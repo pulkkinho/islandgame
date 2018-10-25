@@ -37,7 +37,7 @@ class IGameBoard : public std::enable_shared_from_this<Common::IGameBoard> {
      * @return The number of the pawns in the tile or -1 if the tile does not exist.
      * @post Exception quarantee: strong
      */
-    virtual int checkTileOccupation(Common::CubeCoordinate tileCoord) = 0;
+    virtual int checkTileOccupation(Common::CubeCoordinate tileCoord) const = 0;
 
     /**
      * @brief isWaterTile checks if the tile is a water tile.
@@ -45,7 +45,7 @@ class IGameBoard : public std::enable_shared_from_this<Common::IGameBoard> {
      * @return true, if the tile is a water tile, else (or if the tile does not exist) false.
      * @post Exception quarantee: nothrow
      */
-    virtual bool isWaterTile(Common::CubeCoordinate tileCoord) = 0;
+    virtual bool isWaterTile(Common::CubeCoordinate tileCoord) const = 0;
 
 
     /**
@@ -54,10 +54,10 @@ class IGameBoard : public std::enable_shared_from_this<Common::IGameBoard> {
      * @return Shared pointer to the hex or nullptr, if the hex not exists.
      * @post Exception quarantee: nothrow
      */
-    virtual std::shared_ptr<Common::Hex> getHex(Common::CubeCoordinate hexCoord) = 0;
+    virtual std::shared_ptr<Common::Hex> getHex(Common::CubeCoordinate hexCoord) const = 0;
 
     /**
-     * @brief addPawn. Adds a pawn to the board
+     * @brief addPawn adds a new pawn to the game
      * @param playerId. Id of player, whose pawn is added
      * @param pawnId. Id of the pawn
      * @post Pawn is added to the game. Exception quarantee: basic
@@ -97,6 +97,15 @@ class IGameBoard : public std::enable_shared_from_this<Common::IGameBoard> {
      * @post Actor actorId is removed. Exception quarantee: basic
      */
     virtual void removeActor(int actorId) = 0;
+
+    /**
+     * @brief addHex adds a new hex tile to the board
+     * @param newHex Pointer of a new hex to add
+     * @pre newHex is valid
+     * @post newHex is added to the board. Any existing hex at the same
+     * coordinates is replaced. Exception quarantee: basic
+     */
+    virtual void addHex(std::shared_ptr<Common::Hex> newHex) = 0;
 
 };
 

@@ -31,7 +31,7 @@ class IPlayer {
      * @return The identifier of the player.
      * @post Exception quarantee: nothrow
      */
-    virtual int getPlayerId() = 0;
+    virtual int getPlayerId() const = 0;
 
     /**
      * @brief setActionsLeft sets the player's remaining number of actions.
@@ -45,7 +45,7 @@ class IPlayer {
      * @return amount of actions
      * @post Exception quarantee: nothrow
      */
-    virtual unsigned int getActionsLeft() = 0;
+    virtual unsigned int getActionsLeft() const = 0;
 
 };
 

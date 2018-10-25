@@ -3,6 +3,7 @@
 
 #include "cubecoordinate.hh"
 #include "igamestate.hh"
+#include "pawn.hh"
 
 #include <string>
 
@@ -11,6 +12,9 @@
  * @brief Interface class that is used to control the flow of the game.
  */
 
+/**
+ * @brief Contains pre-existing classes that may be referred by code written by students.
+ */
 namespace Common {
 
 /**
@@ -36,25 +40,26 @@ class IGameRunner {
      * @param tileToMove The destination of the proposed move.
      * @param pawnId The identifier of the pawn.
      * @return 0-3 (number of moves left) or -1 (movement is impossible)
+     * @post Number of moves updated.
      * @post Exception quarantee: nothrow
      */
     virtual int checkPawnMovement(CubeCoordinate pawnToMove, CubeCoordinate tileToMove, int pawnId) = 0;
 
     /**
-     * @brief flipTile tells the actor on the bottom of the tile.
+     * @brief flipTile sinks the tile if possible and tells the actor on the bottom of the tile.
      * @param tileCoord Coordinate of the selected tile.
      * @return The actor on the bottom of the tile or empty string (fail).
      * @exception IllegalMoveException, if any error occured.
+     * @post Gamestate changed to sinking
+     * @post Tile changed to a sea tile
      * @post Exception quarantee: strong
      */
     virtual std::string flipTile(CubeCoordinate tileCoord) = 0;
 
     /**
-     * @brief spinWheel tells which animal moves and how much it moves.
+     * @brief spinWheel decide and report which animal moves and how much it moves.
      * @return a pair <the identifier of the animal,number of movements>
      * @post game phase set to three. Exception quarantee: strong
-     * @brief spinWheel tells what animal moves and how much it moves.
-     * @return Pair: <the identifier of the animal,number of movements>
      */
     virtual std::pair<std::string,std::string> spinWheel() = 0;
 
@@ -71,6 +76,7 @@ class IGameRunner {
      * @post Exception quarantee: nothrow
      */
     virtual Common::GamePhase currentGamePhase() const = 0;
+
 
 
 };

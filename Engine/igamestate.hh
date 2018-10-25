@@ -37,14 +37,14 @@ class IGameState {
      * @return The phase of the game.
      * @post Exception quarantee: nothrow
      */
-    virtual GamePhase currentGamePhase() = 0;
+    virtual GamePhase currentGamePhase() const = 0;
 
     /**
      * @brief currentPlayer tells the player in turn.
      * @return The identifier of the player in turn.
      * @post Excetion quarantee: nothrow
      */
-    virtual int currentPlayer() = 0;
+    virtual int currentPlayer() const = 0;
 
     /**
      * @brief changeGamePhase sets the phase of the game.
