@@ -14,11 +14,18 @@ CONFIG += c++14
 
 
 SOURCES += main.cc \
+    mainwindow.cpp \
+    configurationwindow.cpp
 
 HEADERS  += \
     gameboard.hh \
     player.hh \
-    gamestate.hh
+    gamestate.hh \
+    mainwindow.hh \
+    configurationwindow.hh
+
+FORMS += \
+    configurationwindow.ui
 
 INCLUDEPATH += $$PWD/../GameLogic/Engine
 DEPENDPATH += $$PWD/../GameLogic/Engine
@@ -54,3 +61,16 @@ unix:!macx {
 
 QMAKE_EXTRA_TARGETS += copyfiles
 POST_TARGETDEPS += copyfiles
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../GameLogic/Engine/release/ -lEngine
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../GameLogic/Engine/debug/ -lEngine
+else:unix: LIBS += -L$$OUT_PWD/../GameLogic/Engine/ -lEngine
+
+INCLUDEPATH += $$PWD/../GameLogic/Engine
+DEPENDPATH += $$PWD/../GameLogic/Engine
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../GameLogic/Engine/release/libEngine.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../GameLogic/Engine/debug/libEngine.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../GameLogic/Engine/release/Engine.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../GameLogic/Engine/debug/Engine.lib
+else:unix: PRE_TARGETDEPS += $$OUT_PWD/../GameLogic/Engine/libEngine.a
