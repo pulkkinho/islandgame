@@ -35,7 +35,7 @@ void PieceFactory::readJSON()
         throw Common::FormatException("JSON parsing failed for input file");
     }
 
-    _json = json.object();
+    json_ = json.object();
 
 }
 
@@ -43,7 +43,7 @@ std::vector<std::pair<std::string,int>> PieceFactory::getGamePieces() const
 {
 
     std::vector<std::pair<std::string,int>> gamePieces;
-    QJsonArray common = _json["Common"].toArray();
+    QJsonArray common = json_["Common"].toArray();
     for (int i = 0; i < common.size(); ++i) {
         auto piecesData = std::make_pair(common[i].toObject().value("name").toString().toStdString(),common[i].toObject().value("layers").toInt());
         gamePieces.push_back(piecesData);

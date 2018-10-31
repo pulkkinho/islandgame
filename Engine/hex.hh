@@ -5,6 +5,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <map>
 
 /**
  * @file
@@ -17,7 +18,7 @@ namespace Common {
 
 class Pawn;
 class Actor;
-class Vehicle;
+class Transport;
 
 /**
  * @brief Represents a hex tile on the gameboard.
@@ -45,23 +46,18 @@ class Hex : public std::enable_shared_from_this<Hex> {
     void setPieceType(std::string piece);
 
     /**
-     * @brief setActorType sets a new actor type for the hex.
-     * @param piece The new actor type of the hex.
-     */
-    void setActorType(std::string actor);
-
-    /**
-     * @brief changeOccupation Change the occupation count of this hex tile.
-     * @param pawnAmountChanged Amount to add to the current occupation (negative amount for decreasing).
-     */
-    void changeOccupation(int pawnAmountChanged);
-
-    /**
      * @brief addPawn adds the pawn to the hex
      * @param pawn a shared pointer to the pawn added
      * @post Exception quarantee: nothrow
      */
     void addPawn( std::shared_ptr<Common::Pawn> pawn );
+
+    /**
+     * @brief removePawn removes a pawn from the hex
+     * @param pawn a shared pointer to the pawn removed
+     * @post Exception quarantee: nothrow
+     */
+    void removePawn(std::shared_ptr<Common::Pawn> pawn );
 
     /**
      * @brief getCoordinates gets the location of the hex.
@@ -76,10 +72,10 @@ class Hex : public std::enable_shared_from_this<Hex> {
     std::string getPieceType() const;
 
     /**
-     * @brief getActorType gets the actor type of the hex.
-     * @return The actor type of the hex.
+     * @brief getActorType gets the actor types of the hex.
+     * @return The actor types of the hex.
      */
-    std::string getActorType() const;
+    std::vector<std::string> getActorTypes() const;
 
     /**
      * @brief addActor adds the actor to the hex
@@ -96,25 +92,25 @@ class Hex : public std::enable_shared_from_this<Hex> {
     void removeActor( std::shared_ptr<Common::Actor> actor );
 
     /**
-     * @brief addVehicle adds the vehicle to the hex
-     * @param vehicle a shared pointer to the vehicle added
+     * @brief addTransport adds the transport to the hex
+     * @param transport a shared pointer to the transport added
      * @post Exception quarantee: nothrow
      */
-    void addVehicle( std::shared_ptr<Common::Vehicle> vehicle );
+    void addTransport( std::shared_ptr<Common::Transport> transport );
 
 
     /**
-     * @brief removeVehicle removes a vehicle from the hex
-     * @param vehicle a shared pointer to the vehicle removed
+     * @brief removeTransport removes a transport from the hex
+     * @param transport a shared pointer to the transport removed
      * @post Exception quarantee: nothrow
      */
-    void removeVehicle( std::shared_ptr<Common::Vehicle> vehicle );
+    void removeTransport( std::shared_ptr<Common::Transport> transport );
 
     /**
-     * @brief getPawns tells the number of the pawns in the hex.
+     * @brief getPawnAmount tells the number of the pawns in the hex.
      * @return The number of the pawns in the hex.
      */
-    int getPawns() const;
+    int getPawnAmount() const;
 
     /**
      * @brief isWaterTile checks if the hex is a water tile.
@@ -142,44 +138,47 @@ class Hex : public std::enable_shared_from_this<Hex> {
     std::shared_ptr<Common::Pawn> givePawn(int pawnId) const;
 
     /**
-     * @brief giveVehicle returns the vehicle with id vehicleId
-     * @param vehicleId the id of the vehicle needed
-     * @return a shared pointer to the vehicle with id vehicleId or nullptr if vehicle not found
+     * @brief givetransport returns the transport with id transportId
+     * @param transportId the id of the transport needed
+     * @return a shared pointer to the transport with id transportId or nullptr if transport not found
      */
-    std::shared_ptr<Common::Vehicle> giveVehicle(int vehicleId) const;
+    std::shared_ptr<Common::Transport> givetransport(int transportId) const;
 
     /**
      * @brief giveActor returns the actor with id actorId
      * @param actorId the id of the actor needed
      * @return a shared pointer to the actor with id actorId or nullptr if actor not found
      */
-   std::shared_ptr<Common::Actor> giveActor(int actorId) const;
+    std::shared_ptr<Common::Actor> giveActor(int actorId) const;
 
-   /**
-    * @brief clear clears the hex.
-    * @post all actors and vehicles are removed from the hex
-    */
-   void clear();
+    /**
+     * @brief clear clears the hex.
+     * @post all actors and transports are removed from the hex
+     */
+    void clear();
 
   private:
 
     //! Coordinates of the hex.
-    Common::CubeCoordinate _coord;
+    Common::CubeCoordinate coord_;
 
-    //! Actor type of the hex.
-    std::string _actor;
+    //! Actors on the hex, searchable by ID
+    mutable std::map<int, std::shared_ptr<Common::Actor>> _actorMap;
 
-    //! Number of the pawns in the hex.
-    int _pawns;
+    //! transports on the hex, searchable by ID
+    mutable std::map<int, std::shared_ptr<Common::Transport>> _transportMap;
+
+    //! Pawns on the hex, searchable by ID
+    mutable std::map<int, std::shared_ptr<Common::Pawn>> _pawnMap;
 
     //! Piece type of the hex.
-    std::string _piece;
+    std::string piece_;
 
     //! Whether it is a water tile.
-    int _waterTile;
+    int waterTile_;
 
     //! The neighbour hexes.
-    std::vector<Common::CubeCoordinate> _neighbourVector;
+    std::vector<Common::CubeCoordinate> neighbourVector_;
     void setNeighbourVector();
 
 };

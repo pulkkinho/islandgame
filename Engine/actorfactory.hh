@@ -56,7 +56,7 @@ class ActorFactory {
 
     ActorFactory();
 
-    QJsonObject _json;
+    QJsonObject json_;
 
 };
 

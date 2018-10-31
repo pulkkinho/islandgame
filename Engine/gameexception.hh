@@ -38,7 +38,7 @@ class GameException: public std::exception {
   private:
 
     //! Message declaring the reason of the exception.
-    const std::string _msg;
+    const std::string msg_;
 
 };
 

@@ -46,7 +46,7 @@ class PieceFactory {
 
     PieceFactory();
 
-    QJsonObject _json;
+    QJsonObject json_;
 
 };
 

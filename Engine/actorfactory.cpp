@@ -35,14 +35,14 @@ void ActorFactory::readJSON()
         throw Common::FormatException("JSON parsing failed for input file");
     }
 
-    _json = json.object();
+    json_ = json.object();
 
 }
 
 std::vector<std::string> ActorFactory::getAnimalActors() const {
 
     std::vector<std::string> animalActors;
-    QJsonArray animal = _json["Animal"].toArray();
+    QJsonArray animal = json_["Animal"].toArray();
     for (int i = 0; i < animal.size(); ++i) {
         animalActors.push_back(animal[i].toObject().value("name").toString().toStdString());
     }
@@ -53,7 +53,7 @@ std::vector<std::string> ActorFactory::getAnimalActors() const {
 std::vector<std::string> ActorFactory::getCommonActors() const {
 
     std::vector<std::string> commonActors;
-    QJsonArray common = _json["Common"].toArray();
+    QJsonArray common = json_["Common"].toArray();
     for (int i = 0; i < common.size(); ++i) {
         commonActors.push_back(common[i].toObject().value("name").toString().toStdString());
     }

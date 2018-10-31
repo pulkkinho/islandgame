@@ -13,6 +13,9 @@ namespace Common {
  *
  */
 struct CubeCoordinate {
+    int x;
+    int y;
+    int z;
 
     /**
      * @brief Constructor.
@@ -20,9 +23,6 @@ struct CubeCoordinate {
      * @param uy Y-coordinate.
      * @param uz Z-coordinate.
      */
-    int x;
-    int y;
-    int z;
     CubeCoordinate(int newX,int newY,int newZ) {
 
         x = newX;
@@ -30,6 +30,10 @@ struct CubeCoordinate {
         z = newZ;
 
     }
+
+    /**
+     * @brief CubeCoordinate deafult constructor
+     */
     CubeCoordinate(){}
 
     /**

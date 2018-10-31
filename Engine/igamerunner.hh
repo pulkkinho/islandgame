@@ -35,15 +35,68 @@ class IGameRunner {
     virtual ~IGameRunner() = default;
 
     /**
-     * @brief checkPawnMovement tells if move is possible.
-     * @param pawnToMove The origin of the proposed move.
-     * @param tileToMove The destination of the proposed move.
+     * @brief movePawn moves pawn to given target, if possible.
+     * @param origin The coordinates of the hex to move from
+     * @param target The coordinates of the hex to move to
+     * @param pawnId The id of the pawn to move
+     * @return 0-3 (number of moves left) or -1 (movement is impossible)
+     * @post Exception quarantee: strong
+     */
+    virtual int movePawn(CubeCoordinate origin,
+                         CubeCoordinate target,
+                         int pawnId) = 0;
+
+    /**
+     * @brief moveActor Moves actor to given target, if possible
+     * @param origin The coordinates of the hex to move from
+     * @param target The coordinates of the hex to move to
+     * @param actorId The id of the actor to move
+     * @param moves The distance in moves the actor can move to ( as returned
+     * by IGameRunner::SpinWheel() )
+     * @post Exception quarantee: strong
+     */
+     virtual void moveActor(CubeCoordinate origin,
+                            CubeCoordinate target,
+                            int actorId,
+                            std::string moves) = 0;
+
+    /**
+     * @brief checkPawnMovement tells if move is possible and the number of
+     * moves left.
+     * @details Pawn move is illegal, if one of the following holds:\n
+     * (1) Source-, target-hex or the pawn doesn't exist.\n
+     * (2) Pawn is not on the source-hex\n
+     * (3) Target hex at target is fully occupied (max 3 pawns)\n
+     * (4) Distance > moves left for Player\n
+     * (5) Distance != 1 if moving in water\n
+     * (6) No possible route to the target hex found\n
+     * @param origin The origin of the proposed move.
+     * @param target The destination of the proposed move.
      * @param pawnId The identifier of the pawn.
      * @return 0-3 (number of moves left) or -1 (movement is impossible)
-     * @post Number of moves updated.
      * @post Exception quarantee: nothrow
      */
-    virtual int checkPawnMovement(CubeCoordinate pawnToMove, CubeCoordinate tileToMove, int pawnId) = 0;
+    virtual int checkPawnMovement(Common::CubeCoordinate origin,
+                                  Common::CubeCoordinate target,
+                                  int pawnId) = 0;
+
+    /**
+     * @brief checkActorMovement tells if the move is possible.
+     * @details Actor move is illegal, if one of the following holds:\n
+     * (1) Source-, target-hex or actor doesn't exist\n
+     * (2) Actor is not on source-hex\n
+     * (3) Target-hex is not a water tile\n
+     * (4) Target-hex is too far away (specified by parameter moves)\n
+     * @param origin The origin of the proposed move.
+     * @param target The destination of the proposed move.
+     * @param actorId The identifier of the actor.
+     * @return true, if the move is possible, false otherwise.
+     * @post Exception quarantee: nothrow
+     */
+    virtual bool checkActorMovement(Common::CubeCoordinate origin,
+                                    Common::CubeCoordinate target,
+                                    int actorId,
+                                    std::string moves) = 0;
 
     /**
      * @brief flipTile sinks the tile if possible and tells the actor on the bottom of the tile.

@@ -10,6 +10,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <map>
 
 /**
  * @file
@@ -35,13 +36,38 @@ class GameEngine : public Common::IGameRunner
      * @param statePtr Shared pointer to the game state.
      * @param playerVector Vector that contains players.
      */
-    GameEngine(std::shared_ptr<Common::IGameBoard> boardPtr, std::shared_ptr<Common::IGameState> statePtr, std::vector<Common::IPlayer*> playerVector);
+    GameEngine(std::shared_ptr<Common::IGameBoard> boardPtr,
+               std::shared_ptr<Common::IGameState> statePtr,
+               std::vector<std::shared_ptr<Common::IPlayer>> players);
+
+    /**
+     * @copydoc Common::IGameRunner::movePawn()
+     */
+    virtual int movePawn(Common::CubeCoordinate origin,
+                         Common::CubeCoordinate target,
+                         int pawnId);
 
     /**
      * @copydoc Common::IGameRunner::checkPawnMovement()
      */
-    virtual int checkPawnMovement(Common::CubeCoordinate pawnToMove, Common::CubeCoordinate tileToMove, int pawnId);
+    virtual int checkPawnMovement(Common::CubeCoordinate origin,
+                                  Common::CubeCoordinate target,
+                                  int pawnId);
+    /**
+     * @copydoc Common::IGameRunner::moveActor()
+     */
+    virtual void moveActor(Common::CubeCoordinate origin,
+                           Common::CubeCoordinate target,
+                           int actorId,
+                           std::string moves);
 
+    /**
+     * @copydoc Common::IGameRunner::checkActorMovement()
+     */
+    virtual bool checkActorMovement(Common::CubeCoordinate origin,
+                                    Common::CubeCoordinate target,
+                                    int actorId,
+                                    std::string moves);
     /**
      * @copydoc Common::IGameRunner::flipTile()
      */
@@ -68,24 +94,20 @@ class GameEngine : public Common::IGameRunner
 
     unsigned int cubeCoordinateDistance(Common::CubeCoordinate source, Common::CubeCoordinate target) const;
 
-    std::vector<Common::CubeCoordinate> addHexToBoard(
-            Common::CubeCoordinate coord, std::string pieceType);
+    std::vector<Common::CubeCoordinate> addHexToBoard(Common::CubeCoordinate coord,
+                                                      std::string pieceType);
     void initializeBoard();
 
-    std::vector<Common::IPlayer*> _playerVector;
-    std::shared_ptr<Common::IGameBoard> _board;
-    std::shared_ptr<Common::IGameState> _gameState;
+    std::vector<std::shared_ptr<Common::IPlayer>> playerVector_;
+    std::shared_ptr<Common::IGameBoard> board_;
+    std::shared_ptr<Common::IGameState> gameState_;
 
     //! Actortypes.
-    std::vector<std::string> _animalActors;
-    std::vector<std::string> _commonActors;
+    std::vector<std::string> animalActors_;
+    std::vector<std::string> commonActors_;
 
     //! Piecetypes.
-    std::vector<std::pair<std::string,int>> _gamePieces;
-
-    int _beachTilesLeft;
-    int _forestTilesLeft;
-    int _mountainTilesLeft;
+    std::vector<std::pair<std::string,int>> islandPieces_;
 
 };
 

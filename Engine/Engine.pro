@@ -22,7 +22,7 @@ SOURCES += \
     hex.cpp \
     pawn.cpp \
     actor.cpp \
-    vehicle.cpp
+    transport.cpp
 
 HEADERS += \
     gameexception.hh \
@@ -41,7 +41,7 @@ HEADERS += \
     igamestate.hh \
     iplayer.hh \
     actor.hh \
-    vehicle.hh
+    transport.hh
 
 unix {
     target.path = /usr/lib

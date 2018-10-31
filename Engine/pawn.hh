@@ -43,20 +43,32 @@ public:
      */
     void setId(int pawnId, int playerId);
 
+    /**
+     * @brief getId returns id of the pawn
+     * @return  id of the pawn
+     */
+    int getId();
+
+    /**
+     * @brief getId returns id of the player the pawn belongs to
+     * @return  id of the player who owns this pawn
+     */
+    int getPlayerId();
+
 private:
 
     //! X-coordinate.
-    int _xCoord;
+    int xCoord_;
     //! Y-coordinate.
-    int _yCoord;
+    int yCoord_;
 
     //! Cube coordinate.
     Common::CubeCoordinate _coord;
 
     //! The identifier of the pawn.
-    int _pawnId;
+    int pawnId_;
     //! The identifier of the player.
-    int _playerId;
+    int playerId_;
 
 };
 
