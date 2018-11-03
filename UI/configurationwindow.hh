@@ -15,6 +15,14 @@ public:
     explicit configurationWindow(QWidget *parent = 0);
     ~configurationWindow();
 
+signals:
+
+    void sendvalue(int count);
+
+public slots:
+    virtual void accept();
+    virtual void reject();
+
 private:
     Ui::configurationWindow *ui;
 };
