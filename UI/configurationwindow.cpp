@@ -2,7 +2,7 @@
 #include "ui_configurationwindow.h"
 
 
-configurationWindow::configurationWindow(QWidget *parent :
+configurationWindow::configurationWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::configurationWindow)
 {
