@@ -5,6 +5,8 @@
 #include "igamerunner.hh"
 #include "igamestate.hh"
 #include "iplayer.hh"
+#include "actorfactory.hh"
+#include "transportfactory.hh"
 
 #include <memory>
 
@@ -29,11 +31,33 @@ namespace Initialization {
  * @exception IOException Could not open file Assets/actors.json or Assets/pieces.json for reading.
  * @exception FormatException Format of file Assets/actors.json or Assets/pieces.json is invalid.
  * @return Created instance of IGameRunner.
+ * @note HOX! Custom actors and transports MUST be added before calling getGameRunner!
  * @post GameBoard added
  */
 std::shared_ptr<IGameRunner> getGameRunner(std::shared_ptr<IGameBoard> boardPtr,
                                            std::shared_ptr<IGameState> statePtr,
                                            std::vector<std::shared_ptr<IPlayer>> playerVector);
+
+/**
+ * @brief addNewActorType registers a new actor type to game
+ * @param typeName Name of the new actor type
+ * @param buildFunction Function that will be used to build the actor
+ * @post The game can now use actors of the registered type
+ * @note This function needs to be used, only in case if we want to create new
+ *   types of actors as an additional feature
+ */
+void addNewActorType(std::string typeName, Logic::ActorBuildFunction buildFunction);
+
+/**
+ * @brief addNewTransportType registers a new transport type to game
+ * @param typeName Name of the new transport type
+ * @param buildFunction Function that will be used to build the transport
+ * @post The game can now use transports of the registered type
+ * @note This function needs to be used, only in case if we want to create new
+ *   types of transports as an additional feature
+ */
+void addNewTransportType(std::string typeName, Logic::TransportBuildFunction buildFunction);
+
 
 }
 }

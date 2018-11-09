@@ -37,6 +37,12 @@ public:
     void setCoordinates(Common::CubeCoordinate pawnCoord);
 
     /**
+     * @brief getCoordinates gets the coordinates of the Pawn in CubeCoordinates
+     * @return The Pawn's coordinates in Common::CubeCoordinate format
+     */
+    Common::CubeCoordinate getCoordinates();
+
+    /**
      * @brief setId adds a new pawn.
      * @param pawnId The identifier of the pawn.
      * @param playerId The identifier of the player.
@@ -63,7 +69,7 @@ private:
     int yCoord_;
 
     //! Cube coordinate.
-    Common::CubeCoordinate _coord;
+    Common::CubeCoordinate coord_;
 
     //! The identifier of the pawn.
     int pawnId_;

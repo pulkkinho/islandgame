@@ -4,10 +4,14 @@
 #include "actor.hh"
 #include "illegalmoveexception.hh"
 #include "piecefactory.hh"
+#include "transportfactory.hh"
 
 #include <algorithm>
 
 namespace Logic {
+
+//! Rule for max pawns per tile
+int const MAX_PAWNS_PER_HEX = 3;
 
 GameEngine::GameEngine(std::shared_ptr<Common::IGameBoard> boardPtr,
                        std::shared_ptr<Common::IGameState> statePtr,
@@ -16,15 +20,10 @@ GameEngine::GameEngine(std::shared_ptr<Common::IGameBoard> boardPtr,
     board_(boardPtr),
     gameState_(statePtr)
 {
-
-    ActorFactory::getInstance().readJSON();
-    animalActors_ = ActorFactory::getInstance().getAnimalActors();
-    commonActors_ = ActorFactory::getInstance().getCommonActors();
-
     PieceFactory::getInstance().readJSON();
 
     initializeBoard();
-
+    layoutParser_.readJSON("Assets/layout.json");
 }
 
 int GameEngine::movePawn(Common::CubeCoordinate origin,
@@ -32,17 +31,11 @@ int GameEngine::movePawn(Common::CubeCoordinate origin,
                          int pawnId)
 {
     int movesLeft = checkPawnMovement(origin, target, pawnId);
-    if (movesLeft < 0)
+    if (movesLeft < 0 || board_->getHex(origin)->givePawn(pawnId) == 0)
     {
         throw Common::IllegalMoveException("Illegal pawn move");
     } else {
-        std::shared_ptr<Common::Hex> srcHex = board_->getHex(origin);
-        std::shared_ptr<Common::Hex> targetHex = board_->getHex(target);
-        std::shared_ptr<Common::Pawn> pawn = srcHex->givePawn(pawnId);
-
-        pawn->setCoordinates(target);
-        srcHex->removePawn(pawn);
-        targetHex->addPawn(pawn);
+        board_->movePawn(pawnId, target);
     }
 
     return movesLeft;
@@ -78,8 +71,7 @@ int GameEngine::checkPawnMovement(Common::CubeCoordinate origin,
     }
 
     // (3)
-    int maxPawnsPerTile = 3;
-    if (targetHex->getPawnAmount() >= maxPawnsPerTile) {
+    if (targetHex->getPawnAmount() >= MAX_PAWNS_PER_HEX) {
         return -1;
     }
 
@@ -127,17 +119,11 @@ void GameEngine::moveActor(Common::CubeCoordinate origin,
     bool validMove = checkActorMovement(origin, target, actorId,
                                         moves);
 
-    if (!validMove)
-    {
+    if (!validMove) {
         throw Common::IllegalMoveException("Illegal actor move");
     } else
     {
-        std::shared_ptr<Common::Hex> srcHex = board_->getHex(origin);
-        std::shared_ptr<Common::Actor> actor = srcHex->giveActor(actorId);
-        std::shared_ptr<Common::Hex> targetHex = board_->getHex(target);
-
-        srcHex->removeActor(actor);
-        actor->move(targetHex);
+        board_->moveActor(actorId, target);
     }
 
 
@@ -176,7 +162,7 @@ bool GameEngine::checkActorMovement(Common::CubeCoordinate origin,
     bool distancePass = false;
     unsigned int numMoves = 0;
     if (moves == "D") {
-        // Actor can dive as any distance
+        // Actor can dive any distance
         distancePass = true;
     } else {
 
@@ -188,7 +174,7 @@ bool GameEngine::checkActorMovement(Common::CubeCoordinate origin,
             numMoves = 0;
         }
 
-        if (cubeCoordinateDistance(origin, target) > numMoves) {
+        if (cubeCoordinateDistance(origin, target) <= numMoves) {
             distancePass = true;
         }
     }
@@ -222,7 +208,9 @@ std::string GameEngine::flipTile(Common::CubeCoordinate tileCoord)
 
     auto currentLayer = islandPieces_.back();
     if( pieceType != currentLayer.first ) {
-        throw Common::IllegalMoveException("All tiles of type " + currentLayer.first + "have not yet been flipped.");
+        throw Common::IllegalMoveException("All tiles of type " +
+                                           currentLayer.first +
+                                           "have not yet been flipped.");
     }
 
     // Laskurin päivitys.
@@ -233,22 +221,29 @@ std::string GameEngine::flipTile(Common::CubeCoordinate tileCoord)
     }
 
     // Toimijan arvontaa.
-    std::vector<std::string> allActors;
-    for (auto actor = animalActors_.begin(); actor != animalActors_.end(); actor++) {
-        allActors.push_back(*actor);
-    }
-    for (auto actor = commonActors_.begin(); actor != commonActors_.end(); actor++) {
-        allActors.push_back(*actor);
-    }
-    std::random_shuffle(allActors.begin(),allActors.end());
-    std::string randActor = allActors.back();
+    auto actors = Logic::ActorFactory::getInstance().getAvailableActors();
+    auto transports = Logic::TransportFactory::getInstance().getAvailableTransports();
 
+
+    std::vector<std::string> creatables;
+    creatables.reserve(actors.size() + transports.size());
+    creatables.insert(creatables.end(), actors.begin(), actors.end());
+    creatables.insert(creatables.end(), transports.begin(), transports.end());
+    std::random_shuffle(creatables.begin(), creatables.end());
+    auto selected = creatables.back();
+
+    auto matchString = [selected](auto a)->bool{return a == selected;};
+    if(std::find_if(transports.begin(), transports.end(), matchString) != transports.end()){
+        board_->addTransport(Logic::TransportFactory::getInstance().createTransport(selected), tileCoord);
+    } else if (std::find_if(actors.begin(), actors.end(), matchString) != actors.end()) {
+        board_->addActor(ActorFactory::ActorFactory::getInstance().createActor(selected), tileCoord);
+    }
     // Asetetaan aiempi arvottu toimija...
     //currentHex->addActor(randActor); // FIXME: should create appropriate actor-objects
     // ...ja muutetaan ruutu vesiruuduksi.
     currentHex->setPieceType("Water");
 
-    return randActor;
+    return selected;
 
 }
 
@@ -258,16 +253,18 @@ std::pair<std::string,std::string> GameEngine::spinWheel()
     gameState_->changeGamePhase(Common::GamePhase::SPINNING);
 
     // Mikä eläin (arvonta)...
-    std::vector<std::string> animals = animalActors_;
-    std::random_shuffle(animals.begin(),animals.end());
-    std::string randAnimal = animals.back();
+    layoutParser_.getSections();
+    std::vector<std::string> sections = layoutParser_.getSections();;
+    std::random_shuffle(sections.begin(),sections.end());
+    std::string toMove = sections.back();
 
     // ...ja paljon liikkuu (1,2,3,D -> arvonta).
-    std::vector<std::string> numbers = {"1", "2", "3", "D"};
-    std::random_shuffle(numbers.begin(),numbers.end());
-    std::string randNumber = numbers.back();
 
-    return std::pair<std::string,std::string> (randAnimal,randNumber);
+    auto moves = layoutParser_.getChangesForSection(toMove);
+    std::random_shuffle(moves.begin(),moves.end());
+    std::string moveAmount = moves.back().first;
+
+    return std::pair<std::string,std::string> (toMove, moveAmount);
 
 }
 
@@ -288,7 +285,8 @@ bool GameEngine::breadthFirst(Common::CubeCoordinate FromCoord, Common::CubeCoor
         workVector.erase(workVector.begin());
         std::shared_ptr<Common::Hex> currentHex = board_->getHex(currentCoord);
 
-        if((currentHex)->getPawnAmount() < 3){
+        if(currentHex->getPawnAmount() < MAX_PAWNS_PER_HEX
+                || currentCoord == FromCoord){
             //Tähän implementoidaan laivalla kulkeminen
             if(!(currentHex)->isWaterTile()){
                 unsigned int newIndex = 0;

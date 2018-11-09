@@ -82,6 +82,15 @@ class IGameBoard : public std::enable_shared_from_this<Common::IGameBoard> {
     virtual void removePawn(int pawnId) = 0;
 
     /**
+     * @brief addActor adds a new actor to the game board
+     * @param actor
+     * @param actorCoord
+     * @pre coordinates must contain a hex
+     * @post actor has been added to the hex in target coordinates
+     */
+    virtual void addActor(std::shared_ptr<Common::Actor> actor, Common::CubeCoordinate actorCoord) = 0;
+
+    /**
      * @brief moveActor sets a new location for the actor.
      * @param actorId The identifier of the actor.
      * @param actorCoord The target location of the actor in coordinates.
@@ -107,6 +116,29 @@ class IGameBoard : public std::enable_shared_from_this<Common::IGameBoard> {
      */
     virtual void addHex(std::shared_ptr<Common::Hex> newHex) = 0;
 
+    /**
+     * @brief addTransport adds a new transport to the game board
+     * @param transport transport to be added
+     * @param coord
+     * @pre coordinates must contain a hex
+     * @post Transport has been added to the hex in target coordinates
+     */
+    virtual void addTransport(std::shared_ptr<Common::Transport> transport, Common::CubeCoordinate coord) = 0;
+
+    /**
+     * @brief moveTransport sets a new location for the transport.
+     * @param id The identifier of the transport.
+     * @param coord The target location of the transport in coordinates.
+     * @post transport is moved to a new location: Exception quarantee: basic
+     */
+    virtual void moveTransport(int id, Common::CubeCoordinate coord) = 0;
+
+    /**
+     * @brief removeTransport removes an transport.
+     * @param id The identifier of the transport.
+     * @post transport removed from the gameboard. Exception quarantee: basic
+     */
+    virtual void removeTransport(int id) = 0;
 };
 
 }

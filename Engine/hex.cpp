@@ -62,14 +62,14 @@ void Hex::setPieceType(std::string piece)
 void Hex::addPawn( std::shared_ptr<Common::Pawn> pawn )
 {
     if (pawn != nullptr) {
-        _pawnMap[pawn->getId()] = pawn;
+        pawnMap_[pawn->getId()] = pawn;
     }
 }
 
 void Hex::removePawn(std::shared_ptr<Pawn> pawn)
 {
     if (pawn != nullptr) {
-        _pawnMap.erase(pawn->getId());
+        pawnMap_.erase(pawn->getId());
     }
 }
 
@@ -92,7 +92,7 @@ std::vector<std::string> Hex::getActorTypes() const
 {
     std::vector<std::string> actorTypes;
 
-    for (auto iter = _actorMap.begin(); iter != _actorMap.end(); ++iter)
+    for (auto iter = actorMap_.begin(); iter != actorMap_.end(); ++iter)
     {
         actorTypes.push_back(iter->second->getActorType());
     }
@@ -104,36 +104,34 @@ std::vector<std::string> Hex::getActorTypes() const
 void Hex::addActor( std::shared_ptr<Common::Actor> actor )
 {
     if (actor != nullptr) {
-        _actorMap[actor->getId()] = actor;
+        actorMap_[actor->getId()] = actor;
     }
 }
 
 void Hex::removeActor( std::shared_ptr<Common::Actor> actor )
 {
     if (actor != nullptr) {
-        _actorMap.erase(actor->getId());
+        actorMap_.erase(actor->getId());
     }
 }
 
 void Hex::addTransport( std::shared_ptr<Common::Transport> transport )
 {
     if (transport != nullptr) {
-        _transportMap[transport->getId()] = transport;
+        transportMap_[transport->getId()] = transport;
     }
 }
 
 void Hex::removeTransport( std::shared_ptr<Common::Transport> transport )
 {
     if (transport != nullptr) {
-        _transportMap.erase(transport->getId());
+        transportMap_.erase(transport->getId());
     }
 }
 
 int Hex::getPawnAmount() const
 {
-
-    return _pawnMap.size();
-
+    return pawnMap_.size();
 }
 
 bool Hex::isWaterTile() const
@@ -152,32 +150,74 @@ std::vector<Common::CubeCoordinate> Hex::getNeighbourVector() const
 
 std::shared_ptr<Common::Pawn> Hex::givePawn(int pawnId) const
 {
-    if (_pawnMap.find(pawnId) == _pawnMap.end()) {
+    if (pawnMap_.find(pawnId) == pawnMap_.end()) {
         return nullptr;
     }
-    return _pawnMap[pawnId];
+    return pawnMap_[pawnId];
+
 }
 
-std::shared_ptr<Common::Transport> Hex::givetransport(int transportId) const
+std::shared_ptr<Common::Transport> Hex::giveTransport(int transportId) const
 {
-    if (_transportMap.find(transportId) == _transportMap.end()) {
+    if (transportMap_.find(transportId) == transportMap_.end()) {
         return nullptr;
     }
-    return _transportMap[transportId];
+    return transportMap_[transportId];
 }
 
 std::shared_ptr<Common::Actor> Hex::giveActor(int actorId) const
 {
-    if (_actorMap.find(actorId) == _actorMap.end()) {
+    if (actorMap_.find(actorId) == actorMap_.end()) {
         return nullptr;
     }
-    return _actorMap[actorId];
+    return actorMap_[actorId];
 }
 
-void Hex::clear()
+
+void Hex::clear(){
+    actorMap_.clear();
+    transportMap_.clear();
+    pawnMap_.clear();
+}
+
+void Hex::clearPawnsFromTerrain()
 {
-    _actorMap.clear();
-    _transportMap.clear();
-    _pawnMap.clear();
+    std::map<int, std::shared_ptr<Common::Pawn>>::iterator it;
+    std::map<int, std::shared_ptr<Common::Transport>>::iterator it2;
+    std::vector<std::shared_ptr<Common::Pawn>> removable;
+    bool pawnIsInTransport;
+    for( it = pawnMap_.begin(); it != pawnMap_.end(); ++it){
+        pawnIsInTransport = false;
+        for ( it2 = transportMap_.begin(); it2 != transportMap_.end(); ++it2){
+            if ( it2->second->isPawnInTransport(it->second) ){
+                pawnIsInTransport = true;
+            }
+        }
+        if ( !pawnIsInTransport ){
+            removable.push_back(it->second);
+        }
+    }
+    std::vector<std::shared_ptr<Common::Pawn>>::iterator it3;
+    for( it3 = removable.begin(); it3 != removable.end(); ++it3){
+        removePawn(*it3);
+    }
+}
+
+void Hex::clearTransports()
+{
+    transportMap_.clear();
+}
+
+void Hex::addNeighbour(std::shared_ptr<Common::Hex> hex)
+{
+    neighbourHexes_.push_back(hex);
+}
+
+void Hex::clearAllFromNeightbours()
+{
+    std::vector<std::shared_ptr<Common::Hex>>::const_iterator it;
+    for ( it = neighbourHexes_.begin(); it != neighbourHexes_.end(); ++it){
+        (*it)->clear();
+    }
 }
 }

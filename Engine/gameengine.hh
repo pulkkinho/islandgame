@@ -6,6 +6,7 @@
 #include "igamerunner.hh"
 #include "igamestate.hh"
 #include "iplayer.hh"
+#include "wheellayoutparser.hh"
 
 #include <memory>
 #include <string>
@@ -103,11 +104,12 @@ class GameEngine : public Common::IGameRunner
     std::shared_ptr<Common::IGameState> gameState_;
 
     //! Actortypes.
-    std::vector<std::string> animalActors_;
-    std::vector<std::string> commonActors_;
+
+    WheelLayoutParser layoutParser_;
 
     //! Piecetypes.
     std::vector<std::pair<std::string,int>> islandPieces_;
+
 
 };
 

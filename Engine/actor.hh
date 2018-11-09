@@ -20,62 +20,64 @@ namespace Common
  */
 class Actor : public std::enable_shared_from_this<Actor>
 {
-    public:
-        /**
+public:
+    /**
         * @brief Default constructor, exists solely for documentation.
         */
-        Actor() = default;
+    Actor() = default;
 
-        /**
+    /**
          * @brief Constructor, sets the id of the actor.
          * @param typeId the id of the actor
          */
-        Actor( int typeId );
+    Actor( int id );
 
-        /**
+    /**
          * @brief Destructor of Actor.
          * @post Exception quarantee: nothrow
          */
-        virtual ~Actor();
+    virtual ~Actor();
 
-        /**
+    /**
          * @brief move moves the actor from the current hex tile to another
          * @param to indicates the target hex
          * @pre move must be legal
          * @post Actor moved to the hex tile to
          * @post Exception quarantee: strong
          */
-        virtual void move( std::shared_ptr<Common::Hex> to );
+    virtual void move( std::shared_ptr<Common::Hex> to );
 
-        /**
+    /**
          * @brief doAction provides the action performed by the actor when the tile it occupies is turned
          * @post action performed according to the type of the actor
          * @post exception quarantee: basic
          */
-        virtual void doAction() = 0;
+    virtual void doAction() = 0;
 
-        /**
+    /**
          * @brief getActorType returns the type of the actor as a string
-         * @return dolphin, shark, kraken, seamunster, vortex
+         * @return shark, kraken, seamunster, vortex
          */
-        virtual std::string getActorType() const;
+    virtual std::string getActorType() const;
 
-        /**
+    /**
          * @brief getId returns the id of the actor
          * @return id number of the actor
          */
-        virtual int getId() const;
+    virtual int getId() const;
 
-        /**
+    /**
          * @brief addHex adds the actor to the hex
          * @param hex the hex tile the actor is added to
          * @post actor added to hex
          * @post exception quarantee: nothrow
          */
-        virtual void addHex( std::shared_ptr<Common::Hex> hex );
+    virtual void addHex( std::shared_ptr<Common::Hex> hex );
+protected:
+    std::shared_ptr<Common::Hex> hex_;
 
-     private:
-        int typeid_;
+private:
+    int id_;
 };
 
 }

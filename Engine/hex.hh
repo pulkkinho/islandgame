@@ -46,18 +46,23 @@ class Hex : public std::enable_shared_from_this<Hex> {
     void setPieceType(std::string piece);
 
     /**
+     * @brief changeOccupation Change the occupation count of this hex tile.
+     * @param pawnAmountChanged Amount to add to the current occupation (negative amount for decreasing).
+     */
+    void changeOccupation(int pawnAmountChanged);
+
+    /**
      * @brief addPawn adds the pawn to the hex
      * @param pawn a shared pointer to the pawn added
      * @post Exception quarantee: nothrow
      */
     void addPawn( std::shared_ptr<Common::Pawn> pawn );
-
     /**
-     * @brief removePawn removes a pawn from the hex
-     * @param pawn a shared pointer to the pawn removed
+     * @brief removePawn removes an pawn from the hex
+     * @param pawn a shared pointer to the pwn removed
      * @post Exception quarantee: nothrow
      */
-    void removePawn(std::shared_ptr<Common::Pawn> pawn );
+    void removePawn( std::shared_ptr<Common::Pawn> pawn );
 
     /**
      * @brief getCoordinates gets the location of the hex.
@@ -138,11 +143,11 @@ class Hex : public std::enable_shared_from_this<Hex> {
     std::shared_ptr<Common::Pawn> givePawn(int pawnId) const;
 
     /**
-     * @brief givetransport returns the transport with id transportId
+     * @brief giveTransport returns the transport with id transportId
      * @param transportId the id of the transport needed
      * @return a shared pointer to the transport with id transportId or nullptr if transport not found
      */
-    std::shared_ptr<Common::Transport> givetransport(int transportId) const;
+    std::shared_ptr<Common::Transport> giveTransport(int transportId) const;
 
     /**
      * @brief giveActor returns the actor with id actorId
@@ -151,11 +156,31 @@ class Hex : public std::enable_shared_from_this<Hex> {
      */
     std::shared_ptr<Common::Actor> giveActor(int actorId) const;
 
-    /**
-     * @brief clear clears the hex.
-     * @post all actors and transports are removed from the hex
-     */
-    void clear();
+   /**
+    * @brief clear clears the hex.
+    * @post all actors, pawns and transports are removed from the hex
+    */
+   void clear();
+   /**
+    * @brief clearPawnsFromWater clears pawns that are not in transport from hex.
+    * @post all pawns that are not in transports are removed from the hex
+    */
+   void clearPawnsFromTerrain();
+   /**
+    * @brief clearTransports clears transports from hex
+    * @post all transports are remowed from the hex
+    */
+   void clearTransports();
+   /**
+    * @brief addNeighbour adds neighbour hex to the hex
+    * @param neightbour has been added to the hex
+    */
+   void addNeighbour(std::shared_ptr<Common::Hex> hex);
+   /**
+    * @brief clearAllFromNeightbours clears all from neightbour hexes
+    * @post everything is cleared from neightbour hexes
+    */
+   void clearAllFromNeightbours();
 
   private:
 
@@ -163,13 +188,17 @@ class Hex : public std::enable_shared_from_this<Hex> {
     Common::CubeCoordinate coord_;
 
     //! Actors on the hex, searchable by ID
-    mutable std::map<int, std::shared_ptr<Common::Actor>> _actorMap;
 
-    //! transports on the hex, searchable by ID
-    mutable std::map<int, std::shared_ptr<Common::Transport>> _transportMap;
+    mutable std::map<int, std::shared_ptr<Common::Actor>> actorMap_;
+
+    //! Transports on the hex, searchable by ID
+    mutable std::map<int, std::shared_ptr<Common::Transport>> transportMap_;
 
     //! Pawns on the hex, searchable by ID
-    mutable std::map<int, std::shared_ptr<Common::Pawn>> _pawnMap;
+    mutable std::map<int, std::shared_ptr<Common::Pawn>> pawnMap_;
+
+    //! Number of the pawns in the hex.
+    int pawns_;
 
     //! Piece type of the hex.
     std::string piece_;
@@ -177,8 +206,11 @@ class Hex : public std::enable_shared_from_this<Hex> {
     //! Whether it is a water tile.
     int waterTile_;
 
-    //! The neighbour hexes.
+    //! Vector which contains coordinates of neighbour hexes
     std::vector<Common::CubeCoordinate> neighbourVector_;
+    //! Vector which contains neighbour hexes
+    std::vector<std::shared_ptr<Common::Hex>> neighbourHexes_;
+
     void setNeighbourVector();
 
 };

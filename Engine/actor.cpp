@@ -5,7 +5,9 @@
 namespace Common
 {
 
-Actor::Actor( int typeId ) : typeid_( typeId ){}
+Actor::Actor(int id ):
+    id_( id ),
+    hex_(nullptr){}
 
 Actor::~Actor(){}
 
@@ -23,12 +25,14 @@ std::string Actor::getActorType() const
 
 int Actor::getId() const
 {
-    return typeid_;
+    return id_;
 }
 
 void Actor::addHex( std::shared_ptr<Common::Hex> hex )
 {
     hex->addActor(shared_from_this());
+    hex_->removeActor(shared_from_this());
+    hex_ = hex;
 }
 
 }

@@ -1,0 +1,34 @@
+#ifndef DOLPHIN_HH
+#define DOLPHIN_HH
+
+#include "transport.hh"
+
+namespace Common{
+
+class Dolphin : public Transport
+{
+public:
+    /**
+     * @brief Constructor, sets the id of the dolphin.
+     * @param typeId the id of the dolphin
+     */
+    Dolphin(int id);
+
+    /**
+     * @copydoc Common::Transport::move()
+     */
+    virtual void move( std::shared_ptr<Common::Hex> to);
+
+    /**
+     * @copydoc Common::Transport::getCapacity()
+     */
+    virtual int getCapacity() const;
+
+    /**
+     * @copydoc Common::Transport::canMove()
+     */
+    virtual bool canMove( int playerId ) const;
+
+};
+}
+#endif // DOLPHIN_HH

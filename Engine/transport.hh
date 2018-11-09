@@ -1,12 +1,15 @@
 #ifndef TRANSPORT_HH
 #define TRANSPORT_HH
 #include "hex.hh"
+#include "pawn.hh"
+
 #include <memory>
+#include <vector>
 
 /**
  * @file  The Transport class
- * @brief Implements abstract base class transport
- * @brief transports are: boat
+ * @brief Implements abstract base class Transport
+ * @brief Transports are: boat
  */
 
 namespace Common {
@@ -17,33 +20,39 @@ namespace Common {
  */
 class Transport : public std::enable_shared_from_this<Transport>
 {
-  public:
+public:
     /**
      * @brief default constructor
      */
     Transport() = default;
 
     /**
-     * @brief Constructor of transport
-     * @param transportId the id of the transport created
+     * @brief Constructor of Transport
+     * @param id Unique identifier for the transport.
      */
-    Transport( int transportId );
+    Transport(int id );
     /**
      * @brief desctructor
      * @post Exception quarantee: nothrow
      */
     virtual ~Transport();
 
-    virtual void addPawn( int pawnId );
+    /**
+     * @brief addPawn adds pawn to transport
+     * @param pawn
+     * @post If there is space, pawn is added to transport
+     * @post If transport is full, pawn is not added
+     */
+    void addPawn( std::shared_ptr<Common::Pawn> pawn);
 
     /**
-     * @brief move moves the transport from the current hex tile to another
-     * @param to indicates the target tile
+     * @brief move moves the transport from the current hex hex to another
+     * @param to target hex
      * @pre move must be legal
-     * @post transport moved to the hex tile to
+     * @post Transport moved to the hex hex to
      * @post Exception quarantee: strong
      */
-    virtual void move( std::shared_ptr<Common::Hex> to);
+    virtual void move( std::shared_ptr<Common::Hex> to) = 0;
 
     /**
      * @brief getCapacity returns the amount of pawns the transport is able to carry
@@ -56,15 +65,22 @@ class Transport : public std::enable_shared_from_this<Transport>
      * @param playerId
      * @return true is playerId can move the transport, false if not
      */
-    virtual bool canMove( int playerId ) const;
+    virtual bool canMove( int playerId ) const = 0;
 
     /**
      * @brief addHex adds the transport to the hex
-     * @param hex the hex tile the transport is added to
-     * @post actor added to hex
+     * @param the hex hex where the transport will be added to
+     * @post transport added to hex
      * @post exception quarantee: nothrow
      */
     virtual void addHex( std::shared_ptr<Common::Hex> hex );
+
+    /**
+     * @brief isPawnInTransport checks if pawn is in transport
+     * @param pawn
+     * @return true if pawn is in transport otherwise false
+     */
+    bool isPawnInTransport(std::shared_ptr<Common::Pawn> pawn);
 
     /**
      * @brief getId returns id of the transport
@@ -72,9 +88,17 @@ class Transport : public std::enable_shared_from_this<Transport>
      */
     int getId();
 
-  private:
-    int id_;
+protected:
+    using PawnVector = std::vector<std::shared_ptr<Common::Pawn>>;
     int capacity_;
+    PawnVector pawns_;
+    std::shared_ptr<Common::Hex> hex_;
+
+private:
+    int id_;
+
+
+
 };
 
 }
