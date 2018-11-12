@@ -206,11 +206,11 @@ std::string GameEngine::flipTile(Common::CubeCoordinate tileCoord)
 
     // Noudatetaan poistojärjestystä: ranta, metsä, vuoristo.
 
-    auto currentLayer = islandPieces_.back();
+    auto& currentLayer = islandPieces_.back();
     if( pieceType != currentLayer.first ) {
         throw Common::IllegalMoveException("All tiles of type " +
                                            currentLayer.first +
-                                           "have not yet been flipped.");
+                                           " have not yet been flipped.");
     }
 
     // Laskurin päivitys.

@@ -17,7 +17,7 @@ std::shared_ptr<IGameRunner> getGameRunner(std::shared_ptr<IGameBoard> boardPtr,
                                            std::vector<std::shared_ptr<IPlayer>> playerVector)
 {
 
-    auto actorFactory = Logic::ActorFactory::getInstance();
+    auto& actorFactory = Logic::ActorFactory::getInstance();
     actorFactory.addActor("shark",
                           [=] (int id) -> std::shared_ptr<Actor>
     {
@@ -39,7 +39,7 @@ std::shared_ptr<IGameRunner> getGameRunner(std::shared_ptr<IGameBoard> boardPtr,
         return std::make_shared<Vortex>(id);
     });
 
-    auto transportFactory = Logic::TransportFactory::getInstance();
+    auto& transportFactory = Logic::TransportFactory::getInstance();
     transportFactory.addTransport("boat",
                                   [=] (int id) -> std::shared_ptr<Transport>
     {
