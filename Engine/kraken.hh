@@ -6,8 +6,12 @@
 
 #include <string>
 
-namespace Common{
+namespace Common {
 
+/**
+ * @brief Actor that destroys boats. Pawns onboard a boat encountered by Kraken
+ * are left to float on the water hex.
+ */
 class Kraken: public Actor
 {
 public:
@@ -16,6 +20,7 @@ public:
      * @param typeId the id of the kraken
      */
     Kraken(int typeId);
+
     /**
      * @copydoc Common::Actor::doAction()
      */

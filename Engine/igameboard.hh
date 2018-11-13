@@ -65,6 +65,15 @@ class IGameBoard : public std::enable_shared_from_this<Common::IGameBoard> {
     virtual void addPawn(int playerId, int pawnId) = 0;
 
     /**
+     * @brief addPawn adds a new pawn to the game
+     * @param playerId. Id of player, whose pawn is added
+     * @param pawnId. Id of the pawn
+     * @param coord. CubeCoordinate, where pawn is added
+     * @post Pawn is added to the game. Exception quarantee: basic
+     */
+    virtual void addPawn(int playerId, int pawnId, Common::CubeCoordinate coord) = 0;
+
+    /**
      * @brief movePawn sets a new location for the pawn.
      * @param pawnId The identifier of the pawn.
      * @param pawnCoord The target location of the pawn in coordinates.

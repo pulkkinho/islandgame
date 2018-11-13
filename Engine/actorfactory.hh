@@ -42,7 +42,7 @@ public:
 
     /**
      * @brief getAvailableActors
-     * @return vector contailing the type identifiers of availabla actors
+     * @return vector contailing the type identifiers of available actors
      */
     std::vector<std::string> getAvailableActors() const;
 

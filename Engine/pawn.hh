@@ -24,6 +24,16 @@ public:
     Pawn();
 
     /**
+      * @brief Constructor to create Pawn when IDs and Coordinate is already known.
+      * @details Only internal values are set. No external effects.
+      * @param pawnId Pawn's ID
+      * @param playerID Pawn's owner's ID
+      * @param pawnCoord Pawn's starting CubeCoordinate
+      * @pre No preconditions.
+      */
+    Pawn(int pawnId, int playerId, Common::CubeCoordinate pawnCoord);
+
+    /**
      * @brief setRegularCoordinates sets location for the pawn as x,y-coordinates
      * @param x X-coordinate.
      * @param y Y-coordinate.
@@ -62,11 +72,6 @@ public:
     int getPlayerId();
 
 private:
-
-    //! X-coordinate.
-    int xCoord_;
-    //! Y-coordinate.
-    int yCoord_;
 
     //! Cube coordinate.
     Common::CubeCoordinate coord_;

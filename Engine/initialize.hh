@@ -20,6 +20,8 @@ namespace Common {
 /**
  * @brief This module contains the functions related to the initialization of the game.
  * This is used to integrate the code from the studend side to the GameLogic.
+ * Module services include 1) a creator for game engine object, responsible for running the game,
+ * and 2) adder services that enable adding custom actors and transporter classes in to the game.
  */
 namespace Initialization {
 
@@ -41,9 +43,11 @@ std::shared_ptr<IGameRunner> getGameRunner(std::shared_ptr<IGameBoard> boardPtr,
 /**
  * @brief addNewActorType registers a new actor type to game
  * @param typeName Name of the new actor type
- * @param buildFunction Function that will be used to build the actor
+ * @param buildFunction Function that will be used for automatically
+ * instantiatiating objects from the given custom actor class and creating
+ * shared pointers to them.
  * @post The game can now use actors of the registered type
- * @note This function needs to be used, only in case if we want to create new
+ * @note This function needs to be used only if we want to create new
  *   types of actors as an additional feature
  */
 void addNewActorType(std::string typeName, Logic::ActorBuildFunction buildFunction);
@@ -51,9 +55,11 @@ void addNewActorType(std::string typeName, Logic::ActorBuildFunction buildFuncti
 /**
  * @brief addNewTransportType registers a new transport type to game
  * @param typeName Name of the new transport type
- * @param buildFunction Function that will be used to build the transport
+ * @param buildFunction Function that will be used for automatically
+ * instantiatiating objects from the given custom transporter class and
+ * creating shared pointers to them.
  * @post The game can now use transports of the registered type
- * @note This function needs to be used, only in case if we want to create new
+ * @note This function needs to be used, only if we want to create new
  *   types of transports as an additional feature
  */
 void addNewTransportType(std::string typeName, Logic::TransportBuildFunction buildFunction);

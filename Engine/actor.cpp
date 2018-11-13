@@ -2,8 +2,7 @@
 #include <string>
 #include <memory>
 
-namespace Common
-{
+namespace Common {
 
 Actor::Actor(int id ):
     id_( id ),
@@ -31,7 +30,9 @@ int Actor::getId() const
 void Actor::addHex( std::shared_ptr<Common::Hex> hex )
 {
     hex->addActor(shared_from_this());
-    hex_->removeActor(shared_from_this());
+    if (hex_ != nullptr) {
+        hex_->removeActor(shared_from_this());
+    }
     hex_ = hex;
 }
 

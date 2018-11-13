@@ -3,8 +3,12 @@
 
 #include "transport.hh"
 
-namespace Common{
+namespace Common {
 
+/**
+ * @brief Dolphin moves between hexes according to game rules and can
+ * transport a single pawn at a time.
+ */
 class Dolphin : public Transport
 {
 public:

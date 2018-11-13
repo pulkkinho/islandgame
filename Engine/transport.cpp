@@ -25,7 +25,9 @@ int Transport::getCapacity() const
 void Transport::addHex( std::shared_ptr<Common::Hex> hex )
 {
     hex->addTransport(shared_from_this());
-    hex_->removeTransport(shared_from_this());
+    if (hex_ != nullptr) {
+        hex_->removeTransport(shared_from_this());
+    }
     hex_ = hex;
 }
 

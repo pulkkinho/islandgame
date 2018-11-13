@@ -8,6 +8,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 namespace Logic {
+using ChanceVector = std::vector<std::pair<std::string, unsigned>>;
 
 WheelLayoutParser::WheelLayoutParser(std::string filePath)
 {
@@ -32,7 +33,7 @@ void WheelLayoutParser::readJSON(std::string filePath)
 
 }
 
-std::vector<std::string> WheelLayoutParser::getSections()
+std::vector<std::string> WheelLayoutParser::getSections() const
 {
     std::vector<std::string> sections;
 
@@ -42,9 +43,9 @@ std::vector<std::string> WheelLayoutParser::getSections()
     return sections;
 }
 
-std::vector<std::pair<std::string, int> > WheelLayoutParser::getChangesForSection(std::string section)
+ChanceVector WheelLayoutParser::getChancesForSection(std::string section) const
 {
-    std::vector<std::pair<std::string, int>> chances;
+    std::vector<std::pair<std::string, unsigned>> chances;
 
     for (auto i = 0; i < lastRead_.size(); ++i) {
         auto currentSection = lastRead_[i].toObject().value("name").toString().toStdString();
@@ -52,8 +53,8 @@ std::vector<std::pair<std::string, int> > WheelLayoutParser::getChangesForSectio
             auto chancesObject = lastRead_[i].toObject().value("chances").toObject();
             for(auto key: chancesObject.keys()){
                 auto value = chancesObject.value(key);
-                chances.push_back(std::make_pair<std::string, int>(key.toStdString(),
-                                                                   value.toInt()));
+                chances.push_back(std::make_pair<std::string, unsigned>(key.toStdString(),
+                                                                        (unsigned) value.toInt()));
             }
         }
     }

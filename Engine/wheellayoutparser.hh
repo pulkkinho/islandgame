@@ -34,13 +34,13 @@ public:
      * @brief Returns the different possible things to mve
      * @return vector containing the different things we can move with the spinner
      */
-    std::vector<std::string> getSections();
+    std::vector<std::string> getSections() const;
     /**
      * @brief returns the chances for a specific section
      * @pre section must be one of sections returned by getSections()
      * @return the chances of a specific section
      */
-    std::vector<std::pair<std::string, int>> getChangesForSection(std::string section);
+    std::vector<std::pair<std::string, unsigned>> getChancesForSection(std::string section) const;
     /**
      * @brief isFileRead
      * @return true if a file has been read.

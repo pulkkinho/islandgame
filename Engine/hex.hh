@@ -46,12 +46,6 @@ class Hex : public std::enable_shared_from_this<Hex> {
     void setPieceType(std::string piece);
 
     /**
-     * @brief changeOccupation Change the occupation count of this hex tile.
-     * @param pawnAmountChanged Amount to add to the current occupation (negative amount for decreasing).
-     */
-    void changeOccupation(int pawnAmountChanged);
-
-    /**
      * @brief addPawn adds the pawn to the hex
      * @param pawn a shared pointer to the pawn added
      * @post Exception quarantee: nothrow
@@ -124,11 +118,6 @@ class Hex : public std::enable_shared_from_this<Hex> {
     bool isWaterTile() const;
 
     /**
-     * @brief setWaterAttribute sets a water attribute to the hex.
-     */
-    void setWaterAttribute();
-
-    /**
      * @brief getNeighbourVector returns the neighbour hexes.
      * @return The neighbour hexes.
      */
@@ -182,13 +171,28 @@ class Hex : public std::enable_shared_from_this<Hex> {
     */
    void clearAllFromNeightbours();
 
+   /**
+    * @brief getActors returns Actors inside the Hex.
+    * @return vector of shared_ptrs to Actors.
+    */
+   std::vector<std::shared_ptr<Common::Actor> > getActors();
+   /**
+    * @brief getPawns returns Pawns inside the Hex.
+    * @return vector of shared_ptrs to Pawns.
+    */
+   std::vector<std::shared_ptr<Common::Pawn> > getPawns();
+   /**
+    * @brief getTransports returns Transports inside the Hex.
+    * @return vector of shared_ptrs to Transports
+    */
+   std::vector<std::shared_ptr<Common::Transport> > getTransports();
+
   private:
 
     //! Coordinates of the hex.
     Common::CubeCoordinate coord_;
 
     //! Actors on the hex, searchable by ID
-
     mutable std::map<int, std::shared_ptr<Common::Actor>> actorMap_;
 
     //! Transports on the hex, searchable by ID
@@ -202,9 +206,6 @@ class Hex : public std::enable_shared_from_this<Hex> {
 
     //! Piece type of the hex.
     std::string piece_;
-
-    //! Whether it is a water tile.
-    int waterTile_;
 
     //! Vector which contains coordinates of neighbour hexes
     std::vector<Common::CubeCoordinate> neighbourVector_;

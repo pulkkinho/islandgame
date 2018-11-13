@@ -7,7 +7,6 @@ namespace Common {
 
 Hex::Hex(): piece_("")
 {
-
     neighbourVector_ = { Common::CubeCoordinate(1,-1,0),
                          Common::CubeCoordinate(1,0,-1),
                          Common::CubeCoordinate(0,1,-1),
@@ -15,48 +14,30 @@ Hex::Hex(): piece_("")
                          Common::CubeCoordinate(-1,0,1),
                          Common::CubeCoordinate(0,-1,1)
                        };
-
 }
 
 void Hex::setCoordinates(Common::CubeCoordinate newCoordinates)
 {
-
     coord_ = newCoordinates;
 
     setNeighbourVector();
-    setWaterAttribute();
 
 }
 
 void Hex::setNeighbourVector()
 {
-
     for(auto neighIt = neighbourVector_.begin();
-        neighIt != neighbourVector_.end(); neighIt++){
+        neighIt != neighbourVector_.end();
+        ++neighIt){
         neighIt->x = neighIt->x + coord_.x;
         neighIt->y = neighIt->y + coord_.y;
         neighIt->z = neighIt->z + coord_.z;
     }
-
-}
-
-void Hex::setWaterAttribute()
-{
-
-    if(((abs(coord_.x - 0) + abs(coord_.y - 0)
-         + abs(coord_.z - 0)) / 2) <= 3) {
-        waterTile_ = 0;
-    } else {
-        waterTile_ = 1;
-    }
-
 }
 
 void Hex::setPieceType(std::string piece)
 {
-
     piece_ = piece;
-
 }
 
 void Hex::addPawn( std::shared_ptr<Common::Pawn> pawn )
@@ -76,29 +57,24 @@ void Hex::removePawn(std::shared_ptr<Pawn> pawn)
 
 Common::CubeCoordinate Hex::getCoordinates() const
 {
-
     return coord_;
-
 }
 
 std::string Hex::getPieceType() const
 {
-
     return piece_;
-
 }
 
 std::vector<std::string> Hex::getActorTypes() const
 {
     std::vector<std::string> actorTypes;
 
-    for (auto iter = actorMap_.begin(); iter != actorMap_.end(); ++iter)
+    for (const auto& pair: actorMap_)
     {
-        actorTypes.push_back(iter->second->getActorType());
+        actorTypes.push_back(pair.second->getActorType());
     }
 
     return actorTypes;
-
 }
 
 void Hex::addActor( std::shared_ptr<Common::Actor> actor )
@@ -136,16 +112,12 @@ int Hex::getPawnAmount() const
 
 bool Hex::isWaterTile() const
 {
-
     return piece_ == "Water";
-
 }
 
 std::vector<Common::CubeCoordinate> Hex::getNeighbourVector() const
 {
-
     return neighbourVector_;
-
 }
 
 std::shared_ptr<Common::Pawn> Hex::givePawn(int pawnId) const
@@ -154,7 +126,6 @@ std::shared_ptr<Common::Pawn> Hex::givePawn(int pawnId) const
         return nullptr;
     }
     return pawnMap_[pawnId];
-
 }
 
 std::shared_ptr<Common::Transport> Hex::giveTransport(int transportId) const
@@ -219,5 +190,39 @@ void Hex::clearAllFromNeightbours()
     for ( it = neighbourHexes_.begin(); it != neighbourHexes_.end(); ++it){
         (*it)->clear();
     }
+}
+
+std::vector<std::shared_ptr<Actor> > Hex::getActors()
+{
+    std::vector<std::shared_ptr<Actor> > actors;
+
+    for ( const auto& pair: actorMap_)
+    {
+        actors.push_back(pair.second);
+    }
+
+    return actors;
+}
+
+std::vector<std::shared_ptr<Pawn> > Hex::getPawns()
+{
+    std::vector<std::shared_ptr<Pawn> > pawns;
+    for ( const auto& pair: pawnMap_)
+    {
+        pawns.push_back(pair.second);
+    }
+
+    return pawns;
+}
+
+std::vector<std::shared_ptr<Transport> > Hex::getTransports()
+{
+    std::vector<std::shared_ptr<Transport> > transports;
+    for ( const auto& pair: transportMap_)
+    {
+        transports.push_back(pair.second);
+    }
+
+    return transports;
 }
 }

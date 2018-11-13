@@ -17,13 +17,13 @@
  */
 namespace Common {
 
+using SpinnerLayout = std::map<std::string, std::map<std::string,unsigned>>;
 /**
  * @brief Offers an interface, which is used to control the game logic.
  */
 class IGameRunner {
 
-  public:
-
+public:
     /**
      * @brief Default constructor, exists solely for documentation.
      */
@@ -55,10 +55,10 @@ class IGameRunner {
      * by IGameRunner::SpinWheel() )
      * @post Exception quarantee: strong
      */
-     virtual void moveActor(CubeCoordinate origin,
-                            CubeCoordinate target,
-                            int actorId,
-                            std::string moves) = 0;
+    virtual void moveActor(CubeCoordinate origin,
+                           CubeCoordinate target,
+                           int actorId,
+                           std::string moves) = 0;
 
     /**
      * @brief checkPawnMovement tells if move is possible and the number of
@@ -117,11 +117,23 @@ class IGameRunner {
     virtual std::pair<std::string,std::string> spinWheel() = 0;
 
     /**
+     * @brief getSpinnerLayout
+     * @return the layout of the spinner
+     */
+    virtual SpinnerLayout getSpinnerLayout() const = 0 ;
+
+    /**
      * @brief currentPlayer tells the player in turn.
      * @return The player id in the turn.
      * @post Exception quarantee: nothrow
      */
     virtual int currentPlayer() const = 0;
+
+    /**
+     * @brief playerAmount tells the number of players in the game
+     * @return The number of players in the game
+     */
+    virtual int playerAmount() const = 0;
 
     /**
      * @brief currentGamePhase tells the game phase of the game.

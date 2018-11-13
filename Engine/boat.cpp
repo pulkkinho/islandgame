@@ -18,19 +18,20 @@ void Boat::move(std::shared_ptr<Hex> to) {
     addHex(to);
 }
 
-int Boat::getCapacity() const{
+int Boat::getCapacity() const {
     return capacity_ - pawns_.size();
 }
 
 bool Boat::canMove( int playerId ) const {
-    //Calculating frequencies of pawns for each player
-    // who has pawn in the transport
+    // Calculating frequencies of pawns for each player
+    // who has pawns in the transport
     std::map<int,int> frequencies;
     Transport::PawnVector::const_iterator it;
     for( it = pawns_.begin(); it != pawns_.end(); ++it){
         frequencies[(*it)->getPlayerId()]++;
     }
-    //Number of pawns that player have in transport
+
+    // Number of pawns that player has in transport
     int numberOfPawns = frequencies[playerId];
 
     std::map<int,int>::iterator it2;

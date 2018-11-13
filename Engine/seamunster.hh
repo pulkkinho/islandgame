@@ -5,8 +5,11 @@
 
 #include <string>
 
-namespace Common{
+namespace Common {
 
+/**
+ * @brief Water tile actor that eats boats and pawns. R.I.P.
+ */
 class Seamunster : public Actor
 {
 public:
@@ -15,6 +18,7 @@ public:
      * @param typeId the id of the sea munstes
      */
     Seamunster(int typeId);
+
     /**
      * @copydoc Common::Actor::doAction()
      */

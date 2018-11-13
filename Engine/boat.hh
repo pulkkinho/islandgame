@@ -3,8 +3,13 @@
 
 #include "transport.hh"
 
-namespace Common{
+namespace Common
+{
 
+/**
+ * @brief Boat moves between hexes and can transport up to three pawns per
+ * player at a time.
+ */
 class Boat : public Transport
 {
 public:

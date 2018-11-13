@@ -9,14 +9,15 @@
 /**
  * @file  The Transport class
  * @brief Implements abstract base class Transport
- * @brief Transports are: boat
  */
 
 namespace Common {
 
-
 /**
- * @brief Offers an abstract base class, which is used as the base class to different transports i.e. boat
+ * @brief Offers an abstract base class, which is used as the base class to
+ * different transports. Transporter objects can transport pawns
+ * around the game board as they move between hexes according to the game
+ * rules.
  */
 class Transport : public std::enable_shared_from_this<Transport>
 {
@@ -30,7 +31,8 @@ public:
      * @brief Constructor of Transport
      * @param id Unique identifier for the transport.
      */
-    Transport(int id );
+    Transport( int id );
+
     /**
      * @brief desctructor
      * @post Exception quarantee: nothrow
@@ -38,21 +40,21 @@ public:
     virtual ~Transport();
 
     /**
-     * @brief addPawn adds pawn to transport
+     * @brief Adds pawn to transport
      * @param pawn
      * @post If there is space, pawn is added to transport
      * @post If transport is full, pawn is not added
      */
-    void addPawn( std::shared_ptr<Common::Pawn> pawn);
+    void addPawn( std::shared_ptr<Common::Pawn> pawn );
 
     /**
-     * @brief move moves the transport from the current hex hex to another
+     * @brief Moves the transport from the current hex to another hex
      * @param to target hex
      * @pre move must be legal
-     * @post Transport moved to the hex hex to
+     * @post Transport moved to the hex to
      * @post Exception quarantee: strong
      */
-    virtual void move( std::shared_ptr<Common::Hex> to) = 0;
+    virtual void move( std::shared_ptr<Common::Hex> to ) = 0;
 
     /**
      * @brief getCapacity returns the amount of pawns the transport is able to carry
@@ -77,8 +79,8 @@ public:
 
     /**
      * @brief isPawnInTransport checks if pawn is in transport
-     * @param pawn
-     * @return true if pawn is in transport otherwise false
+     * @param pawn the pawn we want to check for
+     * @return true if pawn is in transport, otherwise false
      */
     bool isPawnInTransport(std::shared_ptr<Common::Pawn> pawn);
 
@@ -96,8 +98,6 @@ protected:
 
 private:
     int id_;
-
-
 
 };
 

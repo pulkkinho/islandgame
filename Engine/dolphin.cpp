@@ -25,14 +25,14 @@ int Dolphin::getCapacity() const{
 }
 
 bool Dolphin::canMove( int playerId ) const {
-    //Calculating frequencies of pawns for each player
-    // who has pawn in the transport
+    // Calculating frequencies of pawns for each player
+    // who has a pawn in the transport
     std::map<int,int> frequencies;
     Transport::PawnVector::const_iterator it;
     for( it = pawns_.begin(); it != pawns_.end(); ++it){
         frequencies[(*it)->getPlayerId()]++;
     }
-    //Number of pawns that player have in transport
+    // Number of pawns that given player has in transport
     int numberOfPawns = frequencies[playerId];
 
     std::map<int,int>::iterator it2;

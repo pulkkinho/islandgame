@@ -2,6 +2,7 @@
 #include "gameengine.hh"
 #include "hex.hh"
 #include "actor.hh"
+#include "boat.hh"
 #include "illegalmoveexception.hh"
 #include "piecefactory.hh"
 #include "transportfactory.hh"
@@ -18,11 +19,14 @@ GameEngine::GameEngine(std::shared_ptr<Common::IGameBoard> boardPtr,
                        std::vector<std::shared_ptr<Common::IPlayer> > players):
     playerVector_(players),
     board_(boardPtr),
-    gameState_(statePtr)
+    gameState_(statePtr),
+    islandRadius_(0)
 {
     PieceFactory::getInstance().readJSON();
 
     initializeBoard();
+    initializeBoats();
+
     layoutParser_.readJSON("Assets/layout.json");
 }
 
@@ -260,12 +264,26 @@ std::pair<std::string,std::string> GameEngine::spinWheel()
 
     // ...ja paljon liikkuu (1,2,3,D -> arvonta).
 
-    auto moves = layoutParser_.getChangesForSection(toMove);
+    auto moves = layoutParser_.getChancesForSection(toMove);
     std::random_shuffle(moves.begin(),moves.end());
     std::string moveAmount = moves.back().first;
 
     return std::pair<std::string,std::string> (toMove, moveAmount);
 
+}
+
+Common::SpinnerLayout GameEngine::getSpinnerLayout() const
+{
+    using Common::SpinnerLayout;
+    auto sections = layoutParser_.getSections();
+    SpinnerLayout layout;
+    for (const auto& section: sections){
+        auto chaces = layoutParser_.getChancesForSection(section);
+        for (const auto& chance: chaces) {
+            layout[section].insert(chance);
+        }
+    }
+    return layout;
 }
 
 bool GameEngine::breadthFirst(Common::CubeCoordinate FromCoord, Common::CubeCoordinate ToCoord, unsigned int actionsLeft)
@@ -389,9 +407,21 @@ std::vector<Common::CubeCoordinate> GameEngine::addHexToBoard(
     std::shared_ptr<Common::Hex> newHex = std::make_shared<Common::Hex>();
     newHex->setCoordinates(coord);
     newHex->setPieceType(pieceType);
+
+    // Add all already existing neighbour-pointers for this hex and add this
+    // hex as their neighbour
+    auto neighbourVector = newHex->getNeighbourVector();
+    for (auto it = neighbourVector.begin(); it != neighbourVector.end(); ++it) {
+        std::shared_ptr<Common::Hex> neighbourHex = board_->getHex(*it);
+        if (neighbourHex != nullptr) {
+            newHex->addNeighbour(neighbourHex);
+            neighbourHex->addNeighbour(newHex);
+        }
+    }
+
     board_->addHex(newHex);
 
-    return newHex->getNeighbourVector();
+    return neighbourVector;
 }
 
 void GameEngine::initializeBoard()
@@ -415,11 +445,15 @@ void GameEngine::initializeBoard()
     pieceVector::iterator iter = pieces.begin();
     while (iter != pieces.end())
     {
-
         // Do as many layers as specified for this piece-type
         for (int i = 0; i < iter->second; ++i)
         {
             Common::CubeCoordinate coord;
+
+            // Count this layer to islandRadius
+            if ((iter->first != "Water") && (iter->first != "Coral")) {
+                ++islandRadius_;
+            }
 
             // Center-piece
             if (i == 0 && iter == pieces.begin())
@@ -460,7 +494,85 @@ void GameEngine::initializeBoard()
         }
         ++iter;
     }
+}
 
+void GameEngine::initializeBoats()
+{
+    /* Initializes boats at the corners of the board.
+     * Spawns boats first in opposing corners of the island. When all corners
+     * are full, spawns more boats along each side of the island (equally if
+     * possible).
+     * Stops spawning boats if the coastline is full.
+     * Should be called after initializeBoard()
+     * Expects transportfactory to already know how to build boats.
+     */
+    auto& factory = Logic::TransportFactory::getInstance();
+    int players = playerAmount();
+
+    // Throw if transportfactory doesn't know boats.
+    auto available = factory.getAvailableTransports();
+    if (std::find(available.begin(),
+                  available.end(), "boat") == available.end()) {
+        throw Common::GameException("Transport factory doesn't know Boats,"
+                                    " are transports initialized?");
+    }
+
+    int offset = 0;
+    for (int i = 0; i < players; ++i)
+    {
+
+        // Stop adding boats if the coastline is full
+        if (offset >= islandRadius_) {
+            break;
+        }
+
+        std::shared_ptr<Common::Transport> newBoat =
+                factory.createTransport("boat");
+        Common::CubeCoordinate coordToAdd;
+
+        int islandSides = 6;
+        switch (i % islandSides) {
+        case 0: {
+            coordToAdd = Common::CubeCoordinate(
+                        islandRadius_, -islandRadius_+offset, -offset);
+            break;
+        }
+        case 1: {
+            coordToAdd = Common::CubeCoordinate(
+                        -islandRadius_, islandRadius_-offset, offset);
+            break;
+        }
+        case 2: {
+            coordToAdd = Common::CubeCoordinate(
+                        offset, -islandRadius_, islandRadius_-offset);
+            break;
+        }
+        case 3: {
+            coordToAdd = Common::CubeCoordinate(
+                        -offset, islandRadius_, -islandRadius_+offset);
+            break;
+        }
+        case 4: {
+            coordToAdd = Common::CubeCoordinate(
+                        islandRadius_-offset, offset, -islandRadius_);
+            break;
+        }
+        case 5: {
+            coordToAdd = Common::CubeCoordinate(
+                        -islandRadius_+offset, -offset, islandRadius_);
+            // Update offset before next lap
+            ++offset;
+            break;
+        }
+        default: {
+            break;
+        }
+        }
+
+        // Add the boat.
+        newBoat->addHex(board_->getHex(coordToAdd));
+
+    }
 }
 
 unsigned int GameEngine::cubeCoordinateDistance(Common::CubeCoordinate source, Common::CubeCoordinate target) const
@@ -483,6 +595,11 @@ Common::GamePhase GameEngine::currentGamePhase() const
 
     return gameState_->currentGamePhase();
 
+}
+
+int GameEngine::playerAmount() const
+{
+    return playerVector_.size();
 }
 
 

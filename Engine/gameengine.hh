@@ -80,6 +80,11 @@ class GameEngine : public Common::IGameRunner
     virtual std::pair<std::string,std::string> spinWheel();
 
     /**
+     * @copydoc  Common::IGameRunner::getSpinnerLayout()
+     */
+    virtual Common::SpinnerLayout getSpinnerLayout() const override;
+
+    /**
      * @copydoc Common::IGameRunner::currentPlayer()
      */
     virtual int currentPlayer() const;
@@ -88,6 +93,11 @@ class GameEngine : public Common::IGameRunner
      * @copydoc Common::IGameRunner::currentGamePhase()
      */
     virtual Common::GamePhase currentGamePhase() const;
+
+    /**
+     * @copydoc Common::IGameRunner::playerAmount()
+     */
+    virtual int playerAmount() const;
 
   private:
 
@@ -98,6 +108,7 @@ class GameEngine : public Common::IGameRunner
     std::vector<Common::CubeCoordinate> addHexToBoard(Common::CubeCoordinate coord,
                                                       std::string pieceType);
     void initializeBoard();
+    void initializeBoats();
 
     std::vector<std::shared_ptr<Common::IPlayer>> playerVector_;
     std::shared_ptr<Common::IGameBoard> board_;
@@ -110,7 +121,8 @@ class GameEngine : public Common::IGameRunner
     //! Piecetypes.
     std::vector<std::pair<std::string,int>> islandPieces_;
 
-
+    // Radius of the island, needed to spawn boats
+    int islandRadius_;
 };
 
 }

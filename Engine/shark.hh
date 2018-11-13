@@ -5,8 +5,12 @@
 
 #include <string>
 
-namespace Common{
+namespace Common {
 
+/**
+ * @brief Water tile actor that eats pawns at the hex, if they are not being
+ * carried by a transporter.
+ */
 class Shark : public Actor
 {
 public:

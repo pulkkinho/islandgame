@@ -5,8 +5,11 @@
 
 #include <string>
 
-namespace Common{
+namespace Common {
 
+/**
+ * @brief Actor that destroys everything from adjacent water hexes.
+ */
 class Vortex : public Actor
 {
 public:

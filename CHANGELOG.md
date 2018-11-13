@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+##[3.0.0] 2018-11-13
+
+### Changed
+- IGameBoard has been expanded, update your implementation.
+
+### Added
+- Added functions playerAmount() and getSpinnerLayout() to IGameRunner.
+- Added addPawn(int,int,CubeCoord) to IGameBoard.
+- Added a constructor with parmeters for Pawn.
+
+### Fixed
+- Various clarifications and improvements to documentation
+
+### Removed
+- Removed changeOccupation() which no more had an implementation and redundant setWaterAttribute() from Hex.
+
+## [2.1.0]
+
+### Fixed
+- Fixed bug related to island layer counter not working correctly.
+- Fixed issues with some compilers trying to use copy constructor of singleton factories.
+- Fixed bug in Transport's hex setting.
+
 ## [2.1.0]
 ### Changed
 - IGameBoard has been expanded, update your implementation.
