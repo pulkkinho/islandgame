@@ -6,11 +6,14 @@
 #include <memory>
 #include <QApplication>
 
+#include "igameboard.hh"
+
 int main(int argc, char *argv[])
 {
 
     QApplication a(argc, argv);
-    MainWindow w;
+    QGraphicsScene scene;
+    MainWindow w(scene);
     configurationWindow c;
     w.show();
     c.show();

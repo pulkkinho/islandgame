@@ -26,7 +26,8 @@ HEADERS  += \
     configurationwindow.hh
 
 FORMS += \
-    configurationwindow.ui
+    configurationwindow.ui\
+    mainwindow.ui
 
 INCLUDEPATH += $$PWD/../GameLogic/Engine
 DEPENDPATH += $$PWD/../GameLogic/Engine
