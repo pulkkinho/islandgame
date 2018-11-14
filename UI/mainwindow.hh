@@ -25,7 +25,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QGraphicsScene &scene, QWidget *parent = 0);
+    MainWindow( QWidget *parent = 0);
     ~MainWindow();
 
 

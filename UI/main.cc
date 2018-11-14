@@ -12,13 +12,13 @@ int main(int argc, char *argv[])
 {
 
     QApplication a(argc, argv);
-    QGraphicsScene scene;
-    MainWindow w(scene);
+    GameBoard scene;
+    MainWindow w;
     configurationWindow c;
     w.show();
     c.show();
-    //GameBoard* kollo;
 
+    //GameBoard* kollo;
 
     //GameEngine engine(Kiikkulauta);
     //

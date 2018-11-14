@@ -8,6 +8,7 @@
 #include <QGraphicsView>
 #include <QWindow>
 #include <QObject>
+#include "cmath"
 
 #include "igameboard.hh"
 #include <iostream>
@@ -51,10 +52,13 @@ public:
 
     void drawHex(std::shared_ptr<Common::Hex> newHex);
 
+    QGraphicsScene* getscene();
+
 private:
     std::unordered_map<int, std::shared_ptr<Common::Pawn>> pawnMap;
     std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>> HexMap;
     std::map<int, Common::CubeCoordinate> actorMap;
+    QGraphicsScene* sceneptr_;
 
 
 
