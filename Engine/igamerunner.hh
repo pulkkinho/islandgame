@@ -5,6 +5,7 @@
 #include "igamestate.hh"
 #include "pawn.hh"
 
+#include <map>
 #include <string>
 
 /**
