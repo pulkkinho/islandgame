@@ -2,19 +2,15 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "gameboard.hh"
-#include "initialize.hh"
-#include "gameengine.hh"
 #include <QGraphicsItem>
 #include <QGraphicsView>
+#include "initialize.hh"
+#include "gameboard.hh"
+#include "gameengine.hh"
+#include "igamestate.hh"
+#include "igameboard.hh"
+#include <igamerunner.hh>
 
-#include <QDebug>
-#include <QLayout>
-#include <QWidget>
-#include <QTimer>
-
-#include <QPushButton>
-#include <QString>
 
 namespace Ui {
 class MainWindow;

@@ -1,9 +1,6 @@
 #include "gameboard.hh"
-#include "piecefactory.hh"
 #include "hex.hh"
 #include "QGraphicsPolygonItem"
-#include "QGraphicsScene"
-#include "QPainter"
 
 
 
@@ -33,7 +30,6 @@ bool GameBoard::isWaterTile(Common::CubeCoordinate tileCoord) const
 std::shared_ptr<Common::Hex> GameBoard::getHex(Common::CubeCoordinate hexCoord) const
 {
 
-    std::cout <<"moimoi" << std::endl;
     if (HexMap.find(hexCoord)== HexMap.end()){
         return nullptr;
     }
@@ -102,24 +98,35 @@ void GameBoard::removeTransport(int id)
 
 void GameBoard::drawHex(std::shared_ptr<Common::Hex> newHex)
 {
-    std::cout << "moim7oi" << std::endl;
     newHex.get()->getNeighbourVector();
-    int z = newHex.get()->getCoordinates().z*50;
-    int x = newHex.get()->getCoordinates().x*50;
-    int y = newHex.get()->getCoordinates().y*50;
+    int z = newHex.get()->getCoordinates().z;
+    int x = newHex.get()->getCoordinates().x;
+    int y = newHex.get()->getCoordinates().z;
+
+    //muutetaan xyz-koordinaatit xy-muotoon:
+    y = x;
+    x = 2 * z + x;
+
+    int q = 400;
+    int w = 400;
+    int s = 20;
+    x= x * 16 * s / 20;
+    y= y * s * 1.5;
+    int a = sqrt(3)*(s/2);
+
     QPolygon poly(6);
-    poly.setPoint(0, 625-x, 650+y);
-    poly.setPoint(1, 650-x, 637.5+y);
-    poly.setPoint(2, 650-x, 612.5+y);
-    poly.setPoint(3, 625-x, 600+y);
-    poly.setPoint(4, 600-x, 612.5+y);
-    poly.setPoint(5, 600-x, 637.5+y);
+    poly.setPoint(0,q-x,w-s-y);
+    poly.setPoint(1,q+a-x,w-s/2-y);
+    poly.setPoint(2,q+a-x,w+s/2-y);
+    poly.setPoint(3,q-x,w+s-y);
+    poly.setPoint(4,q-a-x,w+s/2-y);
+    poly.setPoint(5,q-a-x,w-s/2-y);
+
     QPen Peni;
     QBrush Brushi;
     std::string tyyppi = newHex.get()->getPieceType();
     if (tyyppi == "Forest"){
         Brushi.setColor((Qt::green));
-
     }
     if(tyyppi == "Mountain"){
         Brushi.setColor(((Qt::gray)));
@@ -131,13 +138,13 @@ void GameBoard::drawHex(std::shared_ptr<Common::Hex> newHex)
         Brushi.setColor(((Qt::blue)));
     }
     if(tyyppi == "Coral"){
-        Brushi.setColor(((Qt::cyan)));
+        Brushi.setColor(((Qt::magenta)));
     }
-
     if(tyyppi == "Beach"){
         Brushi.setColor(((Qt::yellow)));
     }
     Brushi.setStyle(Qt::SolidPattern);
+
     sceneptr_->addPolygon(poly,Peni,Brushi);
 
 }
