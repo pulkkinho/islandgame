@@ -1,5 +1,3 @@
-#include "gameboard.hh"
-#include "gamestate.hh"
 #include "player.hh"
 #include "mainwindow.hh"
 #include "configurationwindow.hh"
@@ -12,22 +10,11 @@ int main(int argc, char *argv[])
 {
 
     QApplication a(argc, argv);
-    GameBoard scene;
     MainWindow w;
     configurationWindow c;
-    w.show();
-    c.show();
 
-    //GameBoard* kollo;
-
-    //GameEngine engine(Kiikkulauta);
-    //
-    //MainWindow w(Kiikkulauta);
-    //
-    //QObject::connect(&Kiikkulauta, SIGNAL(mouseClick(int, int)),
-    //                 &engine, SLOT(launchSplash(int, int)));
-    //QObject::connect(&engine, SIGNAL(quitGame()), &w, SLOT(close()));
-    //
-    //w.show();
+    if(c.exec() == 1){
+        w.show();
+    }
     return a.exec();
 }
