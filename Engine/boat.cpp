@@ -9,6 +9,11 @@ Boat::Boat(int id):Transport(id){
     capacity_ = 3;
 }
 
+std::string Boat::getTransportType()
+{
+    return "boat";
+}
+
 void Boat::move(std::shared_ptr<Hex> to) {
     std::vector<std::shared_ptr<Common::Pawn>>::const_iterator i;
     for( i = pawns_.begin(); i != pawns_.end(); ++i){

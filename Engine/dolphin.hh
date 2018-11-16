@@ -19,6 +19,11 @@ public:
     Dolphin(int id);
 
     /**
+     * @copydoc Common::Transport::getTransportType()
+     */
+    virtual std::string getTransportType();
+
+    /**
      * @copydoc Common::Transport::move()
      */
     virtual void move( std::shared_ptr<Common::Hex> to);

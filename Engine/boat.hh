@@ -20,6 +20,11 @@ public:
     Boat(int id);
 
     /**
+     * @copydoc Common::Transport::getTransportType()
+     */
+    virtual std::string getTransportType();
+
+    /**
      * @brief move moves the boat from the current hex tile to another
      * @param to indicates the target tile
      * @pre move must be legal

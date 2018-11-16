@@ -11,6 +11,11 @@ Dolphin::Dolphin(int id):
     capacity_ = 1;
 }
 
+std::string Dolphin::getTransportType()
+{
+    return "dolphin";
+}
+
 void Dolphin::move(std::shared_ptr<Hex> to) {
     std::vector<std::shared_ptr<Common::Pawn>>::const_iterator i;
     for( i = pawns_.begin(); i != pawns_.end(); ++i){

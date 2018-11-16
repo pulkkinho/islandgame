@@ -17,6 +17,16 @@ void Transport::addPawn(std::shared_ptr<Pawn> pawn )
     }
 }
 
+void Transport::removePawn(std::shared_ptr<Pawn> pawn)
+{
+    if (pawn != nullptr) {
+        auto foundPawn = std::find(pawns_.begin(),pawns_.end(),pawn);
+        if (foundPawn != pawns_.end()) {
+            pawns_.erase(foundPawn);
+        }
+    }
+}
+
 int Transport::getCapacity() const
 {
     return 1234;
@@ -29,6 +39,11 @@ void Transport::addHex( std::shared_ptr<Common::Hex> hex )
         hex_->removeTransport(shared_from_this());
     }
     hex_ = hex;
+}
+
+std::shared_ptr<Hex> Transport::getHex()
+{
+    return hex_;
 }
 
 bool Transport::isPawnInTransport(std::shared_ptr<Pawn> pawn)

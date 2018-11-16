@@ -5,13 +5,15 @@
 
 /**
  * @file
- * @brief Defines an exception class for errors occuring in flip tile.
+ * @brief Defines an exception class for errors occuring in flip tile and
+ * pawn/actor/transport movement.
  */
 
 namespace Common {
 
 /**
- * @brief Exception class for flipping tile errors.
+ * @brief Exception class for flipping tile and moving pawn/actor/transport
+ * errors.
  */
 class IllegalMoveException: public GameException {
 

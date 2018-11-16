@@ -36,11 +36,12 @@ public:
     virtual ~IGameRunner() = default;
 
     /**
-     * @brief movePawn moves pawn to given target, if possible.
+     * @brief movePawn moves pawn to given target, if legal.
      * @param origin The coordinates of the hex to move from
      * @param target The coordinates of the hex to move to
      * @param pawnId The id of the pawn to move
-     * @return 0-3 (number of moves left) or -1 (movement is impossible)
+     * @return 0-3 (number of moves left)
+     * @throw Common::IllegalMoveException Illegal move was attempted.
      * @post Exception quarantee: strong
      */
     virtual int movePawn(CubeCoordinate origin,
@@ -48,12 +49,13 @@ public:
                          int pawnId) = 0;
 
     /**
-     * @brief moveActor Moves actor to given target, if possible
+     * @brief moveActor Moves actor to given target, if legal.
      * @param origin The coordinates of the hex to move from
      * @param target The coordinates of the hex to move to
      * @param actorId The id of the actor to move
      * @param moves The distance in moves the actor can move to ( as returned
      * by IGameRunner::SpinWheel() )
+     * @throw Common::IllegalMoveException Illegal move was attempted.
      * @post Exception quarantee: strong
      */
     virtual void moveActor(CubeCoordinate origin,
@@ -111,8 +113,16 @@ public:
     virtual std::string flipTile(CubeCoordinate tileCoord) = 0;
 
     /**
-     * @brief spinWheel decide and report which animal moves and how much it moves.
-     * @return a pair <the identifier of the animal,number of movements>
+     * @brief spinWheel decide and report which "animal" moves and how much it
+     * moves.
+     * @details spinWheel decides and reports which actor/transport moves after
+     * the game phase is set to 3 (SPINNING). The types of actors and transports
+     * returnable by spinwheel are configurable with Assets/layout.json .
+     * By-default the possible types are: "dolphin", "kraken", "seamunster",
+     * "shark", here also referred to as animals.
+     * @note HOX: Unlike kraken, seamunster and shark (Common::Actor),
+     * dolphin is of class Common::Transport
+     * @return a pair <type of the actor/vehicle, number of movements>
      * @post game phase set to three. Exception quarantee: strong
      */
     virtual std::pair<std::string,std::string> spinWheel() = 0;

@@ -8,7 +8,7 @@
 #include "transportfactory.hh"
 
 #include <algorithm>
-
+#include <iostream>
 namespace Logic {
 
 //! Rule for max pawns per tile
@@ -25,7 +25,11 @@ GameEngine::GameEngine(std::shared_ptr<Common::IGameBoard> boardPtr,
     PieceFactory::getInstance().readJSON();
 
     initializeBoard();
-    initializeBoats();
+    try {
+        initializeBoats();
+    } catch (Common::GameException& e) {
+        std::cout<< e.msg() <<std::endl;
+    }
 
     layoutParser_.readJSON("Assets/layout.json");
 }
@@ -35,7 +39,7 @@ int GameEngine::movePawn(Common::CubeCoordinate origin,
                          int pawnId)
 {
     int movesLeft = checkPawnMovement(origin, target, pawnId);
-    if (movesLeft < 0 || board_->getHex(origin)->givePawn(pawnId) == 0)
+    if (movesLeft < 0)
     {
         throw Common::IllegalMoveException("Illegal pawn move");
     } else {
@@ -242,9 +246,7 @@ std::string GameEngine::flipTile(Common::CubeCoordinate tileCoord)
     } else if (std::find_if(actors.begin(), actors.end(), matchString) != actors.end()) {
         board_->addActor(ActorFactory::ActorFactory::getInstance().createActor(selected), tileCoord);
     }
-    // Asetetaan aiempi arvottu toimija...
-    //currentHex->addActor(randActor); // FIXME: should create appropriate actor-objects
-    // ...ja muutetaan ruutu vesiruuduksi.
+    // muutetaan ruutu vesiruuduksi.
     currentHex->setPieceType("Water");
 
     return selected;
@@ -435,7 +437,7 @@ void GameEngine::initializeBoard()
 
     // Get pieces from piecefactory
     Logic::PieceFactory pieceFactory = Logic::PieceFactory::getInstance();
-    pieceFactory.readJSON(); // TODO: Exception handling?
+    pieceFactory.readJSON();
     typedef std::vector<std::pair<std::string,int>> pieceVector;
     pieceVector pieces =
             pieceFactory.getGamePieces();
@@ -513,7 +515,7 @@ void GameEngine::initializeBoats()
     auto available = factory.getAvailableTransports();
     if (std::find(available.begin(),
                   available.end(), "boat") == available.end()) {
-        throw Common::GameException("Transport factory doesn't know Boats,"
+        throw Common::GameException("Transport factory doesn't know boats,"
                                     " are transports initialized?");
     }
 
@@ -526,8 +528,6 @@ void GameEngine::initializeBoats()
             break;
         }
 
-        std::shared_ptr<Common::Transport> newBoat =
-                factory.createTransport("boat");
         Common::CubeCoordinate coordToAdd;
 
         int islandSides = 6;
@@ -569,8 +569,16 @@ void GameEngine::initializeBoats()
         }
         }
 
-        // Add the boat.
-        newBoat->addHex(board_->getHex(coordToAdd));
+        // Add the boat, if a water hex exists at coordToAdd.
+        // No boats are added, if the board doesn't have a singe water-hex
+        std::shared_ptr<Common::Hex> hexToAdd = board_->getHex(coordToAdd);
+        if (hexToAdd != nullptr) {
+            if (hexToAdd->getPieceType() == "Water") {
+                std::shared_ptr<Common::Transport> newBoat =
+                                factory.createTransport("boat");
+                board_->addTransport(newBoat, coordToAdd);
+            }
+        }
 
     }
 }

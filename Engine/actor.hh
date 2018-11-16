@@ -75,6 +75,13 @@ public:
      */
     virtual void addHex( std::shared_ptr<Common::Hex> hex );
 
+    /**
+     * @brief getHex gets a pointer to the Hex the actor is on.
+     * @return shared_ptr to the Hex actor is on, nullptr if actor is not on
+     * any hex.
+     */
+    virtual std::shared_ptr<Common::Hex> getHex();
+
 protected:
     std::shared_ptr<Common::Hex> hex_;
 

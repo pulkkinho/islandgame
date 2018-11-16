@@ -40,18 +40,33 @@ public:
     virtual ~Transport();
 
     /**
+     * @brief getTransportType returns the type name of the transport
+     * @return The name of the transports type.
+     */
+    virtual std::string getTransportType() = 0;
+
+    /**
      * @brief Adds pawn to transport
      * @param pawn
      * @post If there is space, pawn is added to transport
+     * @note note: Pawn is not removed from the hex
      * @post If transport is full, pawn is not added
      */
     void addPawn( std::shared_ptr<Common::Pawn> pawn );
+
+    /**
+     * @brief removePawn removes a pawn from transport
+     * @param pawn Pawn to be removed.
+     * @post If pawn is in transport, it will be removed from it
+     */
+    void removePawn( std::shared_ptr<Common::Pawn> pawn );
 
     /**
      * @brief Moves the transport from the current hex to another hex
      * @param to target hex
      * @pre move must be legal
      * @post Transport moved to the hex to
+     * @post All pawns in transport moved to the hex to
      * @post Exception quarantee: strong
      */
     virtual void move( std::shared_ptr<Common::Hex> to ) = 0;
@@ -76,6 +91,13 @@ public:
      * @post exception quarantee: nothrow
      */
     virtual void addHex( std::shared_ptr<Common::Hex> hex );
+
+    /**
+     * @brief getHex gets a pointer to the Hex the transport is on.
+     * @return shared_ptr to the Hex actor is on, nullptr if actor is not on
+     * any hex.
+     */
+    virtual std::shared_ptr<Common::Hex> getHex();
 
     /**
      * @brief isPawnInTransport checks if pawn is in transport

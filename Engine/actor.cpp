@@ -36,4 +36,9 @@ void Actor::addHex( std::shared_ptr<Common::Hex> hex )
     hex_ = hex;
 }
 
+std::shared_ptr<Hex> Actor::getHex()
+{
+    return hex_;
+}
+
 }
