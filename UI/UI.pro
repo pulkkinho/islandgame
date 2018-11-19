@@ -16,14 +16,20 @@ CONFIG += c++14
 SOURCES += main.cc \
     mainwindow.cpp \
     configurationwindow.cpp \
-    gameboard.cpp
+    gameboard.cpp \
+    polygoni.cpp \
+    scene.cpp \
+    koklaus.cpp
 
 HEADERS  += \
     gameboard.hh \
     player.hh \
     gamestate.hh \
     mainwindow.hh \
-    configurationwindow.hh
+    configurationwindow.hh \
+    polygoni.hh \
+    scene.hh \
+    koklaus.hh
 
 FORMS += \
     configurationwindow.ui\

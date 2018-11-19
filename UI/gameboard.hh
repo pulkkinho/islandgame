@@ -6,7 +6,9 @@
 #include "QGraphicsScene"
 #include <QGraphicsItem>
 #include <QGraphicsView>
+#include "igamerunner.hh"
 #include "cmath"
+#include "polygoni.hh"
 
 #include "igameboard.hh"
 #include <iostream>
@@ -52,10 +54,24 @@ public:
 
     QGraphicsScene* getscene();
 
+    QPolygon getPolygon(std::shared_ptr<Common::Hex> newHex);signals:
+
+    Common::CubeCoordinate findClickedHex(int clickX, int clickY);
+
+    bool wasClicked(std::shared_ptr<Common::Hex> hexi, int clickX, int clickY);
+
+
+
+
+
+
 private:
-    std::unordered_map<int, std::shared_ptr<Common::Pawn>> pawnMap;
+
     std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>> HexMap;
+    std::unordered_map<int, std::shared_ptr<Common::Pawn>> pawnMap;
     std::map<int, Common::CubeCoordinate> actorMap;
+    std::map<Common::CubeCoordinate, std::shared_ptr<QGraphicsItem>> polygonMap;
+    std::vector<Common::CubeCoordinate> coordinates;
 
     QGraphicsScene* sceneptr_;
 

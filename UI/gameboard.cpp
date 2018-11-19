@@ -1,14 +1,20 @@
 #include "gameboard.hh"
 #include "hex.hh"
 #include "QGraphicsPolygonItem"
-
+#include "ostream"
+#include <QGraphicsSceneMouseEvent>
+#include "map"
+#include "iostream"
+#include "string"
+#include "polygoni.hh"
+#include "scene.hh"
 
 
 GameBoard::GameBoard():
     Common::IGameBoard()
 
 {
-    sceneptr_ = new QGraphicsScene;
+    sceneptr_ = new Scene(this);
 }
 
 GameBoard::~GameBoard()
@@ -24,7 +30,10 @@ int GameBoard::checkTileOccupation(Common::CubeCoordinate tileCoord) const
 
 bool GameBoard::isWaterTile(Common::CubeCoordinate tileCoord) const
 {
-    return true;
+    if(HexMap.at(tileCoord).get()->getPieceType() == "Water"){
+        return true;
+    }
+    return false;
 }
 
 std::shared_ptr<Common::Hex> GameBoard::getHex(Common::CubeCoordinate hexCoord) const
@@ -76,8 +85,12 @@ void GameBoard::removeActor(int actorId)
 void GameBoard::addHex(std::shared_ptr<Common::Hex> newHex)
 {
     Common::CubeCoordinate coord = newHex.get()->getCoordinates();
-    HexMap.insert({coord, newHex});
-    drawHex(newHex);
+    HexMap.insert(std::make_pair(coord, newHex));
+    coordinates.push_back(coord);
+
+    std::shared_ptr<Polygoni> masa = std::make_shared<Polygoni>(newHex, sceneptr_);
+    polygonMap.insert(std::make_pair(coord, masa ));
+    std::cout << HexMap.at(coord) << std::endl;
 
 }
 
@@ -98,29 +111,9 @@ void GameBoard::removeTransport(int id)
 
 void GameBoard::drawHex(std::shared_ptr<Common::Hex> newHex)
 {
-    newHex.get()->getNeighbourVector();
-    int z = newHex.get()->getCoordinates().z;
-    int x = newHex.get()->getCoordinates().x;
-    int y = newHex.get()->getCoordinates().z;
+    QPolygon poly = getPolygon(newHex);
 
-    //muutetaan xyz-koordinaatit xy-muotoon:
-    y = x;
-    x = 2 * z + x;
-
-    int q = 400;
-    int w = 400;
-    int s = 20;
-    x= x * 16 * s / 20;
-    y= y * s * 1.5;
-    int a = sqrt(3)*(s/2);
-
-    QPolygon poly(6);
-    poly.setPoint(0,q-x,w-s-y);
-    poly.setPoint(1,q+a-x,w-s/2-y);
-    poly.setPoint(2,q+a-x,w+s/2-y);
-    poly.setPoint(3,q-x,w+s-y);
-    poly.setPoint(4,q-a-x,w+s/2-y);
-    poly.setPoint(5,q-a-x,w-s/2-y);
+    //std::cout << poly[1].x() << std::endl;
 
     QPen Peni;
     QBrush Brushi;
@@ -152,4 +145,77 @@ void GameBoard::drawHex(std::shared_ptr<Common::Hex> newHex)
 QGraphicsScene* GameBoard::getscene()
 {
   return sceneptr_;
+}
+
+Common::CubeCoordinate GameBoard::findClickedHex(int clickX, int clickY)
+{
+    for ( const auto& mauri : HexMap){
+        std::cout << "huu"  << std::endl;
+        std::cout << getHex(mauri.first).get()->getCoordinates().y << std::endl;
+       // if (wasClicked(getHex(hexi), clickX, clickY) == true){
+        //    return hexi;
+        }
+       // }
+
+}
+
+
+
+bool GameBoard::wasClicked(std::shared_ptr<Common::Hex> hexiptr, int clickX, int clickY)
+{
+    std::cout << "wasclicked" << std::endl;
+    //haetaan polygoni jotta voidaan tarkastella sen pisteitä
+    QPolygon poly = getPolygon(hexiptr);
+    //kulmakerroin
+    int kk = 1/sqrt(3);
+    //tarkistetaan onko klikkaus hexin ympärille piirretyn kuvitteellisen suorakulmion sisällä
+    if(poly[0].y() < clickY && poly[3].y() > clickY && poly[4].x() < clickX &&
+            poly[2].x() > clickX){
+        //tarkistetaan, onko klikkaus hexin sisällä tarkastelemalla vielä
+        //klikkauksen y-koordinaatin suhdetta hexin vinojen sivujen
+        //muodostamien suorien yhtälöihin.
+        //Suoran yhtälö y = kk*x - kk*x0 +y0,
+        //missä x = clickX, y = clickY, x0 ja y0 ovat QPolygonin pisteitä
+        if(clickY < kk * clickX + kk * (- poly[4].x()) + poly[4].y() &&
+           clickY < - kk * clickX - kk * (- poly[3].x()) + poly[3].y() &&
+           clickY > - kk * clickX - kk * (- poly[5].x()) + poly[5].y() &&
+           clickY > kk * clickX + kk * (- poly[0].x()) + poly[0].y())
+        {
+            //Mikäli klikkaus on sekä aiemmin tarkastellun hexin ympärille
+            //piirretyn neliön, että viimeisenä tarkasteltujen suorien
+            //muodostaman neliön sisällä voidaan klikkauksen todeta olevan
+            //hexin sisällä.
+            return true;
+        }
+    }
+    return false;
+}
+
+QPolygon GameBoard::getPolygon(std::shared_ptr<Common::Hex> newHex)
+{
+    int x = newHex.get()->getCoordinates().x;
+    int y = newHex.get()->getCoordinates().y;
+    int z = newHex.get()->getCoordinates().z;
+
+    //muutetaan xyz-koordinaatit xy-muotoon:
+    y = x;
+    x = 2 * z + x;
+
+    int q = 400;
+    int w = 400;
+    int s = 20;
+    x= x * 16 * s / 20;
+    y= y * s * 1.5;
+    int a = sqrt(3)*(s/2);
+
+    QPolygon poly(6);
+    //lähtee alimmasta kulmasta vastapäivään
+    poly.setPoint(0,q-x,w-s-y);
+    poly.setPoint(1,q+a-x,w-s/2-y);
+    poly.setPoint(2,q+a-x,w+s/2-y);
+    poly.setPoint(3,q-x,w+s-y);
+    poly.setPoint(4,q-a-x,w+s/2-y);
+    poly.setPoint(5,q-a-x,w-s/2-y);
+
+    return poly;
 }
