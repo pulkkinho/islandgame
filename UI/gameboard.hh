@@ -8,7 +8,6 @@
 #include <QGraphicsView>
 #include "igamerunner.hh"
 #include "cmath"
-#include "polygoni.hh"
 
 #include "igameboard.hh"
 #include <iostream>

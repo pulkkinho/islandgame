@@ -17,9 +17,8 @@ SOURCES += main.cc \
     mainwindow.cpp \
     configurationwindow.cpp \
     gameboard.cpp \
-    polygoni.cpp \
     scene.cpp \
-    koklaus.cpp
+    hexagon.cpp
 
 HEADERS  += \
     gameboard.hh \
@@ -27,9 +26,8 @@ HEADERS  += \
     gamestate.hh \
     mainwindow.hh \
     configurationwindow.hh \
-    polygoni.hh \
     scene.hh \
-    koklaus.hh
+    hexagon.hh
 
 FORMS += \
     configurationwindow.ui\

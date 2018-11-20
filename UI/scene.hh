@@ -30,7 +30,6 @@ public slots:
     void click(int clickX, int clixkY);
 
 
-
 private:
 
     std::shared_ptr<Common::IGameRunner> runnerptr_;

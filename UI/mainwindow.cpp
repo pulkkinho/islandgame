@@ -12,9 +12,8 @@ MainWindow::MainWindow( QWidget *parent) :
     GameBoard peliloota;
     view_.setScene(peliloota.getscene());
     setCentralWidget(&view_);
-    setMinimumHeight(800);
+    setMinimumHeight(500);
     setMinimumWidth(900);
-    peliloota.getscene()->setSceneRect(0, 0, 1200, 1200);
 
 
     std::shared_ptr<Common::IGameState> statePtr;
@@ -24,8 +23,8 @@ MainWindow::MainWindow( QWidget *parent) :
                 std::make_shared<GameBoard>(peliloota),statePtr,players);
 
 
-    QObject::connect(peliloota.getscene(), SIGNAL(mouseClick(int, int)),
-                     peliloota.getscene(), SLOT(click(int,int)));
+  //  QObject::connect(peliloota.getscene(), SIGNAL(mouseClick(int, int)),
+   //                  peliloota.getscene(), SLOT(click(int,int)));
 
 }
 

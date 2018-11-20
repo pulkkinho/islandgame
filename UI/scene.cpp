@@ -1,4 +1,3 @@
-#include "polygoni.hh"
 #include <QGraphicsSceneMouseEvent>
 #include "QGraphicsScene"
 #include "ostream"

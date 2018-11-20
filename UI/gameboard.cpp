@@ -6,15 +6,15 @@
 #include "map"
 #include "iostream"
 #include "string"
-#include "polygoni.hh"
 #include "scene.hh"
+#include "hexagon.hh"
 
 
 GameBoard::GameBoard():
     Common::IGameBoard()
 
 {
-    sceneptr_ = new Scene(this);
+    sceneptr_ = new QGraphicsScene;
 }
 
 GameBoard::~GameBoard()
@@ -86,11 +86,12 @@ void GameBoard::addHex(std::shared_ptr<Common::Hex> newHex)
 {
     Common::CubeCoordinate coord = newHex.get()->getCoordinates();
     HexMap.insert(std::make_pair(coord, newHex));
-    coordinates.push_back(coord);
+    int z = newHex.get()->getCoordinates().z;
+    int x = newHex.get()->getCoordinates().x;
+    int y = newHex.get()->getCoordinates().y;
+    Widget* super = new Widget(newHex, newHex.get()->getPieceType(), x, y, z);
+    sceneptr_->addItem(super);
 
-    std::shared_ptr<Polygoni> masa = std::make_shared<Polygoni>(newHex, sceneptr_);
-    polygonMap.insert(std::make_pair(coord, masa ));
-    std::cout << HexMap.at(coord) << std::endl;
 
 }
 
@@ -98,7 +99,6 @@ void GameBoard::addTransport(std::shared_ptr<Common::Transport> transport, Commo
 {
   std::cout << "moimoi" << std::endl;
 }
-
 void GameBoard::moveTransport(int id, Common::CubeCoordinate coord)
 {
   std::cout << "moimoi" << std::endl;
@@ -138,7 +138,6 @@ void GameBoard::drawHex(std::shared_ptr<Common::Hex> newHex)
     }
     Brushi.setStyle(Qt::SolidPattern);
 
-    sceneptr_->addPolygon(poly,Peni,Brushi);
 
 }
 
