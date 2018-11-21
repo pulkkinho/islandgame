@@ -5,8 +5,11 @@
 
 #include <QGraphicsSceneMouseEvent>
 
-Widget::Widget(std::shared_ptr<Common::Hex> Hexi, std::string Tyyppi, int x, int y, int z, QGraphicsPolygonItem *parent):QGraphicsPolygonItem(parent),
-    hexptr(Hexi), tyyppi(Tyyppi), x_(x), y_(y), z_(z)
+Widget::Widget(std::shared_ptr<Common::Hex> Hexi, std::string Tyyppi, int x, int y, int z,
+               GameBoard board, Common::CubeCoordinate coord, std::shared_ptr<Common::IGameRunner> runner,
+               QGraphicsPolygonItem *parent):
+    QGraphicsPolygonItem(parent), hexptr(Hexi), tyyppi(Tyyppi), x_(x), y_(y),
+    z_(z), board_(board), coord_(coord), runnerptr(runner)
 {
     Pressed = false;
     flip = true;
@@ -37,21 +40,39 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
             //tarkistetaan onko klikkaus hexin ympärille piirretyn kuvitteellisen suorakulmion sisällä
             if(poly[0].y() < clickPosition.y() && poly[3].y() > clickPosition.y() && poly[1].x()-2 > clickPosition.x() &&
                     poly[5].x()+2 < clickPosition.x()){
+                if(tyyppi == "Water"){
+                    std::cout << "KONEKIVÄÄRI?" << std::endl;
+
+                }
+                if(tyyppi == "Coral"){
+                    std::cout << "KORALLIRIUTTA?" << std::endl;
+                    Pressed = false;
+                    return;
+                }
                 std::cout << "lampeen?" << std::endl;
+                Pressed = true;
+                tyyppi = "Water";
+                //Common::Hex masa;
+                //masa = hexptr.get();
+                //board_->getrunner().get()->flipTile(hexptr.get()->getCoordinates());
+                std::cout << runnerptr.get() << std::endl;
+                runnerptr.get()->flipTile(coord_);
+                update();
                 //tarkistetaan, onko klikkaus hexin sisällä tarkastelemalla vielä
                 //klikkauksen y-koordinaatin suhdetta hexin vinojen sivujen
                 //muodostamien suorien yhtälöihin.
                 //Suoran yhtälö y = kk*x - kk*x0 +y0,
                 //missä x = clickPosition.x(), y = clickPosition.y(), x0 ja y0 ovat QPolygonin pisteitä
-                if(clickPosition.y() > (kk * clickPosition.x() + kk * (- poly[5].x()) + poly[5].y()) &&
-                   clickPosition.y() > (- kk * clickPosition.x() - kk * (- poly[1].x()) + poly[1].y()) &&
-                   clickPosition.y() < (kk * clickPosition.x() + kk * (- poly[2].x()) + poly[2].y()) &&
-                   clickPosition.y() < (- kk * clickPosition.x() - kk * (- poly[3].x()) + poly[3].y())){
-                        std::cout << "Oi Suomi on!" << std::endl;
-                        Pressed = true;
-                        update();
-
-            }
+            //    if(clickPosition.y() > (kk * clickPosition.x() + kk * (- poly[5].x()) + poly[5].y()) &&
+            //       clickPosition.y() > (- kk * clickPosition.x() - kk * (- poly[1].x()) + poly[1].y()) &&
+            //       clickPosition.y() < (kk * clickPosition.x() + kk * (- poly[2].x()) + poly[2].y()) &&
+            //       clickPosition.y() < (- kk * clickPosition.x() - kk * (- poly[3].x()) + poly[3].y())){
+            //            std::cout << "Oi Suomi on!" << std::endl;
+            //            Pressed = true;
+            //            tyyppi = "Water";
+            //            update();
+            //
+            //}
         }else Pressed = false;
             update();
     } else Pressed = false;
@@ -116,7 +137,7 @@ void Widget::paint(QPainter *painter,
     Brushi.setStyle(Qt::SolidPattern);
 
     if (Pressed == true && flip == true){
-    Brushi.setColor(Qt::red);
+    Brushi.setColor(Qt::blue);
     }
     this->setBrush(Brushi);
     this->setPolygon(poly);

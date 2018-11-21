@@ -15,7 +15,8 @@ class Widget : public QGraphicsPolygonItem
 
 public:
     Widget(std::shared_ptr<Common::Hex> Hexi, std::string Tyyppi,
-           int x, int y, int z, QGraphicsPolygonItem *parent = NULL);
+           int x, int y, int z, GameBoard board, Common::CubeCoordinate coord,
+           std::shared_ptr<Common::IGameRunner> runner, QGraphicsPolygonItem *parent = NULL);
 
 protected:
     void paint(QPainter *painter,
@@ -30,6 +31,9 @@ protected:
 private:
      std::shared_ptr<Common::Hex> hexptr;
      std::string tyyppi;
+     GameBoard board_;
+     Common::CubeCoordinate coord_;
+     std::shared_ptr<Common::IGameRunner> runnerptr;
      int x_;
      int y_;
      int z_;

@@ -19,7 +19,7 @@ class GameBoard : public Common::IGameBoard
 
 public:
     GameBoard();
-    virtual ~GameBoard();
+    ~GameBoard();
 
     virtual int checkTileOccupation(Common::CubeCoordinate tileCoord) const;
 
@@ -59,6 +59,17 @@ public:
 
     bool wasClicked(std::shared_ptr<Common::Hex> hexi, int clickX, int clickY);
 
+    std::shared_ptr<Common::IGameRunner> getrunner();
+
+//    bool arebeachleft();
+//
+//    bool areforestleft();
+//
+//    bool aremountainleft();
+
+
+
+
 
 
 
@@ -71,6 +82,8 @@ private:
     std::map<int, Common::CubeCoordinate> actorMap;
     std::map<Common::CubeCoordinate, std::shared_ptr<QGraphicsItem>> polygonMap;
     std::vector<Common::CubeCoordinate> coordinates;
+
+    std::shared_ptr<Common::IGameRunner> runner;
 
     QGraphicsScene* sceneptr_;
 

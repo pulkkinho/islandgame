@@ -8,6 +8,8 @@
 #include "string"
 #include "scene.hh"
 #include "hexagon.hh"
+#include "paatti.hh"
+#include "mainwindow.hh"
 
 
 GameBoard::GameBoard():
@@ -15,6 +17,9 @@ GameBoard::GameBoard():
 
 {
     sceneptr_ = new QGraphicsScene;
+    std::shared_ptr<Common::IGameState> statePtr;
+    std::vector<std::shared_ptr<Common::IPlayer>> players;
+    runner= Common::Initialization::getGameRunner(std::make_shared<GameBoard>(*this),statePtr,players);
 }
 
 GameBoard::~GameBoard()
@@ -89,15 +94,35 @@ void GameBoard::addHex(std::shared_ptr<Common::Hex> newHex)
     int z = newHex.get()->getCoordinates().z;
     int x = newHex.get()->getCoordinates().x;
     int y = newHex.get()->getCoordinates().y;
-    Widget* super = new Widget(newHex, newHex.get()->getPieceType(), x, y, z);
+    Widget* super = new Widget(newHex, newHex.get()->getPieceType(), x, y, z, *this, newHex.get()->getCoordinates(), runner);
     sceneptr_->addItem(super);
+    std::cout << runner << std::endl;
 
 
 }
 
 void GameBoard::addTransport(std::shared_ptr<Common::Transport> transport, Common::CubeCoordinate coord)
 {
-  std::cout << "moimoi" << std::endl;
+     std::cout << "Untamo" << std::endl;
+
+    int paattimaara = 0;
+    for(auto untamo : HexMap){
+        std::cout << untamo.second.get()->getCoordinates().z << std::endl;
+        std::cout << std::endl;
+        std::cout << std::endl;
+        std::cout << std::endl;
+
+       // std::cout << coord << std::endl;
+
+        if( untamo.first == coord){
+            actorMap.insert(std::make_pair(transport.get()->getId(),coord));
+            std::cout << paattimaara << std::endl;
+            paattimaara = paattimaara + 1;
+            Paatti* superpaatti = new Paatti(transport);
+            sceneptr_->addItem(superpaatti);
+
+        }
+    }
 }
 void GameBoard::moveTransport(int id, Common::CubeCoordinate coord)
 {
@@ -146,6 +171,12 @@ QGraphicsScene* GameBoard::getscene()
   return sceneptr_;
 }
 
+
+ std::shared_ptr<Common::IGameRunner> GameBoard::getrunner()
+{
+  return runner;
+}
+
 Common::CubeCoordinate GameBoard::findClickedHex(int clickX, int clickY)
 {
     for ( const auto& mauri : HexMap){
@@ -190,6 +221,8 @@ bool GameBoard::wasClicked(std::shared_ptr<Common::Hex> hexiptr, int clickX, int
     return false;
 }
 
+
+
 QPolygon GameBoard::getPolygon(std::shared_ptr<Common::Hex> newHex)
 {
     int x = newHex.get()->getCoordinates().x;
@@ -218,3 +251,34 @@ QPolygon GameBoard::getPolygon(std::shared_ptr<Common::Hex> newHex)
 
     return poly;
 }
+
+
+//bool GameBoard::arebeachleft(){
+//    for(auto untamo : HexMap){
+//           std::string kantamoinen = untamo.second.get()->getPieceType();
+//           if (kantamoinen == "Beach"){
+//               return true;
+//
+//           }
+//    }
+//}
+//
+//bool GameBoard::areforestleft(){
+//    for(auto untamo : HexMap){
+//           std::string kantamoinen = untamo.second.get()->getPieceType();
+//           if (kantamoinen == "Forest"){
+//               return true;
+//
+//           }
+//    }
+//}
+//
+//bool GameBoard::aremountainleft(){
+//    for(auto untamo : HexMap){
+//           std::string kantamoinen = untamo.second.get()->getPieceType();
+//           if (kantamoinen == "Mountain"){
+//               return true;
+//           }
+//    }
+//}
+//

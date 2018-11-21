@@ -18,7 +18,9 @@ SOURCES += main.cc \
     configurationwindow.cpp \
     gameboard.cpp \
     scene.cpp \
-    hexagon.cpp
+    hexagon.cpp \
+    paatti.cpp \
+    gamestate.cpp
 
 HEADERS  += \
     gameboard.hh \
@@ -27,7 +29,8 @@ HEADERS  += \
     mainwindow.hh \
     configurationwindow.hh \
     scene.hh \
-    hexagon.hh
+    hexagon.hh \
+    paatti.hh
 
 FORMS += \
     configurationwindow.ui\
