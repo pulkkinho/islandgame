@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.3.0] 2018-11-21
+
+### Added
+- Added functions for Transports to IGameRunner
+- Added getCurrentPlayer to IGameRunner
+- Added getPawnsInTransport, removePawns and getMaximumCapacity to Transport
+
+### Fixed
+- Improved Actor's documentation.
+- Improved IGameRunner's documentation.
+
+### Changed
+- Moving pawns now reduces players acition points.
+- moving pawns and transports with normal movements uses player's action points
+- moveActor now restores player's actions 
 
 ## [3.2.0] 2018-11-16
 

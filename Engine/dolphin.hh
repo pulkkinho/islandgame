@@ -28,10 +28,6 @@ public:
      */
     virtual void move( std::shared_ptr<Common::Hex> to);
 
-    /**
-     * @copydoc Common::Transport::getCapacity()
-     */
-    virtual int getCapacity() const;
 
     /**
      * @copydoc Common::Transport::canMove()

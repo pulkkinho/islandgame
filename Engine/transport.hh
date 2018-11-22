@@ -67,6 +67,7 @@ public:
      * @pre move must be legal
      * @post Transport moved to the hex to
      * @post All pawns in transport moved to the hex to
+     * @post Transport's and pawns' locations updated.
      * @post Exception quarantee: strong
      */
     virtual void move( std::shared_ptr<Common::Hex> to ) = 0;
@@ -78,6 +79,12 @@ public:
     virtual int getCapacity() const;
 
     /**
+     * @brief getMaxCapacity return the maximum capacity of the transport
+     * @return maximum capacity of the transport
+     */
+    virtual int getMaxCapacity() const;
+
+    /**
      * @brief canMove checks if the player playerId is allowed to move the transport
      * @param playerId
      * @return true is playerId can move the transport, false if not
@@ -87,7 +94,8 @@ public:
     /**
      * @brief addHex adds the transport to the hex
      * @param the hex hex where the transport will be added to
-     * @post transport added to hex
+     * @post Transport added to hex
+     * @post Transport's location updated.
      * @post exception quarantee: nothrow
      */
     virtual void addHex( std::shared_ptr<Common::Hex> hex );
@@ -98,6 +106,13 @@ public:
      * any hex.
      */
     virtual std::shared_ptr<Common::Hex> getHex();
+
+    /**
+     * @brief getPawnsInTransport Returns a vector of pawn-pointers in the
+     * Transport.
+     * @return Vector of pointers to pawns that are in the Transport
+     */
+    virtual std::vector<std::shared_ptr<Common::Pawn>> getPawnsInTransport();
 
     /**
      * @brief isPawnInTransport checks if pawn is in transport
@@ -111,6 +126,11 @@ public:
      * @return id of the transport
      */
     int getId();
+    /**
+     * @brief removePawns removes pawns from transport
+     * @post Pawns are no longer in the transport
+     */
+    void removePawns();
 
 protected:
     using PawnVector = std::vector<std::shared_ptr<Common::Pawn>>;

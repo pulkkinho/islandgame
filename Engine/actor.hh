@@ -44,6 +44,7 @@ public:
      * @param to indicates the target hex
      * @pre move must be legal
      * @post Actor moved to the hex tile to
+     * @post Actor's location updated.
      * @post Exception quarantee: strong
      */
     virtual void move( std::shared_ptr<Common::Hex> to );
@@ -70,7 +71,8 @@ public:
     /**
      * @brief addHex adds the actor to the hex
      * @param hex the hex tile the actor is added to
-     * @post actor added to hex
+     * @post Actor added to hex
+     * @post Actor's location set to hex
      * @post exception quarantee: nothrow
      */
     virtual void addHex( std::shared_ptr<Common::Hex> hex );

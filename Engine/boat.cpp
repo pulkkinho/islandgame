@@ -15,17 +15,15 @@ std::string Boat::getTransportType()
 }
 
 void Boat::move(std::shared_ptr<Hex> to) {
-    std::vector<std::shared_ptr<Common::Pawn>>::const_iterator i;
+    std::vector<std::shared_ptr<Common::Pawn>>::iterator i;
     for( i = pawns_.begin(); i != pawns_.end(); ++i){
         to->addPawn(*i);
         hex_->removePawn(*i);
+        (*i)->setCoordinates(to->getCoordinates());
     }
     addHex(to);
 }
 
-int Boat::getCapacity() const {
-    return capacity_ - pawns_.size();
-}
 
 bool Boat::canMove( int playerId ) const {
     // Calculating frequencies of pawns for each player

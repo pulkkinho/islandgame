@@ -70,6 +70,32 @@ class GameEngine : public Common::IGameRunner
                                     int actorId,
                                     std::string moves);
     /**
+     * @copydoc Common::IGameRunner::moveTransport(
+     * Common::CubeCoordinate origin, Common::CubeCoordinate target,
+     * int transportId)
+     */
+    virtual int moveTransport(Common::CubeCoordinate origin,
+                              Common::CubeCoordinate target,
+                              int transportId);
+
+    /**
+     * @copydoc Common::IGameRunner::moveTransportWithSpinner(
+     * Common::CubeCoordinate origin, Common::CubeCoordinate target,
+     * int transportId, std::string moves)
+     */
+    virtual int moveTransportWithSpinner(Common::CubeCoordinate origin,
+                               Common::CubeCoordinate target,
+                               int transportId,
+                               std::string moves);
+
+    /**
+     * @copydoc Common::IGameRunner::checkTransportMovement()
+     */
+    virtual int checkTransportMovement(Common::CubeCoordinate origin,
+                                    Common::CubeCoordinate target,
+                                    int transportId,
+                                    std::string moves);
+    /**
      * @copydoc Common::IGameRunner::flipTile()
      */
     virtual std::string flipTile(Common::CubeCoordinate tileCoord);
@@ -83,6 +109,11 @@ class GameEngine : public Common::IGameRunner
      * @copydoc  Common::IGameRunner::getSpinnerLayout()
      */
     virtual Common::SpinnerLayout getSpinnerLayout() const override;
+
+    /**
+     * @copydoc Common::IGameRunner::getCurrentPlayer()
+     */
+    virtual std::shared_ptr<Common::IPlayer> getCurrentPlayer();
 
     /**
      * @copydoc Common::IGameRunner::currentPlayer()

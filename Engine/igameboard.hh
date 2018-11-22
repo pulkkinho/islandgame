@@ -72,7 +72,9 @@ class IGameBoard : public std::enable_shared_from_this<Common::IGameBoard> {
      * @param pawnId. Id of the pawn
      * @param coord. CubeCoordinate, where pawn is added
      * @pre CubeCoordinate must contain a Hex-tile. No Pawn with pawnId exists.
-     * @post Pawn is added to the game. Target Hex-object contains a new Pawn. Exception quarantee: basic
+     * @post Pawn is added to the game. Target Hex-object contains a new Pawn.
+     * @post Pawn's location set to coord
+     * @post Exception quarantee: basic
      */
     virtual void addPawn(int playerId, int pawnId, Common::CubeCoordinate coord) = 0;
 
@@ -84,6 +86,7 @@ class IGameBoard : public std::enable_shared_from_this<Common::IGameBoard> {
      * @param pawnCoord The target location of the pawn in coordinates.
      * @pre Pawn exists
      * @post Pawn is moved to the target location or stays in place if location doesn't exist.
+     * @post Pawn's location is updated.
      * Exception quarantee: basic
      */
     virtual void movePawn(int pawnId, Common::CubeCoordinate pawnCoord) = 0;
@@ -102,7 +105,8 @@ class IGameBoard : public std::enable_shared_from_this<Common::IGameBoard> {
      * @param actor
      * @param actorCoord
      * @pre CubeCoordinate must contain a Hex-tile. Actor is not null-pointer.
-     * @post actor has been added to the hex in target coordinates
+     * @post Actor has been added to the hex in target coordinates
+     * @post Actor's location set to the hex in target coordinates
      */
     virtual void addActor(std::shared_ptr<Common::Actor> actor, Common::CubeCoordinate actorCoord) = 0;
 
@@ -113,8 +117,9 @@ class IGameBoard : public std::enable_shared_from_this<Common::IGameBoard> {
      * @param actorId The identifier of the actor.
      * @param actorCoord The target location of the actor in coordinates.
      * @pre Actor exists
-     * @post actor actorId is moved to a new location or stays in place if location doesn't exist.
-     * Exception quarantee: basic
+     * @post Actor actorId is moved to a new location or stays in place if location doesn't exist.
+     * @post Actor's location updated.
+     * @post Exception quarantee: basic
      */
     virtual void moveActor(int actorId, Common::CubeCoordinate actorCoord) = 0;
 
@@ -141,7 +146,9 @@ class IGameBoard : public std::enable_shared_from_this<Common::IGameBoard> {
      * @param transport transport to be added
      * @param coord
      * @pre CubeCoordinate must contain a Hex-tile. Transport isn't null-pointer.
-     * @post Transport has been added to the hex in target coordinates
+     * @post Transport has been added to the hex in target coordinates.
+     * @post Transport's location set to the hex in target coordinates.
+     * Exception guarantee: basic
      */
     virtual void addTransport(std::shared_ptr<Common::Transport> transport, Common::CubeCoordinate coord) = 0;
 
@@ -152,6 +159,8 @@ class IGameBoard : public std::enable_shared_from_this<Common::IGameBoard> {
      * @param id The identifier of the transport.
      * @param coord The target location of the transport in coordinates.
      * @post transport is moved to a new location or stays in place if location doesn't exist.
+     * @post All pawns in transport are moved to the new location with the transport.
+     * @post Transport's and included pawns' locations will be updated.
      * Exception quarantee: basic
      */
     virtual void moveTransport(int id, Common::CubeCoordinate coord) = 0;

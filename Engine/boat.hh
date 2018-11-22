@@ -34,12 +34,6 @@ public:
     virtual void move( std::shared_ptr<Common::Hex> to);
 
     /**
-     * @brief getCapacity returns the amount of pawns the boat is able to carry
-     * @return the amount of free places
-     */
-    virtual int getCapacity() const;
-
-    /**
      * @copydoc Common::Transport::canMove()
      */
     virtual bool canMove( int playerId ) const;

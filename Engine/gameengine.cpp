@@ -9,10 +9,13 @@
 
 #include <algorithm>
 #include <iostream>
+#include <ctime>
+
 namespace Logic {
 
 //! Rule for max pawns per tile
 int const MAX_PAWNS_PER_HEX = 3;
+int const MAX_ACTIONS_PER_TURN = 3;
 
 GameEngine::GameEngine(std::shared_ptr<Common::IGameBoard> boardPtr,
                        std::shared_ptr<Common::IGameState> statePtr,
@@ -22,6 +25,9 @@ GameEngine::GameEngine(std::shared_ptr<Common::IGameBoard> boardPtr,
     gameState_(statePtr),
     islandRadius_(0)
 {
+    // Initialize random-number seed
+    std::srand(std::time(0));
+
     PieceFactory::getInstance().readJSON();
 
     initializeBoard();
@@ -38,12 +44,21 @@ int GameEngine::movePawn(Common::CubeCoordinate origin,
                          Common::CubeCoordinate target,
                          int pawnId)
 {
+    std::shared_ptr<Common::IPlayer> player = getCurrentPlayer();
+
+    // Current player not found
+    if (player == nullptr){
+        throw Common::IllegalMoveException("Illegal transport move:"
+                                           " no current player");
+    }
+
     int movesLeft = checkPawnMovement(origin, target, pawnId);
     if (movesLeft < 0)
     {
         throw Common::IllegalMoveException("Illegal pawn move");
     } else {
         board_->movePawn(pawnId, target);
+        player->setActionsLeft(movesLeft);
     }
 
     return movesLeft;
@@ -101,7 +116,7 @@ int GameEngine::checkPawnMovement(Common::CubeCoordinate origin,
         if ((*playerIt)->getActionsLeft() >= distance) {
             if (board_->isWaterTile(origin) > 0) {
                 // (5)
-                if (distance == 1) {
+                if ((distance == 1) && ((*playerIt)->getActionsLeft() >= 3)) {
                     return 0;
                 }
             } else {
@@ -132,6 +147,7 @@ void GameEngine::moveActor(Common::CubeCoordinate origin,
     } else
     {
         board_->moveActor(actorId, target);
+        getCurrentPlayer()->setActionsLeft(MAX_ACTIONS_PER_TURN);
     }
 
 
@@ -151,7 +167,7 @@ bool GameEngine::checkActorMovement(Common::CubeCoordinate origin,
     // (1)
     std::shared_ptr<Common::Hex> sourceHex = board_->getHex(origin);
     std::shared_ptr<Common::Hex> targetHex = board_->getHex(target);
-    if (sourceHex == nullptr || targetHex == nullptr) {
+    if ( (sourceHex == nullptr) || (targetHex == nullptr) ) {
         return false;
     }
 
@@ -193,6 +209,137 @@ bool GameEngine::checkActorMovement(Common::CubeCoordinate origin,
     return true;
 }
 
+int GameEngine::moveTransport(Common::CubeCoordinate origin,
+                              Common::CubeCoordinate target,
+                              int transportId)
+{
+    // Find current player
+    std::shared_ptr<Common::IPlayer> player = getCurrentPlayer();
+
+    // Current player not found
+    if (player == nullptr){
+        throw Common::IllegalMoveException("Illegal transport move:"
+                                           " no current player");
+    }
+
+    std::string movesStr = std::to_string(player->getActionsLeft());
+    int movesLeft = checkTransportMovement(origin, target, transportId,
+                                           movesStr);
+
+    if (movesLeft < 0) {
+        throw Common::IllegalMoveException("Illegal transport move");
+    } else
+    {
+        player->setActionsLeft(movesLeft);
+        board_->moveTransport(transportId, target);
+    }
+    return movesLeft;
+}
+
+int GameEngine::moveTransportWithSpinner(Common::CubeCoordinate origin,
+                                         Common::CubeCoordinate target,
+                                         int transportId,
+                                         std::string moves)
+{
+    int movesLeft = checkTransportMovement(origin, target, transportId,
+                                        moves);
+
+    if (movesLeft < 0) {
+        throw Common::IllegalMoveException("Illegal transport move");
+    } else
+    {
+        if (moves == "D") {
+            board_->getHex(origin)->giveTransport(transportId)->removePawns();
+            movesLeft=0;
+        }
+        board_->moveTransport(transportId, target);
+    }
+    if (movesLeft == 0 ){
+        getCurrentPlayer()->setActionsLeft(MAX_ACTIONS_PER_TURN);
+    }
+    return movesLeft;
+
+}
+
+int GameEngine::checkTransportMovement(Common::CubeCoordinate origin,
+                                       Common::CubeCoordinate target,
+                                       int transportId,
+                                       std::string moves)
+{
+    // Move is illegal (return -1), if:
+    //    (1) Source-, target-hex or actor doesn't exist
+    //    (2) Transport is not on source-hex
+    //    (3) Target-hex is not a water tile
+    //    (4) Move is diving and transport is not empty
+    //    (5) Target-hex is too far away
+    //    (6) Current player is not allowed to move this transport
+
+    // (1)
+    std::shared_ptr<Common::Hex> sourceHex = board_->getHex(origin);
+    std::shared_ptr<Common::Hex> targetHex = board_->getHex(target);
+    if (sourceHex == nullptr || targetHex == nullptr) {
+        return -1;
+    }
+
+    // (2)
+    std::shared_ptr<Common::Transport> transport =
+            sourceHex->giveTransport(transportId);
+    if (transport == nullptr) {
+        return -1;
+    }
+
+    // (3)
+    if (!targetHex->isWaterTile()) {
+        return -1;
+    }
+
+    bool distancePass = false;
+    unsigned int numMoves = 0;
+    unsigned int distance = 0;
+
+    //Checking if transport is empty
+    bool isTransportEmpty = transport->getMaxCapacity() == transport->getCapacity();
+    // (4)
+    if (moves == "D") {
+        distancePass = true;
+        numMoves = 3;
+    // (5)
+    } else {
+
+        try {
+            numMoves = std::stoi(moves);
+        } catch(std::exception &e) {
+            // Given moves-argument couldn't be translated to int
+            distancePass = false;
+            numMoves = 0;
+        }
+
+        distance = cubeCoordinateDistance(origin, target);
+        if (distance <= numMoves) {
+            //Check if player can move transport or transport is empty (6)
+            if ( transport->canMove( gameState_->currentPlayer() ) ||
+                 isTransportEmpty){
+                distancePass = true;
+            }
+        }
+    }
+    if (!distancePass){
+        return -1;
+    }
+
+    // If we got here, the move is legal.
+
+    // If current gamestate is SPINNING, movement is done in one go and no moves
+    // left needed.
+    if (currentGamePhase() == Common::GamePhase::SPINNING){
+        return 0;
+    }
+
+    // Otherwise, return amount of moves left.
+    int movesLeft = numMoves-distance;
+    return movesLeft;
+}
+
 std::string GameEngine::flipTile(Common::CubeCoordinate tileCoord)
 {
 
@@ -212,6 +359,10 @@ std::string GameEngine::flipTile(Common::CubeCoordinate tileCoord)
         throw Common::IllegalMoveException("Can not flip the coral tile.");
     }
 
+    // Check if islandPieces still has pieces tracked
+    if (islandPieces_.size() == 0) {
+        throw Common::IllegalMoveException("No flippable tiles left");
+    }
     // Noudatetaan poistojärjestystä: ranta, metsä, vuoristo.
 
     auto& currentLayer = islandPieces_.back();
@@ -288,6 +439,18 @@ Common::SpinnerLayout GameEngine::getSpinnerLayout() const
     return layout;
 }
 
+std::shared_ptr<Common::IPlayer> GameEngine::getCurrentPlayer()
+{
+    int id = currentPlayer();
+    auto end = playerVector_.end();
+    for (auto iter = playerVector_.begin(); iter != end; ++iter) {
+        if ((*iter)->getPlayerId() == id) {
+            return *iter;
+        }
+    }
+    return nullptr;
+}
+
 bool GameEngine::breadthFirst(Common::CubeCoordinate FromCoord, Common::CubeCoordinate ToCoord, unsigned int actionsLeft)
 {
 
@@ -307,7 +470,6 @@ bool GameEngine::breadthFirst(Common::CubeCoordinate FromCoord, Common::CubeCoor
 
         if(currentHex->getPawnAmount() < MAX_PAWNS_PER_HEX
                 || currentCoord == FromCoord){
-            //Tähän implementoidaan laivalla kulkeminen
             if(!(currentHex)->isWaterTile()){
                 unsigned int newIndex = 0;
                 while(newIndex < checkVector.size()){
@@ -318,7 +480,18 @@ bool GameEngine::breadthFirst(Common::CubeCoordinate FromCoord, Common::CubeCoor
                 }
                 currentIndex = newIndex;
 
-                std::vector<Common::CubeCoordinate> neighbourVector = currentHex->getNeighbourVector();
+                // Use only existing neighbours
+                std::vector<Common::CubeCoordinate> neighbourVector = {};
+                auto neighbourCoords = currentHex->getNeighbourVector();
+                auto neighboursEnd = neighbourCoords.end();
+                for (auto iter = neighbourCoords.begin(); iter != neighboursEnd;
+                     ++iter)
+                {
+                    if (board_->getHex(*iter) != nullptr) {
+                        neighbourVector.push_back(*iter);
+                    }
+                }
+
                 for(auto neighIt = neighbourVector.begin(); neighIt != neighbourVector.end(); neighIt++){
 
                     if((*neighIt) == ToCoord){
@@ -334,7 +507,6 @@ bool GameEngine::breadthFirst(Common::CubeCoordinate FromCoord, Common::CubeCoor
                         }
                         //finalRoadVector.push_back(FromCoord);
                         if(finalRoadVector.size() <= actionsLeft){
-                            //toimita mainwindowille siirtämistä varten infot, jos tehdään animaatiot
                             return true;
                         }
                         else{

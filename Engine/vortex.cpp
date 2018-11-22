@@ -7,6 +7,11 @@ Vortex::Vortex(int typeId):Actor(typeId)
 
 }
 
+void Vortex::move(std::shared_ptr<Hex> to)
+{
+    (void)to;//Vortex doesn't move
+}
+
 void Vortex::doAction()
 {
     hex_->clearAllFromNeightbours();

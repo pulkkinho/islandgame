@@ -6,7 +6,10 @@
 namespace Common{
 
 Transport::Transport( int id ):
-    id_(id){}
+    capacity_(0),
+    hex_(nullptr),
+    id_(id)
+{}
 
 Transport::~Transport(){}
 
@@ -29,7 +32,12 @@ void Transport::removePawn(std::shared_ptr<Pawn> pawn)
 
 int Transport::getCapacity() const
 {
-    return 1234;
+    return capacity_ - pawns_.size();
+}
+
+int Transport::getMaxCapacity() const
+{
+    return capacity_;
 }
 
 void Transport::addHex( std::shared_ptr<Common::Hex> hex )
@@ -46,6 +54,11 @@ std::shared_ptr<Hex> Transport::getHex()
     return hex_;
 }
 
+std::vector<std::shared_ptr<Pawn> > Transport::getPawnsInTransport()
+{
+    return pawns_;
+}
+
 bool Transport::isPawnInTransport(std::shared_ptr<Pawn> pawn)
 {
     return (std::find(pawns_.begin(),pawns_.end(),pawn) != pawns_.end());
@@ -54,6 +67,11 @@ bool Transport::isPawnInTransport(std::shared_ptr<Pawn> pawn)
 int Transport::getId()
 {
     return id_;
+}
+
+void Transport::removePawns()
+{
+    pawns_.clear();
 }
 
 }

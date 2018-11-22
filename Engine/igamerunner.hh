@@ -3,6 +3,7 @@
 
 #include "cubecoordinate.hh"
 #include "igamestate.hh"
+#include "iplayer.hh"
 #include "pawn.hh"
 
 #include <map>
@@ -42,6 +43,8 @@ public:
      * @param pawnId The id of the pawn to move
      * @return 0-3 (number of moves left)
      * @throw Common::IllegalMoveException Illegal move was attempted.
+     * @post The current player's actions left are decreased by the amount \n
+     * of distance the transport was moved.
      * @post Exception quarantee: strong
      */
     virtual int movePawn(CubeCoordinate origin,
@@ -56,12 +59,55 @@ public:
      * @param moves The distance in moves the actor can move to ( as returned
      * by IGameRunner::SpinWheel() )
      * @throw Common::IllegalMoveException Illegal move was attempted.
+     * @post currentPlayers's moves are restored(end of turn).
      * @post Exception quarantee: strong
      */
     virtual void moveActor(CubeCoordinate origin,
                            CubeCoordinate target,
                            int actorId,
                            std::string moves) = 0;
+
+    /**
+     * @brief moveTransport Moves transport to given target, if legal
+     * @param origin The coordinates of the hex to move from
+     * @param target The coordinates of the hex to move to
+     * @param transportId The id of the transport to move
+     * @return 0-3 (amount of moves left),
+     *  if movement is legal
+     * @note HOX: This version of the move function
+     * should be used when moving the transport
+     * during player's movement phase.
+     * @throw Common::IllegalMoveException Illegal move was attempted
+     * @post Exception quarantee: strong
+     * @post The current player's actions left are decreased by the amount \n
+     * of distance the transport was moved.
+     */
+    virtual int moveTransport(CubeCoordinate origin,
+                              CubeCoordinate target,
+                              int transportId) = 0;
+
+    /**
+     * @brief moveTransportWithSpinner Moves transport to given target, if legal
+     * @param origin The coordinates of the hex to move from
+     * @param target The coordinates of the hex to move to
+     * @param transportId The id of the transport to move
+     * @param moves The distance in moves the transport can move to ( as returned
+     * by IGameRunner::SpinWheel() )
+     * @return 0-3 (amount of moves left) if movement is legal
+     * @note HOX: some transports might be movable in the SPINNING-phase along
+     * with actors. They will then be moved in the same way as actors would.
+     * @throw Common::IllegalMoveException Illegal move was attempted
+     * @post If the transport "dives" (moves=="D"), the pawns are not moved \n
+     * with the transport, and are removed from the transport
+     * @post If the transports is moved "normally" the pawns are moved  \n
+     * with the transport
+     * @post If no moves are left, currentPlayers's moves are restored(end of turn).
+     * @post Exception quarantee: strong
+     */
+    virtual int moveTransportWithSpinner(CubeCoordinate origin,
+                               CubeCoordinate target,
+                               int transportId,
+                               std::string moves) = 0;
 
     /**
      * @brief checkPawnMovement tells if move is possible and the number of
@@ -100,7 +146,27 @@ public:
                                     Common::CubeCoordinate target,
                                     int actorId,
                                     std::string moves) = 0;
-
+    /**
+     * @brief checkTransportMovement tells if the move is legal.
+     * @details Transport move is illegal, if one of folowing holds:\n
+     * (1) Source-, target-hex or actor doesn't exist\n
+     * (2) Transport is not on source-hex\n
+     * (3) Target-hex is not a water tile\n
+     * (4) moves is diving ("D") and transport is not empty \n
+     * (5) Target-hex is too far away (specified by parameter moves)\n
+     * (6) Current player is not allowed to move the transport
+     *  (Transport::canMove())\n
+     * @param origin The origin of the proposed move.
+     * @param target The destination of the proposed move.
+     * @param transportId The identifier of the transport.
+     * @return gamephase is SPINNING: 0 if legal, -1 if illegal\n
+     * gamephase is MOVING: 0-3 (amount of moves left) if legal, -1 if illegal.
+     * @post Exception quarantee: nothrow
+     */
+    virtual int checkTransportMovement(Common::CubeCoordinate origin,
+                                    Common::CubeCoordinate target,
+                                    int transportId,
+                                    std::string moves) = 0;
     /**
      * @brief flipTile sinks the tile if possible and tells the actor on the bottom of the tile.
      * @param tileCoord Coordinate of the selected tile.
@@ -134,6 +200,15 @@ public:
     virtual SpinnerLayout getSpinnerLayout() const = 0 ;
 
     /**
+     * @brief getCurrentPlayer get pointer to the current player in turn.
+     * @return Common::IPlayer-pointer to the current player in turn, or
+     * nullptr if no player has the id set as current player
+     * (IGameState::currentPlayer())
+     * @post Exception guarantee: nothrow
+     */
+    virtual std::shared_ptr<Common::IPlayer> getCurrentPlayer() = 0;
+
+    /**
      * @brief currentPlayer tells the player in turn.
      * @return The player id in the turn.
      * @post Exception quarantee: nothrow
@@ -143,6 +218,7 @@ public:
     /**
      * @brief playerAmount tells the number of players in the game
      * @return The number of players in the game
+     * @post Exception guarantee: nothrow
      */
     virtual int playerAmount() const = 0;
 

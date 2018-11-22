@@ -17,16 +17,13 @@ std::string Dolphin::getTransportType()
 }
 
 void Dolphin::move(std::shared_ptr<Hex> to) {
-    std::vector<std::shared_ptr<Common::Pawn>>::const_iterator i;
+    std::vector<std::shared_ptr<Common::Pawn>>::iterator i;
     for( i = pawns_.begin(); i != pawns_.end(); ++i){
         to->addPawn(*i);
         hex_->removePawn(*i);
+        (*i)->setCoordinates(to->getCoordinates());
     }
     addHex(to);
-}
-
-int Dolphin::getCapacity() const{
-    return capacity_ - pawns_.size();
 }
 
 bool Dolphin::canMove( int playerId ) const {

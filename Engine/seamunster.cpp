@@ -15,7 +15,7 @@ void Seamunster::doAction()
 
 std::string Seamunster::getActorType() const
 {
-    return "sea munster";
+    return "seamunster";
 }
 
 
