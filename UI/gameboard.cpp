@@ -21,10 +21,9 @@ GameBoard::GameBoard():
     state = new GameState;
     std::shared_ptr<Common::IGameState> statePtr;
     std::vector<std::shared_ptr<Common::IPlayer>> players;
-    matti= std::make_shared<GameBoard>(*this);
-    runner = Common::Initialization::getGameRunner(matti,std::make_shared<GameState>(*state),players);
 
-    std::cout<<matti<<"massa mainioinen"<<std::endl;
+    matti= std::make_shared<GameBoard>(*this);
+
 
 
     int paattimaara = 0;
@@ -102,12 +101,12 @@ void GameBoard::addHex(std::shared_ptr<Common::Hex> newHex)
     int z = newHex.get()->getCoordinates().z;
     int x = newHex.get()->getCoordinates().x;
     int y = newHex.get()->getCoordinates().y;
-    std::cout << this << " this itte addhexis" << std::endl;
+    std::cout << this << "matti gb addhex" << std::endl;
 
 
-    Widget* super = new Widget(newHex, newHex.get()->getPieceType(), x, y, z, matti, newHex.get()->getCoordinates(), runner);
+
+    Widget* super = new Widget(newHex, newHex.get()->getPieceType(), x, y, z, this, newHex.get()->getCoordinates(), runner);
     sceneptr_->addItem(super);
-    std::cout << runner << std::endl;
 
 
 }
@@ -128,7 +127,7 @@ void GameBoard::addTransport(std::shared_ptr<Common::Transport> transport, Commo
             actorMap.insert(std::make_pair(transport.get()->getId(),coord));
             std::cout<< "paattikaara" << paattimaara << std::endl;
             paattimaara = paattimaara + 1;
-            Paatti* superpaatti = new Paatti(transport);
+            Paatti* superpaatti = new Paatti(transport, coord);
             sceneptr_->addItem(superpaatti);
 
         }
@@ -183,9 +182,20 @@ QGraphicsScene* GameBoard::getscene()
 }
 
 
- std::shared_ptr<Common::IGameRunner> GameBoard::getrunner()
+std::shared_ptr<Common::IGameRunner> GameBoard::getrunner()
 {
+
+    std::cout << this << "getrunneRII" << std::endl;
+    std::cout << runner << "getrunneRII" << std::endl;
   return runner;
+}
+
+void GameBoard::setrunner(std::shared_ptr<Common::IGameRunner> runneri)
+{
+  runner = runneri;
+
+  std::cout << this << "setrunner board" << std::endl;
+  std::cout << runner << " setrunner runner" << std::endl;
 }
 
 Common::CubeCoordinate GameBoard::findClickedHex(int clickX, int clickY)

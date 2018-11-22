@@ -14,7 +14,7 @@ class Paatti : public QGraphicsRectItem
 {
 
 public:
-    Paatti(std::shared_ptr<Common::Transport> Paatti,
+    Paatti(std::shared_ptr<Common::Transport> Paatti, Common::CubeCoordinate coord,
             QGraphicsRectItem *parent = NULL);
 
 protected:
@@ -26,6 +26,7 @@ protected:
 
 private:
      std::shared_ptr<Common::Transport> paattiptr;
+     Common::CubeCoordinate coord_;
 
 
 };

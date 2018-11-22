@@ -6,14 +6,15 @@
 #include <QGraphicsSceneMouseEvent>
 
 Widget::Widget(std::shared_ptr<Common::Hex> Hexi, std::string Tyyppi, int x, int y, int z,
-               std::shared_ptr<GameBoard> board, Common::CubeCoordinate coord, std::shared_ptr<Common::IGameRunner> runner,
+               GameBoard* board, Common::CubeCoordinate coord, std::shared_ptr<Common::IGameRunner> runner,
                QGraphicsPolygonItem *parent):
     QGraphicsPolygonItem(parent), hexptr(Hexi), tyyppi(Tyyppi), x_(x), y_(y),
     z_(z), board_(board), coord_(coord), runnerptr(runner)
 {
+
     Pressed = false;
     flip = false;
-    std::cout << runnerptr<<"    " <<runner << std::endl;
+    std::cout << board<<"    " <<"boordi"  << std::endl;
 }
 
 //void Widget::setRunner(std::shared_ptr<Common::IGameRunner> runner)
@@ -22,9 +23,8 @@ Widget::Widget(std::shared_ptr<Common::Hex> Hexi, std::string Tyyppi, int x, int
 //}
 void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 {
-    std::cout << board_<< " matti getrunner"<< std::endl;
 
-    std::cout << board_.get()->getrunner()<< " hexagon getrunner"<< std::endl;
+    std::cout << board_->getrunner()<< " hexagon getrunner"<< std::endl;
     if (Pressed == true){
 
         return;
@@ -61,9 +61,9 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                 tyyppi = "Water";
                 flip =  true;
                 Pressed = true;
-                std::cout << board_.get() << "on se nyt boorRRdkele" << std::endl;
-                std::cout << board_.get()->getrunner() << " onsentPRRKelerunneri ennen flippiä" << std::endl;
-                board_.get()->getrunner()->flipTile(coord_);
+                std::cout << board_ << "on se nyt boorRRdkele" << std::endl;
+                std::cout << board_->getrunner() << " onsentPRRKele runneri ennen flippiä" << std::endl;
+                board_->getrunner()->flipTile(coord_);
 
                 return;
                 //tarkistetaan, onko klikkaus hexin sisällä tarkastelemalla vielä

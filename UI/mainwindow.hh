@@ -10,6 +10,7 @@
 #include "igamestate.hh"
 #include "igameboard.hh"
 #include <igamerunner.hh>
+#include "gameboard.hh"
 
 
 namespace Ui {

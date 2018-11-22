@@ -64,6 +64,8 @@ public:
 
     bool wasClicked(std::shared_ptr<Common::Hex> hexi, int clickX, int clickY);
 
+    void setrunner(std::shared_ptr<Common::IGameRunner> runneri);
+
     std::shared_ptr<Common::IGameRunner> getrunner();
 
 //    bool arebeachleft();
