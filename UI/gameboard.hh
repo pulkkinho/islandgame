@@ -8,6 +8,9 @@
 #include <QGraphicsView>
 #include "igamerunner.hh"
 #include "cmath"
+#include "gamestate.hh"
+#include "gameengine.hh"
+#include "mainwindow.hh"
 
 #include "igameboard.hh"
 #include <iostream>
@@ -51,6 +54,8 @@ public:
 
     void drawHex(std::shared_ptr<Common::Hex> newHex);
 
+    GameState* getstate();
+
     QGraphicsScene* getscene();
 
     QPolygon getPolygon(std::shared_ptr<Common::Hex> newHex);signals:
@@ -80,12 +85,16 @@ private:
     std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>> HexMap;
     std::unordered_map<int, std::shared_ptr<Common::Pawn>> pawnMap;
     std::map<int, Common::CubeCoordinate> actorMap;
-    std::map<Common::CubeCoordinate, std::shared_ptr<QGraphicsItem>> polygonMap;
     std::vector<Common::CubeCoordinate> coordinates;
 
+    std::shared_ptr<GameBoard> matti;
+
     std::shared_ptr<Common::IGameRunner> runner;
+    //Logic::GameEngine runner;
 
     QGraphicsScene* sceneptr_;
+    GameState* state;
+    int paattimaara;
 
 
 

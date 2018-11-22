@@ -10,6 +10,7 @@
 #include "hexagon.hh"
 #include "paatti.hh"
 #include "mainwindow.hh"
+#include "gamestate.hh"
 
 
 GameBoard::GameBoard():
@@ -17,9 +18,16 @@ GameBoard::GameBoard():
 
 {
     sceneptr_ = new QGraphicsScene;
+    state = new GameState;
     std::shared_ptr<Common::IGameState> statePtr;
     std::vector<std::shared_ptr<Common::IPlayer>> players;
-    runner= Common::Initialization::getGameRunner(std::make_shared<GameBoard>(*this),statePtr,players);
+    matti= std::make_shared<GameBoard>(*this);
+    runner = Common::Initialization::getGameRunner(matti,std::make_shared<GameState>(*state),players);
+
+    std::cout<<matti<<"massa mainioinen"<<std::endl;
+
+
+    int paattimaara = 0;
 }
 
 GameBoard::~GameBoard()
@@ -52,39 +60,39 @@ std::shared_ptr<Common::Hex> GameBoard::getHex(Common::CubeCoordinate hexCoord) 
 
 void GameBoard::addPawn(int playerId, int pawnId)
 {
-    std::cout << "moimoi" << std::endl;
+    std::cout << "moimoi11" << std::endl;
 }
 
 void GameBoard::addPawn(int playerId, int pawnId, Common::CubeCoordinate coord)
 {
 
-    std::cout << "moimoi" << std::endl;
+    std::cout << "moimoi22" << std::endl;
 }
 
 void GameBoard::movePawn(int pawnId, Common::CubeCoordinate pawnCoord)
 {
-  std::cout << "moimoi" << std::endl;
+  std::cout << "moimoi33" << std::endl;
 }
 
 void GameBoard::removePawn(int pawnId)
 {
-    std::cout << "moimoi" << std::endl;
+    std::cout << "moimoi44" << std::endl;
 }
 
 void GameBoard::addActor(std::shared_ptr<Common::Actor> actor, Common::CubeCoordinate actorCoord)
 {
 
-    std::cout << "moimoi" << std::endl;
+    std::cout << "moimoi55" << std::endl;
 }
 
 void GameBoard::moveActor(int actorId, Common::CubeCoordinate actorCoord)
 {
-  std::cout << "moimoi" << std::endl;
+  std::cout << "moimoi66" << std::endl;
 }
 
 void GameBoard::removeActor(int actorId)
 {
-  std::cout << "moimoi" << std::endl;
+  std::cout << "moimoi77" << std::endl;
 }
 
 void GameBoard::addHex(std::shared_ptr<Common::Hex> newHex)
@@ -94,11 +102,19 @@ void GameBoard::addHex(std::shared_ptr<Common::Hex> newHex)
     int z = newHex.get()->getCoordinates().z;
     int x = newHex.get()->getCoordinates().x;
     int y = newHex.get()->getCoordinates().y;
-    Widget* super = new Widget(newHex, newHex.get()->getPieceType(), x, y, z, *this, newHex.get()->getCoordinates(), runner);
+    std::cout << this << " this itte addhexis" << std::endl;
+
+
+    Widget* super = new Widget(newHex, newHex.get()->getPieceType(), x, y, z, matti, newHex.get()->getCoordinates(), runner);
     sceneptr_->addItem(super);
     std::cout << runner << std::endl;
 
 
+}
+
+GameState* GameBoard::getstate()
+{
+  return state;
 }
 
 void GameBoard::addTransport(std::shared_ptr<Common::Transport> transport, Common::CubeCoordinate coord)
@@ -107,16 +123,10 @@ void GameBoard::addTransport(std::shared_ptr<Common::Transport> transport, Commo
 
     int paattimaara = 0;
     for(auto untamo : HexMap){
-        std::cout << untamo.second.get()->getCoordinates().z << std::endl;
-        std::cout << std::endl;
-        std::cout << std::endl;
-        std::cout << std::endl;
 
-       // std::cout << coord << std::endl;
-
-        if( untamo.first == coord){
+        if( untamo.second.get()->getCoordinates().x == coord.x && untamo.second.get()->getCoordinates().y == coord.y){
             actorMap.insert(std::make_pair(transport.get()->getId(),coord));
-            std::cout << paattimaara << std::endl;
+            std::cout<< "paattikaara" << paattimaara << std::endl;
             paattimaara = paattimaara + 1;
             Paatti* superpaatti = new Paatti(transport);
             sceneptr_->addItem(superpaatti);
@@ -124,14 +134,15 @@ void GameBoard::addTransport(std::shared_ptr<Common::Transport> transport, Commo
         }
     }
 }
+
 void GameBoard::moveTransport(int id, Common::CubeCoordinate coord)
 {
-  std::cout << "moimoi" << std::endl;
+  std::cout << "moimoi1" << std::endl;
 }
 
 void GameBoard::removeTransport(int id)
 {
-    std::cout << "moimoi" << std::endl;
+    std::cout << "moimoi2" << std::endl;
 }
 
 void GameBoard::drawHex(std::shared_ptr<Common::Hex> newHex)
