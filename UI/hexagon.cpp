@@ -6,17 +6,30 @@
 #include <QGraphicsSceneMouseEvent>
 
 Widget::Widget(std::shared_ptr<Common::Hex> Hexi, std::string Tyyppi, int x, int y, int z,
-               GameBoard board, Common::CubeCoordinate coord, std::shared_ptr<Common::IGameRunner> runner,
+               std::shared_ptr<GameBoard> board, Common::CubeCoordinate coord, std::shared_ptr<Common::IGameRunner> runner,
                QGraphicsPolygonItem *parent):
     QGraphicsPolygonItem(parent), hexptr(Hexi), tyyppi(Tyyppi), x_(x), y_(y),
     z_(z), board_(board), coord_(coord), runnerptr(runner)
 {
     Pressed = false;
-    flip = true;
+    flip = false;
+    std::cout << runnerptr<<"    " <<runner << std::endl;
 }
+
+//void Widget::setRunner(std::shared_ptr<Common::IGameRunner> runner)
+//{
+//    runnerptr = runner;
+//}
 void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 {
+    std::cout << board_<< " matti getrunner"<< std::endl;
 
+    std::cout << board_.get()->getrunner()<< " hexagon getrunner"<< std::endl;
+    if (Pressed == true){
+
+        return;
+    }
+    std::cout << "kaarna" << std::endl;
     int y = x_;
     int x = 2 * z_ + x_;
 
@@ -28,15 +41,12 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
     int a = sqrt(3)*(s/2);
     QGraphicsItem::mouseDoubleClickEvent(event);
 
-    if (Pressed == false){
-    Pressed = true;}
-    else {Pressed = false;}
+
     QPoint clickPosition = event->scenePos().toPoint();
-    std::cout << clickPosition.x() << " " << clickPosition.y() << std::endl;
     QPoint keke(clickPosition.x(),clickPosition.y());
 
         if(poly.containsPoint(keke,Qt::WindingFill)){
-            int kk = 1/sqrt(3);
+            if(flip == false){
             //tarkistetaan onko klikkaus hexin ympärille piirretyn kuvitteellisen suorakulmion sisällä
             if(poly[0].y() < clickPosition.y() && poly[3].y() > clickPosition.y() && poly[1].x()-2 > clickPosition.x() &&
                     poly[5].x()+2 < clickPosition.x()){
@@ -46,18 +56,16 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                 }
                 if(tyyppi == "Coral"){
                     std::cout << "KORALLIRIUTTA?" << std::endl;
-                    Pressed = false;
                     return;
                 }
-                std::cout << "lampeen?" << std::endl;
-                Pressed = true;
                 tyyppi = "Water";
-                //Common::Hex masa;
-                //masa = hexptr.get();
-                //board_->getrunner().get()->flipTile(hexptr.get()->getCoordinates());
-                std::cout << runnerptr.get() << std::endl;
-                runnerptr.get()->flipTile(coord_);
-                update();
+                flip =  true;
+                Pressed = true;
+                std::cout << board_.get() << "on se nyt boorRRdkele" << std::endl;
+                std::cout << board_.get()->getrunner() << " onsentPRRKelerunneri ennen flippiä" << std::endl;
+                board_.get()->getrunner()->flipTile(coord_);
+
+                return;
                 //tarkistetaan, onko klikkaus hexin sisällä tarkastelemalla vielä
                 //klikkauksen y-koordinaatin suhdetta hexin vinojen sivujen
                 //muodostamien suorien yhtälöihin.
@@ -72,11 +80,10 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
             //            tyyppi = "Water";
             //            update();
             //
-            //}
+            }
+
         }else Pressed = false;
-            update();
     } else Pressed = false;
-        update();
 }
 
 QRectF Widget::boundingRect() const{
@@ -136,7 +143,7 @@ void Widget::paint(QPainter *painter,
     }
     Brushi.setStyle(Qt::SolidPattern);
 
-    if (Pressed == true && flip == true){
+    if (Pressed == true){
     Brushi.setColor(Qt::blue);
     }
     this->setBrush(Brushi);

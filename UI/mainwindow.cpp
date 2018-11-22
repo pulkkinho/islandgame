@@ -10,11 +10,12 @@ MainWindow::MainWindow( QWidget *parent) :
 {
 
     GameBoard peliloota;
+    std::cout << peliloota.getrunner() << "mainwindow" << std::endl;
     view_.setScene(peliloota.getscene());
     std::shared_ptr<Common::IGameState> statePtr;
     std::vector<std::shared_ptr<Common::IPlayer>> players;
 
-    std::shared_ptr<Common::IGameRunner> peli = Common::Initialization::getGameRunner(std::make_shared<GameBoard>(peliloota),statePtr,players);
+    //std::shared_ptr<Common::IGameRunner> peli = Common::Initialization::getGameRunner(std::make_shared<GameBoard>(peliloota),statePtr,players);
 
     setCentralWidget(&view_);
     setMinimumHeight(500);
