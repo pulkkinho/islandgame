@@ -11,6 +11,7 @@
 #include "igameboard.hh"
 #include <igamerunner.hh>
 #include "gameboard.hh"
+#include "player.hh"
 
 
 namespace Ui {

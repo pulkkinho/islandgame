@@ -20,6 +20,7 @@ SOURCES += main.cc \
     scene.cpp \
     hexagon.cpp \
     paatti.cpp \
+    player.cpp \
     gamestate.cpp
 
 HEADERS  += \

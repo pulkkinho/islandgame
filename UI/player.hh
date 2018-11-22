@@ -27,7 +27,6 @@ private:
     int playerID_;
     int actionsLeft_;
     int gamepoints_;
-    std::shared_ptr<Common::IPlayer> playerptr;
 };
 
 #endif // PLAYER_HH

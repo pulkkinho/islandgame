@@ -37,8 +37,4 @@ Player::Player():
      return actionsLeft_;
  }
 
- std::shared_ptr<Common::IPlayer> Player::getplayerptr()
- {
-     return playerptr;
- }
 

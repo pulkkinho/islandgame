@@ -10,13 +10,24 @@ MainWindow::MainWindow( QWidget *parent) :
 {
 
     GameBoard peliloota;
-    view_.setScene(peliloota.getscene());
-    std::shared_ptr<Common::IGameState> statePtr;
-    std::vector<std::shared_ptr<Common::IPlayer>> players;
-
     std::shared_ptr<GameBoard> boardptr = std::make_shared<GameBoard>(peliloota);
+    view_.setScene(peliloota.getscene());
+
+    GameState gamesteitti;
+    std::shared_ptr<GameState> statePtr = std::make_shared<GameState>(gamesteitti);
+
+    std::vector<std::shared_ptr<Common::IPlayer>> pelaajavektori;
+    int x = 0;
+    while(x<4){
+        Player peluri;
+        std::shared_ptr<Player> playerptr = std::make_shared<Player>(peluri);
+        pelaajavektori.push_back(playerptr);
+        x=x+1;
+
+    }
+
     std::cout << boardptr << " mainwindow boardptr" << std::endl;
-    std::shared_ptr<Common::IGameRunner> peli = Common::Initialization::getGameRunner(boardptr,statePtr,players);
+    std::shared_ptr<Common::IGameRunner> peli = Common::Initialization::getGameRunner(boardptr,statePtr,pelaajavektori);
     boardptr.get()->setrunner(peli);
 
 

@@ -16,6 +16,8 @@ public:
     virtual void changeGamePhase(Common::GamePhase nextPhase);
 
     virtual void changePlayerTurn(int nextPlayer);
+
+private:
 };
 
 #endif // GAMESTATE_HH
