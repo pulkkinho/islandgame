@@ -24,9 +24,14 @@ void configurationWindow::accept()
     QDialog::accept();
     emit sendvalue(ui->PlayerSpinBox->value());
 
+
 }
 
 void configurationWindow::reject()
 {
     QDialog::reject();
+}
+
+int configurationWindow::getvalue(){
+    return ui->PlayerSpinBox->value();
 }

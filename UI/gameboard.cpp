@@ -18,11 +18,6 @@ GameBoard::GameBoard():
 
 {
     sceneptr_ = new QGraphicsScene;
-    //state = new GameState;
-    //std::shared_ptr<Common::IGameState> statePtr;
-    //std::vector<std::shared_ptr<Common::IPlayer>> players;
-
-    //matti= std::make_shared<GameBoard>(*this);
 
 
 

@@ -15,6 +15,7 @@ public:
     explicit configurationWindow(QWidget *parent = 0);
     ~configurationWindow();
 
+    int getvalue();
 signals:
 
     void sendvalue(int count);
