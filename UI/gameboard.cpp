@@ -11,6 +11,7 @@
 #include "paatti.hh"
 #include "mainwindow.hh"
 #include "gamestate.hh"
+#include "kraken.hh"
 
 
 GameBoard::GameBoard():
@@ -54,12 +55,24 @@ std::shared_ptr<Common::Hex> GameBoard::getHex(Common::CubeCoordinate hexCoord) 
 void GameBoard::addPawn(int playerId, int pawnId)
 {
     std::cout << "moimoi11" << std::endl;
+
 }
 
 void GameBoard::addPawn(int playerId, int pawnId, Common::CubeCoordinate coord)
 {
+    std::cout << "Kanamo" << std::endl;
 
-    std::cout << "moimoi22" << std::endl;
+   int paattimaara = 0;
+           //Pawnitem nappu;
+           //std::shared_ptr<Common::Pawn> pawnptr = std::make_shared<Common::Pawn>(nappu);
+           //pawnptr.get()->setId(pawnId,playerId);
+           //pawnMap.insert(std::make_pair(playerId,pawnptr));
+           std::cout<< "kuuupponen" << paattimaara << std::endl;
+           paattimaara = paattimaara + 1;
+
+           Pawnitem* apina = new Pawnitem(pawnId,coord);
+           sceneptr_->addItem(apina);
+
 }
 
 void GameBoard::movePawn(int pawnId, Common::CubeCoordinate pawnCoord)
@@ -74,8 +87,18 @@ void GameBoard::removePawn(int pawnId)
 
 void GameBoard::addActor(std::shared_ptr<Common::Actor> actor, Common::CubeCoordinate actorCoord)
 {
+    std::cout << "lutikka" << std::endl;
 
-    std::cout << "moimoi55" << std::endl;
+
+   for(auto untamo : HexMap){
+
+       if( untamo.second.get()->getCoordinates().x == actorCoord.x && untamo.second.get()->getCoordinates().y == actorCoord.y){
+          // actorMap.insert(std::make_pair(transport.get()->getId(),coord));
+           kraken* superpaatti = new kraken(actor, actorCoord);
+           sceneptr_->addItem(superpaatti);
+
+       }
+   }
 }
 
 void GameBoard::moveActor(int actorId, Common::CubeCoordinate actorCoord)
@@ -183,6 +206,16 @@ std::shared_ptr<Common::IGameRunner> GameBoard::getrunner()
     std::cout << runner << "getrunneRII" << std::endl;
   return runner;
 }
+
+std::unordered_map<int, std::shared_ptr<Common::Pawn>> GameBoard::getpawnmap(){
+    return pawnMap;
+}
+
+void GameBoard::addtopawnmap(int id, std::shared_ptr<Common::Pawn> pawnptr){
+    pawnMap.insert(std::make_pair(id,pawnptr));
+}
+
+
 
 void GameBoard::setrunner(std::shared_ptr<Common::IGameRunner> runneri)
 {

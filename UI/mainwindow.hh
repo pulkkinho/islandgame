@@ -12,7 +12,7 @@
 #include <igamerunner.hh>
 #include "gameboard.hh"
 #include "player.hh"
-
+#include "pawnitem.hh"
 
 namespace Ui {
 class MainWindow;
@@ -32,6 +32,10 @@ private:
     int kuupo;
     QGraphicsView view_;
     std::vector<std::shared_ptr<Common::IPlayer>> pelaajavihtori;
+    Player* player_;
+ //   Pawnitem* pawn_;
+    Common::Pawn pawn_;
+
 
 };
 

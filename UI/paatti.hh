@@ -10,22 +10,20 @@
 #include <QGraphicsItem>
 #include <QObject>
 
-class Paatti : public QGraphicsRectItem
+class Paatti : public QGraphicsPixmapItem
 {
 
 public:
-    Paatti(std::shared_ptr<Common::Transport> Paatti, Common::CubeCoordinate coord,
-            QGraphicsRectItem *parent = NULL);
+    Paatti(std::shared_ptr<Common::Transport> boat, Common::CubeCoordinate coord, QGraphicsItem* parent =NULL);
 
-protected:
-    void paint(QPainter *painter,
-                const QStyleOptionGraphicsItem *option,
-                QWidget *widget);
-    QRectF boundingRect() const;
+    void updateGraphics();
+
+
+
 
 
 private:
-     std::shared_ptr<Common::Transport> paattiptr;
+     std::shared_ptr<Common::Transport> paatti_;
      Common::CubeCoordinate coord_;
 
 

@@ -22,6 +22,11 @@ Player::Player():
      return playerID_;
  }
 
+ int Player::setPlayerId(int ID)
+ {
+     playerID_ =  ID;
+ }
+
  void Player::setActionsLeft(unsigned int actionsLeft)
  {
      //tekeekö itsestään nämä?

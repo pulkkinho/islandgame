@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>vene.png</file>
+        <file>pawn.png</file>
+        <file>dolphin.png</file>
+        <file>vortex.png</file>
+        <file>shark.png</file>
+        <file>kraken.png</file>
+        <file>monster.png</file>
+    </qresource>
+</RCC>

@@ -14,6 +14,8 @@ public:
 
   virtual int getPlayerId() const;
 
+  virtual int setPlayerId(int ID) ;
+
 
   virtual void setActionsLeft(unsigned int actionsLeft);
 

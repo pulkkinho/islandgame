@@ -68,6 +68,16 @@ public:
 
     std::shared_ptr<Common::IGameRunner> getrunner();
 
+    std::unordered_map<int, std::shared_ptr<Common::Pawn>> getpawnmap();
+
+    void addtopawnmap(int,std::shared_ptr<Common::Pawn>);
+
+   // std::unordered_map<int, std::shared_ptr<Common::Pawn>> getactormap();
+   //
+   // void addtoactormap(int,std::shared_ptr<Common::Pawn>);
+
+
+
 //    bool arebeachleft();
 //
 //    bool areforestleft();

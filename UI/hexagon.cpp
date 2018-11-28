@@ -58,6 +58,22 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                     std::cout << "KORALLIRIUTTA?" << std::endl;
                     return;
                 }
+
+              //  for(auto untamo : HexMap){
+              //
+              //      if( untamo.second.get()->getCoordinates().x == actorCoord.x && untamo.second.get()->getCoordinates().y == actorCoord.y){
+              //         // actorMap.insert(std::make_pair(transport.get()->getId(),coord));
+              //          kraken* superpaatti = new kraken(actor, actorCoord);
+              //          sceneptr_->addItem(superpaatti);
+
+
+                std::cout <<board_->getpawnmap().size()<< "miuuuuu" << std::endl;
+                std::cout <<board_<< "mur" << std::endl;
+
+                for(auto untamo : board_->getpawnmap())
+                {
+                std::cout <<untamo.first<<" KILJUA "<< untamo.second.get() << "toivotaantoivotaan" << std::endl;}
+
                 tyyppi = "Water";
                 flip =  true;
                 Pressed = true;
