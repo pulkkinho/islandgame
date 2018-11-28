@@ -15,7 +15,7 @@ class Pawnitem : public QGraphicsPixmapItem
 {
 
 public:
-    Pawnitem(int ID, Common::CubeCoordinate coord, QGraphicsItem* parent =NULL);
+    Pawnitem(int ID, Common::CubeCoordinate coord, std::shared_ptr<Common::Hex>, QGraphicsItem* parent =NULL);
 
     void updateGraphics();
 
@@ -26,6 +26,7 @@ public:
 private:
      int pawnID_;
      Common::CubeCoordinate coord_;
+     std::shared_ptr<Common::Hex> hexi_;
 
      int playerId_;
 

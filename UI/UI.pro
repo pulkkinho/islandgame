@@ -17,7 +17,6 @@ SOURCES += main.cc \
     mainwindow.cpp \
     configurationwindow.cpp \
     gameboard.cpp \
-    scene.cpp \
     hexagon.cpp \
     paatti.cpp \
     player.cpp \
@@ -31,7 +30,6 @@ HEADERS  += \
     gamestate.hh \
     mainwindow.hh \
     configurationwindow.hh \
-    scene.hh \
     hexagon.hh \
     paatti.hh \
     pawnitem.hh \

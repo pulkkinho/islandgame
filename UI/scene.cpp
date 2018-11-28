@@ -36,7 +36,6 @@ void Scene::click(int clickX, int clickY)
     //    }
     //    }
    // std::cout << "Click coordinates: x=" << clickX << " y=" << clickY << std::endl;
-    std::cout << board_->findClickedHex(clickX,clickY).x;
                  //.get()->getCoordinates().x << std::endl;
   //  runnerptr_.get()->flipTile(board_->findClickedHex(clickX,clickY).get()->getCoordinates());
 

@@ -14,22 +14,15 @@ Widget::Widget(std::shared_ptr<Common::Hex> Hexi, std::string Tyyppi, int x, int
 
     Pressed = false;
     flip = false;
-    std::cout << board<<"    " <<"boordi"  << std::endl;
 }
 
-//void Widget::setRunner(std::shared_ptr<Common::IGameRunner> runner)
-//{
-//    runnerptr = runner;
-//}
 void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 {
 
-    std::cout << board_->getrunner()<< " hexagon getrunner"<< std::endl;
     if (Pressed == true){
 
         return;
     }
-    std::cout << "kaarna" << std::endl;
     int y = x_;
     int x = 2 * z_ + x_;
 
@@ -47,55 +40,20 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 
         if(poly.containsPoint(keke,Qt::WindingFill)){
             if(flip == false){
-            //tarkistetaan onko klikkaus hexin ympärille piirretyn kuvitteellisen suorakulmion sisällä
             if(poly[0].y() < clickPosition.y() && poly[3].y() > clickPosition.y() && poly[1].x()-2 > clickPosition.x() &&
                     poly[5].x()+2 < clickPosition.x()){
                 if(tyyppi == "Water"){
-                    std::cout << "KONEKIVÄÄRI?" << std::endl;
 
                 }
                 if(tyyppi == "Coral"){
-                    std::cout << "KORALLIRIUTTA?" << std::endl;
                     return;
                 }
-
-              //  for(auto untamo : HexMap){
-              //
-              //      if( untamo.second.get()->getCoordinates().x == actorCoord.x && untamo.second.get()->getCoordinates().y == actorCoord.y){
-              //         // actorMap.insert(std::make_pair(transport.get()->getId(),coord));
-              //          kraken* superpaatti = new kraken(actor, actorCoord);
-              //          sceneptr_->addItem(superpaatti);
-
-
-                std::cout <<board_->getpawnmap().size()<< "miuuuuu" << std::endl;
-                std::cout <<board_<< "mur" << std::endl;
-
-                for(auto untamo : board_->getpawnmap())
-                {
-                std::cout <<untamo.first<<" KILJUA "<< untamo.second.get() << "toivotaantoivotaan" << std::endl;}
 
                 tyyppi = "Water";
                 flip =  true;
                 Pressed = true;
-                std::cout << board_ << "on se nyt boorRRdkele" << std::endl;
-                std::cout << board_->getrunner() << " onsentPRRKele runneri ennen flippiä" << std::endl;
                 board_->getrunner()->flipTile(coord_);
-
                 return;
-                //tarkistetaan, onko klikkaus hexin sisällä tarkastelemalla vielä
-                //klikkauksen y-koordinaatin suhdetta hexin vinojen sivujen
-                //muodostamien suorien yhtälöihin.
-                //Suoran yhtälö y = kk*x - kk*x0 +y0,
-                //missä x = clickPosition.x(), y = clickPosition.y(), x0 ja y0 ovat QPolygonin pisteitä
-            //    if(clickPosition.y() > (kk * clickPosition.x() + kk * (- poly[5].x()) + poly[5].y()) &&
-            //       clickPosition.y() > (- kk * clickPosition.x() - kk * (- poly[1].x()) + poly[1].y()) &&
-            //       clickPosition.y() < (kk * clickPosition.x() + kk * (- poly[2].x()) + poly[2].y()) &&
-            //       clickPosition.y() < (- kk * clickPosition.x() - kk * (- poly[3].x()) + poly[3].y())){
-            //            std::cout << "Oi Suomi on!" << std::endl;
-            //            Pressed = true;
-            //            tyyppi = "Water";
-            //            update();
-            //
             }
 
         }else Pressed = false;

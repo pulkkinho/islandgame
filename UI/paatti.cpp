@@ -15,7 +15,6 @@ Paatti::Paatti(std::shared_ptr<Common::Transport> Paatti, Common::CubeCoordinate
 {
 
     Paatti.get()->getTransportType();
-    std::cout<<    Paatti.get()->getTransportType()<<"WUHUUUUU"<<std::endl;
     updateGraphics();
 
 }
@@ -44,14 +43,6 @@ void Paatti::updateGraphics()
     int s = 20;
     x= x * 16 * s / 20;
     y= y * s * 1.5;
-
-
-   // this << QPoint(q-x,w-s-y);
-   // this << QPoint(q+a-x,w-s/2-y);
-   // this << QPoint(q+a-x,w+s/2-y);
-   // this << QPoint(q-x,w+s-y);
-   // this << QPoint(q-a-x,w+s/2-y);
-   // this << QPoint(q-a-x,w-s/2-y);
     this->setPos(q-x-sivuskaalaaja,w-s-y+korkeusskaalaaja);
 }
 

@@ -70,6 +70,8 @@ public:
 
     std::unordered_map<int, std::shared_ptr<Common::Pawn>> getpawnmap();
 
+    std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>> getHexMap();
+
     void addtopawnmap(int,std::shared_ptr<Common::Pawn>);
 
    // std::unordered_map<int, std::shared_ptr<Common::Pawn>> getactormap();

@@ -14,7 +14,6 @@ kraken::kraken(std::shared_ptr<Common::Actor> krakeni, Common::CubeCoordinate co
 
 {
 
-    std::cout<<    kraken_.get()->getActorType()<<"WOLOLOOOOO"<<std::endl;
     kraken_.get()->getActorType();
     updateGraphics();
 }
