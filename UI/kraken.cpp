@@ -26,23 +26,23 @@ void kraken::updateGraphics()
 
     if(kraken_.get()->getActorType()=="seamunster"){
         QPixmap laivunen("://monster.png");
-        setPixmap(laivunen.scaledToHeight(35));
-        korkeusskaalaaja = 2;
-        sivuskaalaaja = 18;
+        setPixmap(laivunen.scaledToHeight(25));
+        korkeusskaalaaja = 5;
+        sivuskaalaaja = 15;
 
     }
 
     if(kraken_.get()->getActorType()=="vortex"){
         QPixmap laivunen("://vortex.png");
-        setPixmap(laivunen.scaledToHeight(45));
-        sivuskaalaaja = 22;
-        korkeusskaalaaja=-2;
+        setPixmap(laivunen.scaledToHeight(10));
+        sivuskaalaaja = 15;
+        korkeusskaalaaja=12;
 
     }
 
     if(kraken_.get()->getActorType()=="shark"){
         QPixmap laivunen("://shark.png");
-        setPixmap(laivunen.scaledToHeight(20));
+        setPixmap(laivunen.scaledToHeight(25));
         sivuskaalaaja = 18;
         korkeusskaalaaja = 10;
 
@@ -50,8 +50,8 @@ void kraken::updateGraphics()
 
     if(kraken_.get()->getActorType()=="kraken"){
         QPixmap laivunen("://kraken.png");
-        setPixmap(laivunen.scaledToHeight(22));
-        sivuskaalaaja = 16;
+        setPixmap(laivunen.scaledToHeight(30));
+        sivuskaalaaja = 10;
 
     }
     int y = coord_.x;

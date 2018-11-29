@@ -27,13 +27,14 @@ void Paatti::updateGraphics()
 
     if(paatti_.get()->getTransportType()=="dolphin"){
         QPixmap laivunen("://dolphin.png");
-        setPixmap(laivunen.scaledToHeight(30));
-        sivuskaalaaja = 10;
+        setPixmap(laivunen.scaledToHeight(20));
 
     }
     else{
         QPixmap laivunen("://vene.png");
-        setPixmap(laivunen.scaledToHeight(20));
+        setPixmap(laivunen.scaledToHeight(30));
+        sivuskaalaaja = 20;
+
     }
     int y = coord_.x;
     int x = 2 * coord_.z + coord_.x;

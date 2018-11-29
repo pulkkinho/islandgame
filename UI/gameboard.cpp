@@ -58,7 +58,7 @@ void GameBoard::addPawn(int playerId, int pawnId)
 
 void GameBoard::addPawn(int playerId, int pawnId, Common::CubeCoordinate coord)
 {
-           Pawnitem* apina = new Pawnitem(pawnId,coord,HexMap.at(coord));
+           Pawnitem* apina = new Pawnitem(playerId,pawnId,coord,HexMap.at(coord));
            HexMap.at(coord).get()->addPawn(pawnMap.at(pawnId));
            sceneptr_->addItem(apina);
 
