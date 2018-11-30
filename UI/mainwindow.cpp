@@ -17,6 +17,7 @@ MainWindow::MainWindow( QWidget *parent) :
     std::shared_ptr<GameBoard> boardptr = std::make_shared<GameBoard>(peliloota);
     view_.setScene(peliloota.getscene());
 
+
     GameState gamesteitti;
     std::shared_ptr<GameState> statePtr = std::make_shared<GameState>(gamesteitti);
 
@@ -36,6 +37,14 @@ MainWindow::MainWindow( QWidget *parent) :
 
     std::shared_ptr<Common::IGameRunner> peli = Common::Initialization::getGameRunner(boardptr,statePtr,pelaajavektori);
 
+
+    std::shared_ptr<Common::SpinnerLayout> wheel(nullptr);
+
+    wheel = std::make_shared<Common::SpinnerLayout>();
+
+    boardptr.get()->setwheel(wheel);
+
+    boardptr.get()->drawwheel(wheel);
 
     while(x<kopo.getvalue()){
 
@@ -104,6 +113,7 @@ MainWindow::MainWindow( QWidget *parent) :
         x=x+1;
     }
     boardptr.get()->setrunner(peli);
+    statePtr.get()->setrunner(peli);
 
 
     setCentralWidget(&view_);

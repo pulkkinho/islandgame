@@ -52,6 +52,7 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                 tyyppi = "Water";
                 flip =  true;
                 Pressed = true;
+
                 board_->getrunner()->flipTile(coord_);
                 return;
             }

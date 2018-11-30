@@ -13,8 +13,8 @@ void Pawnitem::updateGraphics()
 {
 
     int nappuMaaraHexissa = hexi_.get()->getPawnAmount() + 1;
-    int sivuskaalaaja = 20 - nappuMaaraHexissa * 10;
-    int korkeusskaalaaja = nappuMaaraHexissa * 8;
+    int sivuskaalaaja = 24 - nappuMaaraHexissa * 10;
+    int korkeusskaalaaja = nappuMaaraHexissa * 6;
     if(playerId_ == 1){
         QPixmap apuna("://pawn1.png");
         setPixmap(apuna.scaledToHeight(15));

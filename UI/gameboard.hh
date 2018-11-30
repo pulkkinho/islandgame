@@ -52,7 +52,9 @@ public:
 
     virtual void removeTransport(int id);
 
-    void drawHex(std::shared_ptr<Common::Hex> newHex);
+    void drawwheel(std::shared_ptr<Common::SpinnerLayout> gamewheel);
+
+    void setwheel(std::shared_ptr<Common::SpinnerLayout> wheel);
 
     GameState* getstate();
 
@@ -73,6 +75,7 @@ public:
     std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>> getHexMap();
 
     void addtopawnmap(int,std::shared_ptr<Common::Pawn>);
+
 
    // std::unordered_map<int, std::shared_ptr<Common::Pawn>> getactormap();
    //
@@ -104,11 +107,13 @@ private:
     std::shared_ptr<GameBoard> matti;
 
     std::shared_ptr<Common::IGameRunner> runner;
+
+    std::shared_ptr<Common::SpinnerLayout> wheel_;
+
     //Logic::GameEngine runner;
 
     QGraphicsScene* sceneptr_;
     GameState* state;
-    int paattimaara;
 
 
 

@@ -22,7 +22,8 @@ SOURCES += main.cc \
     player.cpp \
     gamestate.cpp \
     pawnitem.cpp \
-    kraken.cpp
+    kraken.cpp \
+    spinnerwheel.cpp
 
 HEADERS  += \
     gameboard.hh \
@@ -33,7 +34,8 @@ HEADERS  += \
     hexagon.hh \
     paatti.hh \
     pawnitem.hh \
-    kraken.hh
+    kraken.hh \
+    spinnerwheel.hh
 
 FORMS += \
     configurationwindow.ui\

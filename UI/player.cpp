@@ -4,6 +4,8 @@
 #include "QGraphicsPolygonItem"
 #include "QGraphicsScene"
 #include "QPainter"
+#include "iostream"
+
 
 
 
@@ -33,6 +35,7 @@ Player::Player():
     // maalla actionsLeft = actionsLeft -1;
     // uiden actionsLeft = actionsLeft - actionsLeft;
     // banaanin syötyä ei muutu
+     std::cout<<"WOHOOOOOOOOOOOOOOOO"<<std::endl;
 
     actionsLeft_ = actionsLeft;
  }

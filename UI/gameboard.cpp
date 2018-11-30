@@ -11,6 +11,9 @@
 #include "mainwindow.hh"
 #include "gamestate.hh"
 #include "kraken.hh"
+#include "spinnerwheel.hh"
+#include <stdio.h>
+
 
 
 GameBoard::GameBoard():
@@ -31,7 +34,14 @@ GameBoard::~GameBoard()
 
 int GameBoard::checkTileOccupation(Common::CubeCoordinate tileCoord) const
 {
-    return 0;
+    if(HexMap.at(tileCoord).get() == 0){
+        return -1;
+    }
+    else{
+        return HexMap.at(tileCoord).get()->getPawnAmount();
+
+    }
+
 }
 
 bool GameBoard::isWaterTile(Common::CubeCoordinate tileCoord) const
@@ -71,21 +81,27 @@ void GameBoard::movePawn(int pawnId, Common::CubeCoordinate pawnCoord)
 
 void GameBoard::removePawn(int pawnId)
 {
-    std::cout << "moimoi44" << std::endl;
+    // toimiiks?
+
+    for(std::unordered_map<int, std::shared_ptr<Common::Pawn>>::iterator it = pawnMap.begin(); it != pawnMap.end(); it++)
+    {
+        if((it->first) == pawnId)
+        {
+            pawnMap.erase(it);
+            break;
+        }
+    }
+
 }
 
 void GameBoard::addActor(std::shared_ptr<Common::Actor> actor, Common::CubeCoordinate actorCoord)
 {
-
-
-
    for(auto untamo : HexMap){
 
        if( untamo.second.get()->getCoordinates().x == actorCoord.x && untamo.second.get()->getCoordinates().y == actorCoord.y){
           // actorMap.insert(std::make_pair(transport.get()->getId(),coord));
            kraken* superpaatti = new kraken(actor, actorCoord);
            sceneptr_->addItem(superpaatti);
-
        }
    }
 }
@@ -97,7 +113,16 @@ void GameBoard::moveActor(int actorId, Common::CubeCoordinate actorCoord)
 
 void GameBoard::removeActor(int actorId)
 {
-  std::cout << "moimoi77" << std::endl;
+    // toimiiks?
+
+    for(std::map<int, Common::CubeCoordinate>::iterator it = actorMap.begin(); it != actorMap.end(); it++)
+    {
+        if((it->first) == actorId)
+        {
+            actorMap.erase(it);
+            break;
+        }
+    }
 }
 
 void GameBoard::addHex(std::shared_ptr<Common::Hex> newHex)
@@ -140,7 +165,21 @@ void GameBoard::moveTransport(int id, Common::CubeCoordinate coord)
 
 void GameBoard::removeTransport(int id)
 {
-    std::cout << "moimoi2" << std::endl;
+    // toimiiks?
+    // pitääks tehä transportmappi?
+
+}
+
+void GameBoard::drawwheel(std::shared_ptr<Common::SpinnerLayout> gamewheel)
+{
+            spinnerwheel* superpaatti = new spinnerwheel(gamewheel);
+            sceneptr_->addItem(superpaatti);
+
+}
+
+void GameBoard::setwheel(std::shared_ptr<Common::SpinnerLayout> wheel)
+{
+    wheel_=wheel;
 }
 
 
