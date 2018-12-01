@@ -3,6 +3,7 @@
 
 #include "igamestate.hh"
 #include "igamerunner.hh"
+#include "vector"
 
 
 class GameState : public Common::IGameState
@@ -20,14 +21,24 @@ public:
 
     void setrunner(std::shared_ptr<Common::IGameRunner> runneri);
 
+    int getPawnPerPlayer();
+
+    void addPointsToPlayer(int points, int playerId);
+
+    void deletePawn(int pawnId);
+
+    int playerPawnsLeft(int playerId);
+
     std::shared_ptr<Common::IGameRunner> getrunner();
 
 private:
 
-    // crashaa jos tätä ei oo, en tiiä miks
-    int firstplayerid_ = 1;
-    Common::GamePhase currentPhase_;
-    int currentplayerid_;
+    Common::GamePhase _gamePhaseId;
+    int _playerInTurn = 1;
+    int _pawnPerPlayer = 3;
+    std::vector<std::pair<int,int>> _playerPointVector;
+    std::vector<std::pair<int,int>> _playerPawnVector;
+    
     std::shared_ptr<Common::IGameRunner> runner;
 
 
