@@ -56,15 +56,14 @@ public:
 
     void setwheel(std::shared_ptr<Common::SpinnerLayout> wheel);
 
-    GameState* getstate();
+    std::shared_ptr<GameState> getstate();
+
 
     QGraphicsScene* getscene();
 
-    QPolygon getPolygon(std::shared_ptr<Common::Hex> newHex);signals:
+    void setMoveTile(Common::CubeCoordinate coord, int id);
 
-    Common::CubeCoordinate findClickedHex(int clickX, int clickY);
-
-    bool wasClicked(std::shared_ptr<Common::Hex> hexi, int clickX, int clickY);
+    void setTargetTile(Common::CubeCoordinate coord);
 
     void setrunner(std::shared_ptr<Common::IGameRunner> runneri);
 
@@ -76,18 +75,20 @@ public:
 
     void addtopawnmap(int,std::shared_ptr<Common::Pawn>);
 
+    int getMoveCount();
 
+    int getMoveFromId();
+
+    void setState(std::shared_ptr<GameState> steitti);
+
+
+    Common::CubeCoordinate getMoveFrom();
+
+    std::map<int, Pawnitem*> getPawnItemMap();
    // std::unordered_map<int, std::shared_ptr<Common::Pawn>> getactormap();
    //
    // void addtoactormap(int,std::shared_ptr<Common::Pawn>);
 
-
-
-//    bool arebeachleft();
-//
-//    bool areforestleft();
-//
-//    bool aremountainleft();
 
 
 
@@ -101,6 +102,7 @@ private:
 
     std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>> HexMap;
     std::unordered_map<int, std::shared_ptr<Common::Pawn>> pawnMap;
+    std::map<int, Pawnitem*> pawnItemMap;
     std::map<int, Common::CubeCoordinate> actorMap;
     std::vector<Common::CubeCoordinate> coordinates;
 
@@ -110,10 +112,14 @@ private:
 
     std::shared_ptr<Common::SpinnerLayout> wheel_;
 
+    std::shared_ptr<GameState> state;
     //Logic::GameEngine runner;
 
     QGraphicsScene* sceneptr_;
-    GameState* state;
+    Common::CubeCoordinate moveFrom;
+    Common::CubeCoordinate moveTo;
+    int moveFromId;
+    int moveCount = 0;
 
 
 

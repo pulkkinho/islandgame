@@ -31,7 +31,7 @@ int GameState::currentPlayer() const
 
 void GameState::changeGamePhase(Common::GamePhase nextPhase)
 {
-
+    std::cout << "pollo americana" << std::endl;
     std::cout<<runner.get()->currentPlayer()<<"  pollo"<<std::endl;
     std::cout<<_playerInTurn<<"  greetings"<<std::endl;
     // tähän kaatuu koska currentplayeris ei oo mittää järkevää --> miten?, ei kaadu jos on firstplayerid
@@ -39,7 +39,7 @@ void GameState::changeGamePhase(Common::GamePhase nextPhase)
     std::cout<<    runner.get()->playerAmount()<<"  pollllero"<<std::endl;
 
     std::cout<<_gamePhaseId<<"  kuukkuu"<<std::endl;
-
+    std::cout << nextPhase << "nextphase" << std::endl;
     _gamePhaseId = nextPhase;
     std::cout<<_gamePhaseId<<"  muuruu"<<std::endl;
 }
@@ -51,8 +51,6 @@ void GameState::changePlayerTurn(int nextPlayer)
     std::cout<<_playerInTurn<<"  wololoo"<<std::endl;
 
 }
-
-
 void GameState::setrunner(std::shared_ptr<Common::IGameRunner> runneri)
 {
   runner = runneri;

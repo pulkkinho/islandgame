@@ -6,15 +6,16 @@
 #include <QGraphicsSceneMouseEvent>
 
 Widget::Widget(std::shared_ptr<Common::Hex> Hexi, std::string Tyyppi, int x, int y, int z,
-               GameBoard* board, Common::CubeCoordinate coord, std::shared_ptr<Common::IGameRunner> runner,
+               GameBoard* board, Common::CubeCoordinate coord,
                QGraphicsPolygonItem *parent):
     QGraphicsPolygonItem(parent), hexptr(Hexi), tyyppi(Tyyppi), x_(x), y_(y),
-    z_(z), board_(board), coord_(coord), runnerptr(runner)
+    z_(z), board_(board), coord_(coord)
 {
 
     Pressed = false;
     flip = false;
 }
+
 
 void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 {
@@ -37,14 +38,48 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 
     QPoint clickPosition = event->scenePos().toPoint();
     QPoint keke(clickPosition.x(),clickPosition.y());
+    std::cout << "meenee klikkaukseen" << std::endl;
 
         if(poly.containsPoint(keke,Qt::WindingFill)){
-            if(flip == false){
             if(poly[0].y() < clickPosition.y() && poly[3].y() > clickPosition.y() && poly[1].x()-2 > clickPosition.x() &&
                     poly[5].x()+2 < clickPosition.x()){
-                if(tyyppi == "Water"){
+            //pelivaihe 1
+                if( board_->getrunner().get()->currentGamePhase()  == 1){
 
+                    std::cout << "mennee kakkoseen" << std::endl;
+                    //promt = palyer x plz choose tile to move from
+                    // -II- to <-nää jonnekki muualle
+                    if(board_->getMoveCount() == 0){
+
+                        std::cout << "mennee kolmoseen" << std::endl;
+                        for (auto pawn : board_->getpawnmap()){
+                            std::cout << pawn.second.get()->getCoordinates().y << " " << coord_.y << std::endl;
+                            if(pawn.second.get()->getCoordinates().y == coord_.y &&
+                                    pawn.second.get()->getCoordinates().x == coord_.x &&
+                                    pawn.second.get()->getCoordinates().z == coord_.z){
+
+                                std::cout << "mennee neloiseen" << std::endl;
+                                board_->setMoveTile(coord_, pawn.first);
+
+                                std::cout << board_->getMoveFromId() << std::endl;
+                                break;
+                            }
+                        }
+                    }
+                    else if (board_->getMoveCount() == 1){
+                        std::cout << "morjestaa" << std::endl;
+                        board_->setTargetTile(coord_);
+                        std::cout << board_->getrunner()<< std::endl;
+                        board_->getrunner().get()->movePawn(board_->getMoveFrom(),coord_, board_->getMoveFromId());
+                    }
                 }
+            //vaihe 2
+            else if( board_->getrunner().get()->currentGamePhase()  == 2){
+                if(flip == false){
+                    if(poly[0].y() < clickPosition.y() && poly[3].y() > clickPosition.y()
+                            && poly[1].x()-2 > clickPosition.x() && poly[5].x()+2 < clickPosition.x()){
+                        if(tyyppi == "Water"){
+                        }
                 if(tyyppi == "Coral"){
                     return;
                 }
@@ -55,10 +90,14 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 
                 board_->getrunner()->flipTile(coord_);
                 return;
+                    }
+                }
             }
 
-        }else Pressed = false;
-    } else Pressed = false;
+        }
+            else Pressed = false;
+    }
+        else Pressed = false;
 }
 
 QRectF Widget::boundingRect() const{

@@ -13,6 +13,7 @@
 #include "kraken.hh"
 #include "spinnerwheel.hh"
 #include <stdio.h>
+#include "pawn.hh"
 
 
 
@@ -68,16 +69,45 @@ void GameBoard::addPawn(int playerId, int pawnId)
 
 void GameBoard::addPawn(int playerId, int pawnId, Common::CubeCoordinate coord)
 {
-           Pawnitem* apina = new Pawnitem(playerId,pawnId,coord,HexMap.at(coord));
-           HexMap.at(coord).get()->addPawn(pawnMap.at(pawnId));
-           sceneptr_->addItem(apina);
-
+    //hexmappiin pawn
+    HexMap.at(coord).get()->addPawn(pawnMap.at(pawnId));
+    Pawnitem* apina = new Pawnitem(playerId,pawnId,coord,HexMap.at(coord));
+    //pawnitemille oikea hex
+    apina->setHex(HexMap.at(coord));
+    sceneptr_->addItem(apina);
+    //pawnitem oikeaan positioon
+    apina->updateGraphics(HexMap.at(coord).get()->getPawnAmount());
+    pawnItemMap.insert(std::make_pair(pawnId, apina));
 }
+
+
 
 void GameBoard::movePawn(int pawnId, Common::CubeCoordinate pawnCoord)
 {
   std::cout << "moimoi33" << std::endl;
+  Common::CubeCoordinate oldCoord = pawnItemMap.at(pawnId)->getCoord();
+
+  HexMap.at(oldCoord).get()->removePawn(pawnMap.at(pawnId));
+
+  int counter = 0;
+  for (auto pawn : pawnItemMap){
+      if (pawn.second->getCoord().y == oldCoord.y &&
+              pawn.second->getCoord().z == oldCoord.z &&
+              pawn.second->getCoord().x == oldCoord.x ){
+          std::cout << "updateg" << std::endl;
+          pawn.second->updateGraphics(counter);
+          ++counter;
+      }
+  }
+  pawnItemMap.at(pawnId)->setNewCoord(pawnCoord);
+
+  HexMap.at(pawnCoord).get()->addPawn(pawnMap.at(pawnId));
+
+  pawnItemMap.at(pawnId)->updateGraphics(HexMap.at(pawnCoord).get()->getPawnAmount());
+
+  state.get()->changeGamePhase(Common::GamePhase::SINKING);
 }
+
 
 void GameBoard::removePawn(int pawnId)
 {
@@ -88,6 +118,7 @@ void GameBoard::removePawn(int pawnId)
         if((it->first) == pawnId)
         {
             pawnMap.erase(it);
+            
             break;
         }
     }
@@ -134,13 +165,14 @@ void GameBoard::addHex(std::shared_ptr<Common::Hex> newHex)
     int y = newHex.get()->getCoordinates().y;
     coordinates.push_back(coord);
 
-    Widget* super = new Widget(newHex, newHex.get()->getPieceType(), x, y, z, this, newHex.get()->getCoordinates(), runner);
+    Widget* super = new Widget(newHex, newHex.get()->getPieceType(), x, y, z, this, newHex.get()->getCoordinates());
+
     sceneptr_->addItem(super);
 
 
 }
 
-GameState* GameBoard::getstate()
+std::shared_ptr<GameState> GameBoard::getstate()
 {
   return state;
 }
@@ -185,9 +217,41 @@ void GameBoard::setwheel(std::shared_ptr<Common::SpinnerLayout> wheel)
 
 QGraphicsScene* GameBoard::getscene()
 {
-  return sceneptr_;
+    return sceneptr_;
 }
 
+void GameBoard::setTargetTile(Common::CubeCoordinate coord)
+{
+    moveTo = coord;
+    moveCount = 0;
+}
+
+void GameBoard::setMoveTile(Common::CubeCoordinate coord, int id){
+    moveFrom = coord;
+    moveFromId = id;
+    moveCount = 1;
+}
+
+int GameBoard::getMoveFromId(){
+    return moveFromId;
+}
+
+Common::CubeCoordinate GameBoard::getMoveFrom(){
+    return moveFrom;
+}
+
+std::map<int, Pawnitem *> GameBoard::getPawnItemMap()
+{
+    return pawnItemMap;
+}
+
+void GameBoard::setState(std::shared_ptr<GameState> steitti)
+{
+    state = steitti;
+}
+int GameBoard::getMoveCount(){
+    return moveCount;
+}
 
 std::shared_ptr<Common::IGameRunner> GameBoard::getrunner()
 {
@@ -199,6 +263,9 @@ std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>> GameBoard::getHex
 }
 
 std::unordered_map<int, std::shared_ptr<Common::Pawn>> GameBoard::getpawnmap(){
+    for (auto masa : pawnMap){
+        std::cout << masa.second.get()->getCoordinates().y << std::endl;
+    }
     return pawnMap;
 }
 

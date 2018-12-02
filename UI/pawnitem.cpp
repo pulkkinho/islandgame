@@ -1,20 +1,34 @@
 #include "pawnitem.hh"
-
+#include "iostream"
+#include "gameboard.hh"
 Pawnitem::Pawnitem(int playerid,int ID, Common::CubeCoordinate coord, std::shared_ptr<Common::Hex> hexi, QGraphicsItem* parent):
     QGraphicsPixmapItem(parent),playerId_(playerid),pawnID_(ID), coord_(coord), hexi_(hexi)
 
 
 {
 
-    updateGraphics();
+    //updateGraphics();
 }
 
-void Pawnitem::updateGraphics()
+void Pawnitem::setNewCoord(Common::CubeCoordinate newCoord)
 {
+    coord_ = newCoord;
+}
 
-    int nappuMaaraHexissa = hexi_.get()->getPawnAmount() + 1;
-    int sivuskaalaaja = 24 - nappuMaaraHexissa * 10;
-    int korkeusskaalaaja = nappuMaaraHexissa * 6;
+void Pawnitem::setHex(std::shared_ptr<Common::Hex> hex)
+{
+    hexi_ = hex;
+}
+
+Common::CubeCoordinate Pawnitem::getCoord()
+{
+    return coord_;
+}
+
+void Pawnitem::updateGraphics(int slotti)
+{
+    int sivuskaalaaja = 24 - slotti * 10;
+    int korkeusskaalaaja = slotti * 6;
     if(playerId_ == 1){
         QPixmap apuna("://pawn1.png");
         setPixmap(apuna.scaledToHeight(15));
@@ -55,7 +69,4 @@ void Pawnitem::updateGraphics()
     y= y * s * 1.5;
     this->setPos(q-x-sivuskaalaaja,w-s-y+korkeusskaalaaja);
 }
-
-
-
 

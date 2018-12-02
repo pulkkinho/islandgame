@@ -21,6 +21,7 @@ MainWindow::MainWindow( QWidget *parent) :
     GameState gamesteitti;
     std::shared_ptr<GameState> statePtr = std::make_shared<GameState>(gamesteitti);
 
+
     std::vector<std::shared_ptr<Common::IPlayer>> pelaajavektori;
     int x=0;
 
@@ -71,13 +72,7 @@ MainWindow::MainWindow( QWidget *parent) :
             pawncounter = pawncounter+1;
             int pawnid = 3*x+pawncounter;
             int playerid = x+1;
-            Common::CubeCoordinate koordit (-1-x*5,-1-x*5,0-x*5) ;
-            std::shared_ptr<Common::Pawn> nappu(nullptr);
 
-            nappu = std::make_shared<Common::Pawn>(pawnid,playerid,koordit);
-
-            pawn_.setId(3*x+pawncounter,x);
-            boardptr.get()->addtopawnmap(nappu.get()->getId(),nappu);
 
 
             bool lammio = false;
@@ -95,8 +90,15 @@ MainWindow::MainWindow( QWidget *parent) :
 
                             if(untamo.first.x == xx && untamo.first.y == yy && untamo.first.z == zz){
 
+                                Common::CubeCoordinate koordit (xx, yy, zz) ;
+                                std::shared_ptr<Common::Pawn> nappu(nullptr);
+                                nappu = std::make_shared<Common::Pawn>(pawnid,playerid,koordit);
+                                pawn_.setId(3*x+pawncounter,x);
+                                boardptr.get()->addtopawnmap(nappu.get()->getId(),nappu);
 
                                 boardptr.get()->addPawn(pelaajavektori.at(x).get()->getPlayerId(),nappu.get()->getId(),untamo.first);
+
+
                                 lammio = true;
                             }
                         }
@@ -114,6 +116,10 @@ MainWindow::MainWindow( QWidget *parent) :
     }
     boardptr.get()->setrunner(peli);
     statePtr.get()->setrunner(peli);
+
+    boardptr.get()->setState(statePtr);
+    statePtr.get()->changeGamePhase(Common::GamePhase::MOVEMENT);
+
 
 
     setCentralWidget(&view_);

@@ -5,14 +5,13 @@
 #include <QGraphicsItem>
 #include <QGraphicsView>
 #include "initialize.hh"
-#include "gameboard.hh"
 #include "gameengine.hh"
 #include "igamestate.hh"
 #include "igameboard.hh"
+#include "pawnitem.hh"
 #include <igamerunner.hh>
 #include "gameboard.hh"
 #include "player.hh"
-#include "pawnitem.hh"
 
 namespace Ui {
 class MainWindow;

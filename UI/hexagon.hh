@@ -9,16 +9,15 @@
 #include <QVector>
 #include <QGraphicsItem>
 #include <QObject>
+#include "gamestate.hh"
 
 class Widget : public QGraphicsPolygonItem
 {
 
 public:
     Widget(std::shared_ptr<Common::Hex> Hexi, std::string Tyyppi,
-           int x, int y, int z, GameBoard* board, Common::CubeCoordinate coord,
-           std::shared_ptr<Common::IGameRunner> runner, QGraphicsPolygonItem *parent = NULL);
+           int x, int y, int z, GameBoard* board, Common::CubeCoordinate coord, QGraphicsPolygonItem *parent = NULL);
 
-    //void setRunner(std::shared_ptr<Common::IGameRunner> runner);
 
 
 protected:
@@ -35,7 +34,6 @@ private:
      std::string tyyppi;
      GameBoard* board_;
      Common::CubeCoordinate coord_;
-     std::shared_ptr<Common::IGameRunner> runnerptr;
      int x_;
      int y_;
      int z_;
