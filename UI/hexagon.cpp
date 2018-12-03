@@ -4,6 +4,7 @@
 #include "QBrush"
 
 #include <QGraphicsSceneMouseEvent>
+#include "illegalmoveexception.hh"
 
 Widget::Widget(std::shared_ptr<Common::Hex> Hexi, std::string Tyyppi, int x, int y, int z,
                GameBoard* board, Common::CubeCoordinate coord,
@@ -27,50 +28,41 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
     int y = x_;
     int x = 2 * z_ + x_;
 
-    int q = 200;
-    int w = 200;
     int s = 20;
     x= x * 16 * s / 20;
     y= y * s * 1.5;
-    int a = sqrt(3)*(s/2);
     QGraphicsItem::mouseDoubleClickEvent(event);
 
 
     QPoint clickPosition = event->scenePos().toPoint();
     QPoint keke(clickPosition.x(),clickPosition.y());
-    std::cout << "meenee klikkaukseen" << std::endl;
-
+    try {
         if(poly.containsPoint(keke,Qt::WindingFill)){
-            if(poly[0].y() < clickPosition.y() && poly[3].y() > clickPosition.y() && poly[1].x()-2 > clickPosition.x() &&
+            if(poly[0].y() < clickPosition.y() && poly[3].y() >
+                    clickPosition.y() && poly[1].x()-2 > clickPosition.x() &&
                     poly[5].x()+2 < clickPosition.x()){
             //pelivaihe 1
                 if( board_->getrunner().get()->currentGamePhase()  == 1){
 
-                    std::cout << "mennee kakkoseen" << std::endl;
+
                     //promt = palyer x plz choose tile to move from
                     // -II- to <-nää jonnekki muualle
                     if(board_->getMoveCount() == 0){
-
-                        std::cout << "mennee kolmoseen" << std::endl;
                         for (auto pawn : board_->getpawnmap()){
-                            std::cout << pawn.second.get()->getCoordinates().y << " " << coord_.y << std::endl;
                             if(pawn.second.get()->getCoordinates().y == coord_.y &&
                                     pawn.second.get()->getCoordinates().x == coord_.x &&
-                                    pawn.second.get()->getCoordinates().z == coord_.z){
+                                    pawn.second.get()->getCoordinates().z == coord_.z && pawn.second.get()->getPlayerId() == board_->getrunner().get()->currentPlayer()){
 
-                                std::cout << "mennee neloiseen" << std::endl;
                                 board_->setMoveTile(coord_, pawn.first);
-
-                                std::cout << board_->getMoveFromId() << std::endl;
                                 break;
                             }
                         }
                     }
                     else if (board_->getMoveCount() == 1){
-                        std::cout << "morjestaa" << std::endl;
                         board_->setTargetTile(coord_);
-                        std::cout << board_->getrunner()<< std::endl;
-                        board_->getrunner().get()->movePawn(board_->getMoveFrom(),coord_, board_->getMoveFromId());
+                        if(board_->getrunner().get()->movePawn(board_->getMoveFrom(),coord_, board_->getMoveFromId()) == 0){
+                            board_->getstate().get()->changeGamePhase(Common::GamePhase::SINKING);
+                        }
                     }
                 }
             //vaihe 2
@@ -78,18 +70,28 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                 if(flip == false){
                     if(poly[0].y() < clickPosition.y() && poly[3].y() > clickPosition.y()
                             && poly[1].x()-2 > clickPosition.x() && poly[5].x()+2 < clickPosition.x()){
-                        if(tyyppi == "Water"){
-                        }
-                if(tyyppi == "Coral"){
+
+
+
+                        board_->getrunner()->flipTile(coord_);
+                    tyyppi = "Water";
+                    flip =  true;
+                    Pressed = true;
+                    if(board_->getrunner().get()->getCurrentPlayer().get()->getPlayerId() == board_->getrunner().get()->playerAmount()){
+
+                        board_->getstate().get()->changePlayerTurn(1);
+                        board_->getrunner().get()->getCurrentPlayer().get()->setActionsLeft(3);
+                        board_->getstate().get()->changeGamePhase(Common::GamePhase::MOVEMENT);
+                        return;
+
+                    }
+                    else{
+                    board_->getstate().get()->changePlayerTurn(board_->getrunner().get()->getCurrentPlayer().get()->getPlayerId() + 1);
+
+                    board_->getrunner().get()->getCurrentPlayer().get()->setActionsLeft(3);
+                    board_->getstate().get()->changeGamePhase(Common::GamePhase::MOVEMENT);
                     return;
-                }
-
-                tyyppi = "Water";
-                flip =  true;
-                Pressed = true;
-
-                board_->getrunner()->flipTile(coord_);
-                return;
+                    }
                     }
                 }
             }
@@ -98,6 +100,10 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
             else Pressed = false;
     }
         else Pressed = false;
+
+    }catch(Common::IllegalMoveException msg){
+        std::cout << msg.msg() << std::endl;
+    }
 }
 
 QRectF Widget::boundingRect() const{

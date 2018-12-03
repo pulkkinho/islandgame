@@ -32,11 +32,11 @@ protected:
 private:
      std::shared_ptr<Common::Hex> hexptr;
      std::string tyyppi;
-     GameBoard* board_;
-     Common::CubeCoordinate coord_;
      int x_;
      int y_;
      int z_;
+     GameBoard* board_;
+     Common::CubeCoordinate coord_;
      QPolygon poly;
      QColor vari;
 

@@ -84,28 +84,26 @@ void GameBoard::addPawn(int playerId, int pawnId, Common::CubeCoordinate coord)
 
 void GameBoard::movePawn(int pawnId, Common::CubeCoordinate pawnCoord)
 {
-  std::cout << "moimoi33" << std::endl;
   Common::CubeCoordinate oldCoord = pawnItemMap.at(pawnId)->getCoord();
 
   HexMap.at(oldCoord).get()->removePawn(pawnMap.at(pawnId));
 
-  int counter = 0;
-  for (auto pawn : pawnItemMap){
-      if (pawn.second->getCoord().y == oldCoord.y &&
-              pawn.second->getCoord().z == oldCoord.z &&
-              pawn.second->getCoord().x == oldCoord.x ){
-          std::cout << "updateg" << std::endl;
-          pawn.second->updateGraphics(counter);
-          ++counter;
-      }
+  int counter = 1;
+  int x = 0;
+  while (x < HexMap.at(oldCoord).get()->getPawnAmount()){
+      pawnItemMap.at(HexMap.at(oldCoord).get()->getPawns().at(x).get()->getId())->updateGraphics(x+1);
+      ++x;
   }
+
   pawnItemMap.at(pawnId)->setNewCoord(pawnCoord);
+  pawnMap.at(pawnId)->setCoordinates(pawnCoord);
 
   HexMap.at(pawnCoord).get()->addPawn(pawnMap.at(pawnId));
 
   pawnItemMap.at(pawnId)->updateGraphics(HexMap.at(pawnCoord).get()->getPawnAmount());
 
-  state.get()->changeGamePhase(Common::GamePhase::SINKING);
+  moveCount = 0;
+
 }
 
 
@@ -264,7 +262,6 @@ std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>> GameBoard::getHex
 
 std::unordered_map<int, std::shared_ptr<Common::Pawn>> GameBoard::getpawnmap(){
     for (auto masa : pawnMap){
-        std::cout << masa.second.get()->getCoordinates().y << std::endl;
     }
     return pawnMap;
 }

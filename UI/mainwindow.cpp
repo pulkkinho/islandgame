@@ -30,6 +30,7 @@ MainWindow::MainWindow( QWidget *parent) :
         std::shared_ptr<Player> uusipelaaja (nullptr);
         uusipelaaja = std::make_shared<Player>();
         uusipelaaja.get()->setPlayerId(x+1);
+        uusipelaaja.get()->setActionsLeft(3);
         pelaajavektori.push_back(uusipelaaja);
         x=x+1;
     }

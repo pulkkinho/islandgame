@@ -24,31 +24,17 @@ Common::GamePhase GameState::currentGamePhase() const
 int GameState::currentPlayer() const
 {
 
-    std::cout<<_playerInTurn<<"  no mutta hyvvöö päovöö"<<std::endl;
-
     return _playerInTurn;
 }
 
 void GameState::changeGamePhase(Common::GamePhase nextPhase)
 {
-    std::cout << "pollo americana" << std::endl;
-    std::cout<<runner.get()->currentPlayer()<<"  pollo"<<std::endl;
-    std::cout<<_playerInTurn<<"  greetings"<<std::endl;
-    // tähän kaatuu koska currentplayeris ei oo mittää järkevää --> miten?, ei kaadu jos on firstplayerid
-    std::cout<<    runner.get()->getCurrentPlayer().get()->getPlayerId()<<"  pallero"<<std::endl;
-    std::cout<<    runner.get()->playerAmount()<<"  pollllero"<<std::endl;
-
-    std::cout<<_gamePhaseId<<"  kuukkuu"<<std::endl;
-    std::cout << nextPhase << "nextphase" << std::endl;
     _gamePhaseId = nextPhase;
-    std::cout<<_gamePhaseId<<"  muuruu"<<std::endl;
 }
 
 void GameState::changePlayerTurn(int nextPlayer)
 {
-    // ei mee tänne, mut en tiiä johtuuks täst
     _playerInTurn = nextPlayer ;
-    std::cout<<_playerInTurn<<"  wololoo"<<std::endl;
 
 }
 void GameState::setrunner(std::shared_ptr<Common::IGameRunner> runneri)

@@ -34,8 +34,6 @@ Player::Player():
      //tekeekö itsestään nämä?
     // maalla actionsLeft = actionsLeft -1;
     // uiden actionsLeft = actionsLeft - actionsLeft;
-    // banaanin syötyä ei muutu
-     std::cout<<"WOHOOOOOOOOOOOOOOOO"<<std::endl;
 
     actionsLeft_ = actionsLeft;
  }
