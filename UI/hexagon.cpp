@@ -75,6 +75,7 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 
                         board_->getrunner()->flipTile(coord_);
                     tyyppi = "Water";
+
                     flip =  true;
                     Pressed = true;
                     if(board_->getrunner().get()->getCurrentPlayer().get()->getPlayerId() == board_->getrunner().get()->playerAmount()){
@@ -82,6 +83,8 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                         board_->getstate().get()->changePlayerTurn(1);
                         board_->getrunner().get()->getCurrentPlayer().get()->setActionsLeft(3);
                         board_->getstate().get()->changeGamePhase(Common::GamePhase::MOVEMENT);
+                        board_->spinwheel();
+
                         return;
 
                     }
@@ -90,6 +93,7 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 
                     board_->getrunner().get()->getCurrentPlayer().get()->setActionsLeft(3);
                     board_->getstate().get()->changeGamePhase(Common::GamePhase::MOVEMENT);
+                    board_->spinwheel();
                     return;
                     }
                     }

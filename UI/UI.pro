@@ -23,7 +23,8 @@ SOURCES += main.cc \
     gamestate.cpp \
     pawnitem.cpp \
     kraken.cpp \
-    spinnerwheel.cpp
+    spinnerwheel.cpp \
+    scoreboard.cpp
 
 HEADERS  += \
     gameboard.hh \
@@ -35,7 +36,8 @@ HEADERS  += \
     paatti.hh \
     pawnitem.hh \
     kraken.hh \
-    spinnerwheel.hh
+    spinnerwheel.hh \
+    scoreboard.hh
 
 FORMS += \
     configurationwindow.ui\
@@ -91,3 +93,6 @@ else:unix: PRE_TARGETDEPS += $$OUT_PWD/../GameLogic/Engine/libEngine.a
 
 RESOURCES += \
     kuvat.qrc
+
+DISTFILES += \
+    Instructions

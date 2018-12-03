@@ -11,12 +11,17 @@
 #include <QGraphicsItem>
 #include <QObject>
 
-class spinnerwheel : public QGraphicsPixmapItem
+class spinnerwheel : public QGraphicsItem
 {
 public:
     spinnerwheel(std::shared_ptr<Common::SpinnerLayout>, QGraphicsItem* parent =NULL);
 
-    void updateGraphics();
+    void paintwheel();
+
+protected:
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    QRectF boundingRect() const;
+
 
 
 private:

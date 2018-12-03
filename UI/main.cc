@@ -13,7 +13,8 @@ int main(int argc, char *argv[])
 
     MainWindow w;
 
-        w.show();
+    w.setFixedSize(w.width(),w.height());
+    w.showMaximized();
 
     return a.exec();
 }

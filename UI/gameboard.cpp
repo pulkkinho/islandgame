@@ -14,6 +14,13 @@
 #include "spinnerwheel.hh"
 #include <stdio.h>
 #include "pawn.hh"
+#include "QLabel"
+#include "QtWidgets"
+#include "QTimer"
+#include "QtCore"
+#include "chrono"
+#include "thread"
+
 
 
 
@@ -22,7 +29,10 @@ GameBoard::GameBoard():
 
 {
     sceneptr_ = new QGraphicsScene;
-
+    spinButton_ = new QPushButton("SPIN");
+    spinButton_->setGeometry(-400,-40,100,50);
+    spinButton_->setDisabled(true);
+    sceneptr_->addWidget(spinButton_);
 
 
 }
@@ -172,7 +182,65 @@ void GameBoard::addHex(std::shared_ptr<Common::Hex> newHex)
 
 std::shared_ptr<GameState> GameBoard::getstate()
 {
-  return state;
+    return state;
+}
+
+std::pair<std::string, std::string> GameBoard::spinwheel()
+{
+    //spinbutton->isChecked()
+
+    std::pair<std::string,std::string> result = this->getrunner().get()->spinWheel();
+    std::cout<< result.first<<result.second<<" spinnaus  " <<std::endl;
+
+
+    QLabel *gif_anim = new QLabel();
+    gif_anim->setGeometry(-170,-90,40,40);
+    QMovie *movie = new QMovie("://spinneri.gif");
+    movie->setScaledSize(gif_anim->size());
+    gif_anim->setMovie(movie);
+    std::cout<<movie->frameCount()<<std::endl;
+    movie->start();
+    QGraphicsProxyWidget *proxy = sceneptr_->addWidget(gif_anim);
+
+    bool slept = false;
+    if (slept == false){
+        std::chrono::seconds dura(5);
+        std::this_thread::sleep_for(dura);
+        slept=true;
+    }
+
+
+
+
+
+    //QTimer *kello = new QTimer();
+    //kello->start(8);
+    //
+    //bool onko = false;
+    //while(onko == false)
+    //if (kello->remainingTime()){
+    //    std::cout<<kello->remainingTime()<<"plaa"<<std::endl;
+    //
+    //}
+
+  //  kello->start(timeout);
+  //  if(kello->time() == 0){
+  //      movie->stop();
+  //
+  //  }
+
+
+
+    //movie->jumpToFrame(7);
+    //tehhää timer, annetaan spinnerin pyörii, katotaan sit
+    //mikä spinnerin antama monsteri on ja pysäytetään spinneri siihen frameen mikä osottaa sinne
+    //qdialogil esitetään numero
+    //movie->setPaused(true);
+
+    std::cout<<movie->loopCount()<<std::endl;
+
+
+    return result;
 }
 
 void GameBoard::addTransport(std::shared_ptr<Common::Transport> transport, Common::CubeCoordinate coord)
@@ -212,6 +280,10 @@ void GameBoard::setwheel(std::shared_ptr<Common::SpinnerLayout> wheel)
     wheel_=wheel;
 }
 
+QPushButton* GameBoard::getpushbutton()
+{
+    return spinButton_;
+}
 
 QGraphicsScene* GameBoard::getscene()
 {

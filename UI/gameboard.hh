@@ -14,6 +14,7 @@
 
 #include "igameboard.hh"
 #include <iostream>
+#include "QPushButton"
 
 
 class GameBoard : public Common::IGameBoard
@@ -56,8 +57,11 @@ public:
 
     void setwheel(std::shared_ptr<Common::SpinnerLayout> wheel);
 
+    QPushButton* getpushbutton();
+
     std::shared_ptr<GameState> getstate();
 
+    std::pair<std::string,std::string> spinwheel();
 
     QGraphicsScene* getscene();
 
@@ -120,6 +124,7 @@ private:
     Common::CubeCoordinate moveTo;
     int moveFromId;
     int moveCount = 0;
+    QPushButton *spinButton_;
 
 
 

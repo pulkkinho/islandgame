@@ -11,7 +11,7 @@ MainWindow::MainWindow( QWidget *parent) :
 {
 
     configurationWindow kopo;
-    kopo.exec();
+    if(kopo.exec()){
 
     GameBoard peliloota;
     std::shared_ptr<GameBoard> boardptr = std::make_shared<GameBoard>(peliloota);
@@ -127,6 +127,7 @@ MainWindow::MainWindow( QWidget *parent) :
     setMinimumHeight(500);
     setMinimumWidth(900);
 }
+    }
 
 MainWindow::~MainWindow()
 {
