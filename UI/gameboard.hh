@@ -8,13 +8,14 @@
 #include <QGraphicsView>
 #include "igamerunner.hh"
 #include "cmath"
-#include "gamestate.hh"
 #include "gameengine.hh"
 #include "mainwindow.hh"
 
 #include "igameboard.hh"
 #include <iostream>
 #include "QPushButton"
+#include "infobox.hh"
+#include "scoreboardui.hh"
 
 
 class GameBoard : public Common::IGameBoard
@@ -59,6 +60,8 @@ public:
 
     QPushButton* getpushbutton();
 
+    void setLabel(Common::GamePhase,int);
+
     std::shared_ptr<GameState> getstate();
 
     std::pair<std::string,std::string> spinwheel();
@@ -85,10 +88,18 @@ public:
 
     void setState(std::shared_ptr<GameState> steitti);
 
-
     Common::CubeCoordinate getMoveFrom();
 
     std::map<int, Pawnitem*> getPawnItemMap();
+
+    void showScoreBoard(std::vector<std::pair<int,int>>);
+
+    void updateScoreBoard(std::vector<std::pair<int,int>>);
+
+    void showInfoBox(Common::GamePhase, int);
+
+    void updateInfobox(Common::GamePhase, int);
+
    // std::unordered_map<int, std::shared_ptr<Common::Pawn>> getactormap();
    //
    // void addtoactormap(int,std::shared_ptr<Common::Pawn>);
@@ -124,7 +135,9 @@ private:
     Common::CubeCoordinate moveTo;
     int moveFromId;
     int moveCount = 0;
-    QPushButton *spinButton_;
+
+    std::shared_ptr<scoreboardUI> scoreboard;
+    std::shared_ptr<infoBox> infobox;
 
 
 

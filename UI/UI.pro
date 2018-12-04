@@ -24,7 +24,10 @@ SOURCES += main.cc \
     pawnitem.cpp \
     kraken.cpp \
     spinnerwheel.cpp \
-    scoreboard.cpp
+    scoreboard.cpp \
+    spinneranimation.cpp \
+    scoreboardui.cpp \
+    infobox.cpp
 
 HEADERS  += \
     gameboard.hh \
@@ -37,7 +40,10 @@ HEADERS  += \
     pawnitem.hh \
     kraken.hh \
     spinnerwheel.hh \
-    scoreboard.hh
+    scoreboard.hh \
+    spinneranimation.hh \
+    scoreboardui.hh \
+    infobox.hh
 
 FORMS += \
     configurationwindow.ui\
