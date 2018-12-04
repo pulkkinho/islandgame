@@ -16,6 +16,8 @@
 #include "QPushButton"
 #include "infobox.hh"
 #include "scoreboardui.hh"
+#include "kraken.hh"
+#include "paatti.hh"
 
 
 class GameBoard : public Common::IGameBoard
@@ -100,9 +102,19 @@ public:
 
     void updateInfobox(Common::GamePhase, int);
 
-   // std::unordered_map<int, std::shared_ptr<Common::Pawn>> getactormap();
-   //
-   // void addtoactormap(int,std::shared_ptr<Common::Pawn>);
+
+    std::pair<std::string,std::string> getSpinnerResult();
+
+    int getActorId(Common::CubeCoordinate coord, std::string tyyppi);
+
+    int getPaattiId(Common::CubeCoordinate coord);
+
+    void nextTurn();
+
+    std::map<int, kraken*> getKrakenMap();
+
+
+    std::map<int, Paatti*> getPaattiMap();
 
 
 
@@ -118,12 +130,19 @@ private:
     std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>> HexMap;
     std::unordered_map<int, std::shared_ptr<Common::Pawn>> pawnMap;
     std::map<int, Pawnitem*> pawnItemMap;
+    std::map<int, kraken*> krakenMap;
+
+
+    std::map<int, Paatti*> paattiMap;
     std::map<int, Common::CubeCoordinate> actorMap;
     std::vector<Common::CubeCoordinate> coordinates;
 
     std::shared_ptr<GameBoard> matti;
 
     std::shared_ptr<Common::IGameRunner> runner;
+
+
+    std::pair<std::string,std::string> spinnerResult;
 
     std::shared_ptr<Common::SpinnerLayout> wheel_;
 
@@ -138,6 +157,9 @@ private:
 
     std::shared_ptr<scoreboardUI> scoreboard;
     std::shared_ptr<infoBox> infobox;
+
+    
+    
 
 
 

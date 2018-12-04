@@ -71,6 +71,7 @@ void GameBoard::addPawn(int playerId, int pawnId)
 
 void GameBoard::addPawn(int playerId, int pawnId, Common::CubeCoordinate coord)
 {
+
     //hexmappiin pawn
     HexMap.at(coord).get()->addPawn(pawnMap.at(pawnId));
     Pawnitem* apina = new Pawnitem(playerId,pawnId,coord,HexMap.at(coord));
@@ -80,32 +81,34 @@ void GameBoard::addPawn(int playerId, int pawnId, Common::CubeCoordinate coord)
     //pawnitem oikeaan positioon
     apina->updateGraphics(HexMap.at(coord).get()->getPawnAmount());
     pawnItemMap.insert(std::make_pair(pawnId, apina));
+
 }
 
 
 
 void GameBoard::movePawn(int pawnId, Common::CubeCoordinate pawnCoord)
 {
-  Common::CubeCoordinate oldCoord = pawnItemMap.at(pawnId)->getCoord();
 
-  HexMap.at(oldCoord).get()->removePawn(pawnMap.at(pawnId));
-  int x = 0;
-  while (x < HexMap.at(oldCoord).get()->getPawnAmount()){
-      pawnItemMap.at(HexMap.at(oldCoord).get()->getPawns().at(x).get()->getId())->updateGraphics(x+1);
-      ++x;
+    Common::CubeCoordinate oldCoord = pawnItemMap.at(pawnId)->getCoord();
 
-  }
+    HexMap.at(oldCoord).get()->removePawn(pawnMap.at(pawnId));
 
-  pawnItemMap.at(pawnId)->setNewCoord(pawnCoord);
-  pawnMap.at(pawnId)->setCoordinates(pawnCoord);
+    int x = 0;
+    while (x < HexMap.at(oldCoord).get()->getPawnAmount()){
+        pawnItemMap.at(HexMap.at(oldCoord).get()->getPawns().at(x).get()->getId())->updateGraphics(x+1);
+        ++x;
+    }
+    if(HexMap.at(pawnCoord).get()->getTransports().size() > 0){
+        HexMap.at(pawnCoord).get()->getTransports().at(0).get()->addPawn(pawnMap.at(pawnId));
+    }
+    pawnItemMap.at(pawnId)->setNewCoord(pawnCoord);
+    pawnMap.at(pawnId)->setCoordinates(pawnCoord);
 
-  HexMap.at(pawnCoord).get()->addPawn(pawnMap.at(pawnId));
+    HexMap.at(pawnCoord).get()->addPawn(pawnMap.at(pawnId));
 
-  pawnItemMap.at(pawnId)->updateGraphics(HexMap.at(pawnCoord).get()->getPawnAmount());
+    pawnItemMap.at(pawnId)->updateGraphics(HexMap.at(pawnCoord).get()->getPawnAmount());
 
-  moveCount = 0;
-
-
+    moveCount = 0;
 }
 
 
@@ -127,19 +130,29 @@ void GameBoard::removePawn(int pawnId)
 
 void GameBoard::addActor(std::shared_ptr<Common::Actor> actor, Common::CubeCoordinate actorCoord)
 {
-   for(auto untamo : HexMap){
 
-       if( untamo.second.get()->getCoordinates().x == actorCoord.x && untamo.second.get()->getCoordinates().y == actorCoord.y){
-          // actorMap.insert(std::make_pair(transport.get()->getId(),coord));
-           kraken* superpaatti = new kraken(actor, actorCoord);
-           sceneptr_->addItem(superpaatti);
-       }
-   }
+    for(auto untamo : HexMap){
+
+        if( untamo.second.get()->getCoordinates().x == actorCoord.x && untamo.second.get()->getCoordinates().y == actorCoord.y){
+            actorMap.insert(std::make_pair(actor.get()->getId(), actorCoord));
+            kraken* superpaatti = new kraken(actor, actorCoord);
+            superpaatti->setKraken(actor);
+            actor.get()->addHex(HexMap.at(actorCoord));
+            sceneptr_->addItem(superpaatti);
+            std::cout << actor << " actor gb" << std::endl;
+         std::cout << actor.get()->getId() << std::endl;
+            krakenMap.insert(std::make_pair(actor.get()->getId(), superpaatti));
+
+        }
+    }
 }
 
 void GameBoard::moveActor(int actorId, Common::CubeCoordinate actorCoord)
 {
-  std::cout << "moimoi66" << std::endl;
+
+    krakenMap.at(actorId)->getActor().get()->addHex(HexMap.at(actorCoord));
+    krakenMap.at(actorId)->setNewCoord(actorCoord);
+    krakenMap.at(actorId)->updateGraphics();
 }
 
 void GameBoard::removeActor(int actorId)
@@ -208,17 +221,28 @@ std::pair<std::string, std::string> GameBoard::spinwheel()
     //QGraphicsProxyWidget *proxy = sceneptr_->addWidget(gif_anim);
 
 
-    return result;
+    spinnerResult = result;
+
+    for (auto aktor : krakenMap){
+        if(aktor.second->getType() == spinnerResult.first){
+            return result;
+        }
+    }
+    nextTurn();
 }
 
 void GameBoard::addTransport(std::shared_ptr<Common::Transport> transport, Common::CubeCoordinate coord)
 {
+
     for(auto untamo : HexMap){
 
         if( untamo.second.get()->getCoordinates().x == coord.x && untamo.second.get()->getCoordinates().y == coord.y){
             actorMap.insert(std::make_pair(transport.get()->getId(),coord));
             Paatti* superpaatti = new Paatti(transport, coord);
             sceneptr_->addItem(superpaatti);
+            HexMap.at(coord).get()->addTransport(transport);
+
+            paattiMap.insert(std::make_pair(transport.get()->getId(), superpaatti));
 
         }
     }
@@ -226,7 +250,9 @@ void GameBoard::addTransport(std::shared_ptr<Common::Transport> transport, Commo
 
 void GameBoard::moveTransport(int id, Common::CubeCoordinate coord)
 {
-  std::cout << "moimoi1" << std::endl;
+    paattiMap.at(id)->getObject().get()->addHex(HexMap.at(coord));
+    paattiMap.at(id)->setNewCoord(coord);
+    paattiMap.at(id)->updateGraphics();
 }
 
 void GameBoard::removeTransport(int id)
@@ -283,6 +309,56 @@ std::map<int, Pawnitem *> GameBoard::getPawnItemMap()
 {
     return pawnItemMap;
 }
+
+std::pair<std::string, std::string> GameBoard::getSpinnerResult()
+{
+    return spinnerResult;
+}
+
+int GameBoard::getActorId(Common::CubeCoordinate coord, std::string tyyppi)
+{
+    for (auto actori : krakenMap){
+        if(actori.second->getType() == tyyppi && actori.second->getCoord() == coord){
+            return actori.first;
+        }
+    }
+}
+
+int GameBoard::getPaattiId(Common::CubeCoordinate coord)
+{
+    for (auto paatti : paattiMap){
+        if(paatti.second->getCoord() == coord){
+            return paatti.first;
+        }
+    }
+}
+
+std::map<int, kraken *> GameBoard::getKrakenMap()
+{
+    return krakenMap;
+}
+
+void GameBoard::nextTurn()
+{
+    if(runner.get()->getCurrentPlayer().get()->getPlayerId() == runner.get()->playerAmount()){
+
+        runner.get()->getCurrentPlayer().get()->setActionsLeft(3);
+        state.get()->changePlayerTurn(1);
+    }
+    else{
+        runner.get()->getCurrentPlayer().get()->setActionsLeft(3);
+    state.get()->changePlayerTurn(getrunner().get()->getCurrentPlayer().get()->getPlayerId() + 1);
+
+    }
+    state.get()->changeGamePhase(Common::GamePhase::MOVEMENT);
+
+}
+
+std::map<int, Paatti *> GameBoard::getPaattiMap()
+{
+    return paattiMap;
+}
+
 
 void GameBoard::showScoreBoard(std::vector<std::pair<int,int>> playerPointVector)
 {
