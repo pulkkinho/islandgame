@@ -21,10 +21,6 @@ Widget::Widget(std::shared_ptr<Common::Hex> Hexi, std::string Tyyppi, int x, int
 void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 {
 
-    if (Pressed == true){
-
-        return;
-    }
     int y = x_;
     int x = 2 * z_ + x_;
 
@@ -42,11 +38,12 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                     clickPosition.y() && poly[1].x()-2 > clickPosition.x() &&
                     poly[5].x()+2 < clickPosition.x()){
             //pelivaihe 1
+                std::cout << "klikedi klik" << std::endl;
                 if( board_->getrunner().get()->currentGamePhase()  == 1){
 
 
                     //promt = palyer x plz choose tile to move from
-                    // -II- to <-nää jonnekki muualle
+                    // -II- to <-nää jonnekki muualle)
                     if(board_->getMoveCount() == 0){
                         for (auto pawn : board_->getpawnmap()){
                             if(pawn.second.get()->getCoordinates().y == coord_.y &&
@@ -60,7 +57,27 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                     }
                     else if (board_->getMoveCount() == 1){
                         board_->setTargetTile(coord_);
-                        if(board_->getrunner().get()->movePawn(board_->getMoveFrom(),coord_, board_->getMoveFromId()) == 0){
+
+                        if(board_->getHex(board_->getMoveFrom()).get()->getTransports().size() > 0){
+                            std::cout <<board_->getActorId(board_->getMoveFrom(), board_->getSpinnerResult().first) << "actorid" << std::endl;
+                            //liikutetaan alusta ja asetetaan jäljellä olevien liikkeiden määrä
+                                board_->getrunner().get()->getCurrentPlayer().get()->setActionsLeft(
+                                        board_->getrunner().get()->getCurrentPlayer().get()->getActionsLeft() -
+                                        board_->getrunner().get()->moveTransport(board_->getMoveFrom(),
+                                        coord_,board_->getPaattiId(board_->getMoveFrom())));
+
+
+
+                                for(auto pawn : board_->getHexMap().at(board_->getMoveFrom()).get()->getPawns()){
+
+                                    board_->getPawnItemMap().at(pawn.get()->getId())->setNewCoord(coord_);
+                                    board_->getpawnmap().at(pawn.get()->getId())->setCoordinates(coord_);
+                                    board_->getHexMap().at(coord_).get()->addPawn(pawn);
+                                    board_->getPawnItemMap().at(pawn.get()->getId())->updateGraphics(board_->getHexMap().at(coord_).get()->getPawnAmount());
+                                }
+                                board_->getstate().get()->changeGamePhase(Common::GamePhase::SINKING);
+                        }
+                        else if(board_->getrunner().get()->movePawn(board_->getMoveFrom(),coord_, board_->getMoveFromId()) == 0){
                             board_->getstate().get()->changeGamePhase(Common::GamePhase::SINKING);
                         }
                     }
@@ -74,25 +91,19 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 
 
                         board_->getrunner()->flipTile(coord_);
-                    tyyppi = "Water";
 
                     flip =  true;
                     Pressed = true;
                     if(board_->getrunner().get()->getCurrentPlayer().get()->getPlayerId() == board_->getrunner().get()->playerAmount()){
 
-                        board_->getstate().get()->changePlayerTurn(1);
-                        board_->getrunner().get()->getCurrentPlayer().get()->setActionsLeft(3);
-                        board_->getstate().get()->changeGamePhase(Common::GamePhase::MOVEMENT);
+                        board_->getstate().get()->changeGamePhase(Common::GamePhase::SPINNING);
                         board_->spinwheel();
-
                         return;
 
                     }
                     else{
-                    board_->getstate().get()->changePlayerTurn(board_->getrunner().get()->getCurrentPlayer().get()->getPlayerId() + 1);
 
-                    board_->getrunner().get()->getCurrentPlayer().get()->setActionsLeft(3);
-                    board_->getstate().get()->changeGamePhase(Common::GamePhase::MOVEMENT);
+                    board_->getstate().get()->changeGamePhase(Common::GamePhase::SPINNING);
                     board_->spinwheel();
                     return;
                     }
@@ -100,9 +111,37 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                 }
             }
 
-        }
+                else if( board_->getrunner().get()->currentGamePhase()  == 3){
+
+
+                    if(board_->getMoveCount() == 0){
+                        for (auto krakeni : board_->getKrakenMap()){
+                            std::cout <<  coord_.y<< coord_.x<< coord_.z <<   "kooooord" <<std::endl;
+
+                            if(krakeni.second->getActor().get()->getHex().get()->getCoordinates().y == coord_.y &&
+                                    krakeni.second->getActor().get()->getHex().get()->getCoordinates().x == coord_.x &&
+                                    krakeni.second->getActor().get()->getHex().get()->getCoordinates().z == coord_.z &&
+                                    krakeni.first == board_->getActorId(coord_, board_->getSpinnerResult().first)){
+
+                                board_->setMoveTile(coord_, krakeni.first);
+                                break;
+                            }
+                        }
+                    }
+                    else if (board_->getMoveCount() == 1){
+                        board_->setTargetTile(coord_);
+                        std::cout << "que" << std::endl;
+                        board_->getrunner().get()->moveActor(board_->getMoveFrom(),coord_, board_->getMoveFromId(), board_->getSpinnerResult().second);
+                        board_->getstate().get()->changeGamePhase(Common::GamePhase::MOVEMENT);
+                        board_->nextTurn();
+
+                    }
+                }
+
+            }
             else Pressed = false;
-    }
+
+        }
         else Pressed = false;
 
     }catch(Common::IllegalMoveException msg){

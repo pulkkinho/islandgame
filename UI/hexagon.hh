@@ -31,6 +31,7 @@ protected:
 
 private:
      std::shared_ptr<Common::Hex> hexptr;
+
      std::string tyyppi;
      int x_;
      int y_;

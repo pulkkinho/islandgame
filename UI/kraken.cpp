@@ -20,7 +20,6 @@ kraken::kraken(std::shared_ptr<Common::Actor> krakeni, Common::CubeCoordinate co
 
 void kraken::updateGraphics()
 {
-
     int sivuskaalaaja = 15;
     int korkeusskaalaaja = 4;
 
@@ -63,4 +62,30 @@ void kraken::updateGraphics()
     x= x * 16 * s / 20;
     y= y * s * 1.5;
     this->setPos(q-x-sivuskaalaaja,w-s-y+korkeusskaalaaja);
+}
+
+void kraken::setNewCoord(Common::CubeCoordinate coordi)
+{
+    coord_ = coordi;
+}
+
+std::string kraken::getType()
+{
+    return kraken_.get()->getActorType();
+    std::cout << kraken_.get()->getActorType() << "actortype" << std::endl;
+}
+
+std::shared_ptr<Common::Actor> kraken::getActor()
+{
+    return kraken_;
+}
+
+void kraken::setKraken(std::shared_ptr<Common::Actor> aktori)
+{
+    kraken_ = aktori;
+}
+
+Common::CubeCoordinate kraken::getCoord()
+{
+    return coord_;
 }

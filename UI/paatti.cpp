@@ -1,6 +1,5 @@
 #include "paatti.hh"
 
-#include "hexagon.hh"
 #include <QtGui>
 #include <iostream>
 #include "QBrush"
@@ -13,10 +12,7 @@ Paatti::Paatti(std::shared_ptr<Common::Transport> Paatti, Common::CubeCoordinate
 
 
 {
-
-    Paatti.get()->getTransportType();
     updateGraphics();
-
 }
 
 void Paatti::updateGraphics()
@@ -45,5 +41,20 @@ void Paatti::updateGraphics()
     x= x * 16 * s / 20;
     y= y * s * 1.5;
     this->setPos(q-x-sivuskaalaaja,w-s-y+korkeusskaalaaja);
+}
+
+void Paatti::setNewCoord(Common::CubeCoordinate coordi)
+{
+    coord_ = coordi;
+}
+
+std::shared_ptr<Common::Transport> Paatti::getObject()
+{
+    return paatti_;
+}
+
+Common::CubeCoordinate Paatti::getCoord()
+{
+    return coord_;
 }
 
