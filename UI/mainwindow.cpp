@@ -39,7 +39,6 @@ MainWindow::MainWindow( QWidget *parent) :
 
     std::shared_ptr<Common::IGameRunner> peli = Common::Initialization::getGameRunner(boardptr,statePtr,pelaajavektori);
 
-
     std::shared_ptr<Common::SpinnerLayout> wheel(nullptr);
 
     wheel = std::make_shared<Common::SpinnerLayout>();
@@ -120,6 +119,12 @@ MainWindow::MainWindow( QWidget *parent) :
 
     boardptr.get()->setState(statePtr);
     statePtr.get()->changeGamePhase(Common::GamePhase::MOVEMENT);
+
+
+    statePtr.get()->initializePlayerPointVector();
+
+    boardptr.get()->showInfoBox(statePtr.get()->currentGamePhase(),statePtr.get()->currentPlayer());
+    boardptr.get()->showScoreBoard(statePtr.get()->getPlayerPointVector());
 
 
 

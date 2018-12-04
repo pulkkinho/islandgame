@@ -9,7 +9,6 @@
 #include "hexagon.hh"
 #include "paatti.hh"
 #include "mainwindow.hh"
-#include "gamestate.hh"
 #include "kraken.hh"
 #include "spinnerwheel.hh"
 #include <stdio.h>
@@ -17,10 +16,7 @@
 #include "QLabel"
 #include "QtWidgets"
 #include "QTimer"
-#include "QtCore"
-#include "chrono"
-#include "thread"
-
+#include "spinneranimation.hh"
 
 
 
@@ -29,10 +25,6 @@ GameBoard::GameBoard():
 
 {
     sceneptr_ = new QGraphicsScene;
-    spinButton_ = new QPushButton("SPIN");
-    spinButton_->setGeometry(-400,-40,100,50);
-    spinButton_->setDisabled(true);
-    sceneptr_->addWidget(spinButton_);
 
 
 }
@@ -97,12 +89,11 @@ void GameBoard::movePawn(int pawnId, Common::CubeCoordinate pawnCoord)
   Common::CubeCoordinate oldCoord = pawnItemMap.at(pawnId)->getCoord();
 
   HexMap.at(oldCoord).get()->removePawn(pawnMap.at(pawnId));
-
-  int counter = 1;
   int x = 0;
   while (x < HexMap.at(oldCoord).get()->getPawnAmount()){
       pawnItemMap.at(HexMap.at(oldCoord).get()->getPawns().at(x).get()->getId())->updateGraphics(x+1);
       ++x;
+
   }
 
   pawnItemMap.at(pawnId)->setNewCoord(pawnCoord);
@@ -113,6 +104,7 @@ void GameBoard::movePawn(int pawnId, Common::CubeCoordinate pawnCoord)
   pawnItemMap.at(pawnId)->updateGraphics(HexMap.at(pawnCoord).get()->getPawnAmount());
 
   moveCount = 0;
+
 
 }
 
@@ -190,54 +182,30 @@ std::pair<std::string, std::string> GameBoard::spinwheel()
     //spinbutton->isChecked()
 
     std::pair<std::string,std::string> result = this->getrunner().get()->spinWheel();
-    std::cout<< result.first<<result.second<<" spinnaus  " <<std::endl;
 
+    spinneranimation* spinner = new spinneranimation(result.first,result.second);
 
-    QLabel *gif_anim = new QLabel();
-    gif_anim->setGeometry(-170,-90,40,40);
-    QMovie *movie = new QMovie("://spinneri.gif");
-    movie->setScaledSize(gif_anim->size());
-    gif_anim->setMovie(movie);
-    std::cout<<movie->frameCount()<<std::endl;
-    movie->start();
-    QGraphicsProxyWidget *proxy = sceneptr_->addWidget(gif_anim);
+    sceneptr_->addWidget(spinner);
 
-    bool slept = false;
-    if (slept == false){
-        std::chrono::seconds dura(5);
-        std::this_thread::sleep_for(dura);
-        slept=true;
-    }
+    QLabel *kakko = new QLabel();
 
-
-
-
-
-    //QTimer *kello = new QTimer();
-    //kello->start(8);
+    QString menejo =QString::fromStdString( result.second);
+    kakko->setText("Amount to move:   "+menejo);
+    kakko->setGeometry(-250,50,150,25);
+    sceneptr_->addWidget(kakko);
+    //std::cout<< result.first<<result.second<<" spinnaus  " <<std::endl;
     //
-    //bool onko = false;
-    //while(onko == false)
-    //if (kello->remainingTime()){
-    //    std::cout<<kello->remainingTime()<<"plaa"<<std::endl;
     //
-    //}
-
-  //  kello->start(timeout);
-  //  if(kello->time() == 0){
-  //      movie->stop();
-  //
-  //  }
-
-
-
-    //movie->jumpToFrame(7);
-    //tehhää timer, annetaan spinnerin pyörii, katotaan sit
-    //mikä spinnerin antama monsteri on ja pysäytetään spinneri siihen frameen mikä osottaa sinne
-    //qdialogil esitetään numero
-    //movie->setPaused(true);
-
-    std::cout<<movie->loopCount()<<std::endl;
+    //QLabel *gif_anim = new QLabel();
+    //gif_anim->setGeometry(-170,-90,40,40);
+    //QMovie *movie = new QMovie("://spinneri.gif");
+    //movie->setScaledSize(gif_anim->size());
+    //gif_anim->setMovie(movie);
+    //std::cout<<movie->frameCount()<<std::endl;
+    //movie->start();
+    //
+    //
+    //QGraphicsProxyWidget *proxy = sceneptr_->addWidget(gif_anim);
 
 
     return result;
@@ -280,10 +248,11 @@ void GameBoard::setwheel(std::shared_ptr<Common::SpinnerLayout> wheel)
     wheel_=wheel;
 }
 
-QPushButton* GameBoard::getpushbutton()
+void GameBoard::setLabel(Common::GamePhase, int)
 {
-    return spinButton_;
+
 }
+
 
 QGraphicsScene* GameBoard::getscene()
 {
@@ -313,6 +282,33 @@ Common::CubeCoordinate GameBoard::getMoveFrom(){
 std::map<int, Pawnitem *> GameBoard::getPawnItemMap()
 {
     return pawnItemMap;
+}
+
+void GameBoard::showScoreBoard(std::vector<std::pair<int,int>> playerPointVector)
+{
+    scoreboard = std::make_shared<scoreboardUI>(playerPointVector);
+    scoreboard.get()->setGeometry(500,-100,30,30);
+    sceneptr_->addWidget(scoreboard.get());
+}
+
+void GameBoard::updateScoreBoard(std::vector<std::pair<int, int>> playerPointVector)
+{
+    scoreboard.get()->updateGraphics(playerPointVector);
+}
+
+void GameBoard::showInfoBox(Common::GamePhase currentGamePhase, int playerInTurn)
+{
+
+
+    infobox = std::make_shared<infoBox>(currentGamePhase,playerInTurn);
+    infobox.get()->setGeometry(100,-200,30,30);
+    sceneptr_->addWidget(infobox.get());
+}
+
+void GameBoard::updateInfobox(Common::GamePhase currentGamePhase, int playerInTurn)
+{
+    infobox.get()->setNew(currentGamePhase,playerInTurn);
+    infobox.get()->updateGraphics();
 }
 
 void GameBoard::setState(std::shared_ptr<GameState> steitti)

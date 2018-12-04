@@ -29,6 +29,10 @@ public:
 
     int playerPawnsLeft(int playerId);
 
+    void initializePlayerPointVector();
+
+    std::vector<std::pair<int,int>> getPlayerPointVector();
+
     std::shared_ptr<Common::IGameRunner> getrunner();
 
 private:

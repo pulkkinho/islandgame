@@ -62,6 +62,9 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                         board_->setTargetTile(coord_);
                         if(board_->getrunner().get()->movePawn(board_->getMoveFrom(),coord_, board_->getMoveFromId()) == 0){
                             board_->getstate().get()->changeGamePhase(Common::GamePhase::SINKING);
+                            board_->updateInfobox(board_->getstate().get()->currentGamePhase(), board_->getstate().get()->currentPlayer());
+                            board_->getstate().get()->addPointsToPlayer(3,2);
+                            board_->updateScoreBoard(board_->getstate().get()->getPlayerPointVector());
                         }
                     }
                 }
