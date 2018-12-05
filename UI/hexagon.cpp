@@ -137,14 +137,14 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 
 
                     if(board_->getMoveCount() == 0){
-                        for (auto krakeni : board_->getKrakenMap()){
+                        for (auto monstersi : board_->getmonstersMap()){
 
-                            if(krakeni.second->getActor().get()->getHex().get()->getCoordinates().y == coord_.y &&
-                                    krakeni.second->getActor().get()->getHex().get()->getCoordinates().x == coord_.x &&
-                                    krakeni.second->getActor().get()->getHex().get()->getCoordinates().z == coord_.z &&
-                                    krakeni.first == board_->getActorId(coord_, board_->getSpinnerResult().first)){
+                            if(monstersi.second->getActor().get()->getHex().get()->getCoordinates().y == coord_.y &&
+                                    monstersi.second->getActor().get()->getHex().get()->getCoordinates().x == coord_.x &&
+                                    monstersi.second->getActor().get()->getHex().get()->getCoordinates().z == coord_.z &&
+                                    monstersi.first == board_->getActorId(coord_, board_->getSpinnerResult().first)){
 
-                                board_->setMoveTile(coord_, krakeni.first);
+                                board_->setMoveTile(coord_, monstersi.first);
                                 break;
                             }
                         }

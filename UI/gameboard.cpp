@@ -9,7 +9,7 @@
 #include "hexagon.hh"
 #include "paatti.hh"
 #include "mainwindow.hh"
-#include "kraken.hh"
+#include "monsters.hh"
 #include "spinnerwheel.hh"
 #include <stdio.h>
 #include "pawn.hh"
@@ -136,13 +136,13 @@ void GameBoard::addActor(std::shared_ptr<Common::Actor> actor, Common::CubeCoord
 
         if( untamo.second.get()->getCoordinates().x == actorCoord.x && untamo.second.get()->getCoordinates().y == actorCoord.y){
             actorMap.insert(std::make_pair(actor.get()->getId(), actorCoord));
-            kraken* superpaatti = new kraken(actor, actorCoord);
-            superpaatti->setKraken(actor);
+            monsters* superpaatti = new monsters(actor, actorCoord);
+            superpaatti->setmonsters(actor);
             actor.get()->addHex(HexMap.at(actorCoord));
             sceneptr_->addItem(superpaatti);
             std::cout << actor << " actor gb" << std::endl;
          std::cout << actor.get()->getId() << std::endl;
-            krakenMap.insert(std::make_pair(actor.get()->getId(), superpaatti));
+            monstersMap.insert(std::make_pair(actor.get()->getId(), superpaatti));
 
         }
     }
@@ -153,17 +153,17 @@ void GameBoard::moveActor(int actorId, Common::CubeCoordinate actorCoord)
     std::vector<std::shared_ptr<Common::Transport>> transportit = HexMap.at(actorCoord).get()->getTransports();
 
     std::cout << transportit.size() << "transportit.ziseee" << std::endl;
-    krakenMap.at(actorId)->getActor().get()->addHex(HexMap.at(actorCoord));
-    krakenMap.at(actorId)->getActor().get()->doAction();
+    monstersMap.at(actorId)->getActor().get()->addHex(HexMap.at(actorCoord));
     std::cout << transportit.size() << "transportit.ziseee" << std::endl;
     if(transportit.size() != 0){
         sceneptr_->removeItem(paattiMap.at(actorId));
-        paattiMap.at(actorId)->setOpacity(1);
+        paattiMap.at(HexMap.at(actorCoord).get()->getTransports().at(0).get()->getId())->setOpacity(1);
         paattiMap.erase(actorId);
     }
 
-    krakenMap.at(actorId)->setNewCoord(actorCoord);
-    krakenMap.at(actorId)->updateGraphics();
+    monstersMap.at(actorId)->getActor().get()->doAction();
+    monstersMap.at(actorId)->setNewCoord(actorCoord);
+    monstersMap.at(actorId)->updateGraphics();
 }
 
 void GameBoard::removeActor(int actorId)
@@ -175,7 +175,7 @@ void GameBoard::removeActor(int actorId)
         if((it->first) == actorId)
         {
             actorMap.erase(it);
-            sceneptr_->removeItem(krakenMap.at(actorId));
+            sceneptr_->removeItem(monstersMap.at(actorId));
             break;
         }
     }
@@ -235,7 +235,7 @@ std::pair<std::string, std::string> GameBoard::spinwheel()
 
     spinnerResult = result;
 
-    for (auto aktor : krakenMap){
+    for (auto aktor : monstersMap){
         if(aktor.second->getType() == spinnerResult.first){
             return result;
         }
@@ -340,7 +340,7 @@ std::pair<std::string, std::string> GameBoard::getSpinnerResult()
 
 int GameBoard::getActorId(Common::CubeCoordinate coord, std::string tyyppi)
 {
-    for (auto actori : krakenMap){
+    for (auto actori : monstersMap){
         if(actori.second->getType() == tyyppi && actori.second->getCoord() == coord){
             return actori.first;
         }
@@ -356,9 +356,9 @@ int GameBoard::getPaattiId(Common::CubeCoordinate coord)
     }
 }
 
-std::map<int, kraken *> GameBoard::getKrakenMap()
+std::map<int, monsters *> GameBoard::getmonstersMap()
 {
-    return krakenMap;
+    return monstersMap;
 }
 
 void GameBoard::nextTurn()
