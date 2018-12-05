@@ -121,6 +121,7 @@ void GameBoard::removePawn(int pawnId)
         if((it->first) == pawnId)
         {
             pawnMap.erase(it);
+            sceneptr_->removeItem(pawnItemMap.at(pawnId));
             
             break;
         }
@@ -149,8 +150,18 @@ void GameBoard::addActor(std::shared_ptr<Common::Actor> actor, Common::CubeCoord
 
 void GameBoard::moveActor(int actorId, Common::CubeCoordinate actorCoord)
 {
+    std::vector<std::shared_ptr<Common::Transport>> transportit = HexMap.at(actorCoord).get()->getTransports();
 
+    std::cout << transportit.size() << "transportit.ziseee" << std::endl;
     krakenMap.at(actorId)->getActor().get()->addHex(HexMap.at(actorCoord));
+    krakenMap.at(actorId)->getActor().get()->doAction();
+    std::cout << transportit.size() << "transportit.ziseee" << std::endl;
+    if(transportit.size() != 0){
+        sceneptr_->removeItem(paattiMap.at(actorId));
+        paattiMap.at(actorId)->setOpacity(1);
+        paattiMap.erase(actorId);
+    }
+
     krakenMap.at(actorId)->setNewCoord(actorCoord);
     krakenMap.at(actorId)->updateGraphics();
 }
@@ -164,6 +175,7 @@ void GameBoard::removeActor(int actorId)
         if((it->first) == actorId)
         {
             actorMap.erase(it);
+            sceneptr_->removeItem(krakenMap.at(actorId));
             break;
         }
     }
@@ -233,17 +245,25 @@ std::pair<std::string, std::string> GameBoard::spinwheel()
 
 void GameBoard::addTransport(std::shared_ptr<Common::Transport> transport, Common::CubeCoordinate coord)
 {
-
+    std::string tyyppi = transport.get()->getTransportType();
     for(auto untamo : HexMap){
 
         if( untamo.second.get()->getCoordinates().x == coord.x && untamo.second.get()->getCoordinates().y == coord.y){
+
+
+
             actorMap.insert(std::make_pair(transport.get()->getId(),coord));
             Paatti* superpaatti = new Paatti(transport, coord);
             sceneptr_->addItem(superpaatti);
             HexMap.at(coord).get()->addTransport(transport);
 
             paattiMap.insert(std::make_pair(transport.get()->getId(), superpaatti));
-
+            //lisätään mahdolliset jo hexissä olleet pawnit transporttiin
+            if(HexMap.at(coord).get()->getPawnAmount() > 0){
+                for(auto x : HexMap.at(coord).get()->getPawns()){
+                    transport.get()->addPawn(x);
+                }
+            }
         }
     }
 }
@@ -251,14 +271,17 @@ void GameBoard::addTransport(std::shared_ptr<Common::Transport> transport, Commo
 void GameBoard::moveTransport(int id, Common::CubeCoordinate coord)
 {
     paattiMap.at(id)->getObject().get()->addHex(HexMap.at(coord));
+    HexMap.at(coord).get()->removeTransport(paattiMap.at(id)->getObject());
+    HexMap.at(coord).get()->addTransport(paattiMap.at(id)->getObject());
     paattiMap.at(id)->setNewCoord(coord);
     paattiMap.at(id)->updateGraphics();
 }
 
 void GameBoard::removeTransport(int id)
 {
-    // toimiiks?
-    // pitääks tehä transportmappi?
+    std::cout << "removetransport" << std::endl;
+    paattiMap.erase(id);
+    sceneptr_->removeItem(paattiMap.at(id));
 
 }
 
