@@ -56,8 +56,11 @@ void scoreboardUI::updateGraphics(std::vector<std::pair<int, int> > playerVector
 
         int indeksi = player.first - 1;
         tekstivektor.at(indeksi).get()->setText("Player" +playernumber2+"   Points:  "+numberOfPoints2);
+        kuvavektor.at(indeksi).get()->setPixmap( QPixmap ("://pawn"+playernumber2+".png").scaledToHeight(25));
 
-        vbl->addWidget(tekstivektor.at(indeksi).get(),row,0);
+
+        vbl->addWidget(kuvavektor.at(indeksi).get(),row,0);
+        vbl->addWidget(tekstivektor.at(indeksi).get(),row,1);
 
         row = row + 1;
     }
@@ -70,10 +73,7 @@ void scoreboardUI::setNew(std::vector<std::pair<int, int> > playerVector)
     _playerPointVector = playerVector;
 }
 
-void scoreboardUI::rip()
-{
 
-}
 
 
 

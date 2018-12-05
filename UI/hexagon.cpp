@@ -76,12 +76,13 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                                     board_->getPawnItemMap().at(pawn.get()->getId())->updateGraphics(board_->getHexMap().at(coord_).get()->getPawnAmount());
                                 }
                                 board_->getstate().get()->changeGamePhase(Common::GamePhase::SINKING);
+                                board_->updateInfobox(board_->getstate().get()->currentGamePhase(), board_->getstate().get()->currentPlayer());
+
                         }
                         else if(board_->getrunner().get()->movePawn(board_->getMoveFrom(),coord_, board_->getMoveFromId()) == 0){
                             board_->getstate().get()->changeGamePhase(Common::GamePhase::SINKING);
 
                             board_->updateInfobox(board_->getstate().get()->currentGamePhase(), board_->getstate().get()->currentPlayer());
-                            board_->getstate().get()->addPointsToPlayer(3,2);
                             board_->updateScoreBoard(board_->getstate().get()->getPlayerPointVector());
                         }
                     }
@@ -101,6 +102,8 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                     if(board_->getrunner().get()->getCurrentPlayer().get()->getPlayerId() == board_->getrunner().get()->playerAmount()){
 
                         board_->getstate().get()->changeGamePhase(Common::GamePhase::SPINNING);
+                        board_->updateInfobox(board_->getstate().get()->currentGamePhase(), board_->getstate().get()->currentPlayer());
+
                         board_->spinwheel();
                         return;
 
@@ -108,6 +111,9 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                     else{
 
                     board_->getstate().get()->changeGamePhase(Common::GamePhase::SPINNING);
+                    board_->updateInfobox(board_->getstate().get()->currentGamePhase(), board_->getstate().get()->currentPlayer());
+
+
                     board_->spinwheel();
                     return;
                     }
@@ -137,6 +143,8 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                         std::cout << "que" << std::endl;
                         board_->getrunner().get()->moveActor(board_->getMoveFrom(),coord_, board_->getMoveFromId(), board_->getSpinnerResult().second);
                         board_->getstate().get()->changeGamePhase(Common::GamePhase::MOVEMENT);
+                        board_->updateInfobox(board_->getstate().get()->currentGamePhase(), board_->getstate().get()->currentPlayer());
+
                         board_->nextTurn();
 
                     }

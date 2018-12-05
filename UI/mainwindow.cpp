@@ -131,8 +131,8 @@ MainWindow::MainWindow( QWidget *parent) :
     setCentralWidget(&view_);
     setMinimumHeight(500);
     setMinimumWidth(900);
-}
     }
+}
 
 MainWindow::~MainWindow()
 {

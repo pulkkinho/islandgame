@@ -19,7 +19,6 @@ public:
 
     void setNew(std::vector<std::pair<int,int>>);
 
-    void rip();
 
 private:
     std::vector<std::pair<int,int>> _playerPointVector;

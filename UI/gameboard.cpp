@@ -351,6 +351,7 @@ void GameBoard::nextTurn()
 
     }
     state.get()->changeGamePhase(Common::GamePhase::MOVEMENT);
+    this->updateInfobox(this->getstate().get()->currentGamePhase(), this->getstate().get()->currentPlayer());
 
 }
 
@@ -377,7 +378,7 @@ void GameBoard::showInfoBox(Common::GamePhase currentGamePhase, int playerInTurn
 
 
     infobox = std::make_shared<infoBox>(currentGamePhase,playerInTurn);
-    infobox.get()->setGeometry(100,-200,30,30);
+    infobox.get()->setGeometry(0,-200,30,30);
     sceneptr_->addWidget(infobox.get());
 }
 
