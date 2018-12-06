@@ -108,6 +108,9 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 
 
                         board_->getrunner()->flipTile(coord_);
+                        if(board_->getHexMap().at(coord_).get()->getActors().size() > 0){
+                            board_->moveActor(board_->getHexMap().at(coord_).get()->getActors().at(0).get()->getId(), coord_);
+                        }
 
                     flip =  true;
                     Pressed = true;
@@ -132,8 +135,8 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                     }
                 }
             }
-
-                else if( board_->getrunner().get()->currentGamePhase()  == 3){
+            //vaihe3
+                else if( board_->getrunner().get()->currentGamePhase()  == 3 ){
 
 
                     if(board_->getMoveCount() == 0){
@@ -149,6 +152,7 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                             }
                         }
                     }
+
                     else if (board_->getMoveCount() == 1){
                         board_->setTargetTile(coord_);
                         board_->getrunner().get()->moveActor(board_->getMoveFrom(),coord_, board_->getMoveFromId(), board_->getSpinnerResult().second);
@@ -156,6 +160,7 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                         board_->updateInfobox(board_->getstate().get()->currentGamePhase(), board_->getstate().get()->currentPlayer());
 
                         board_->nextTurn();
+
                     }
                 }
             }

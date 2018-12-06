@@ -115,6 +115,7 @@ void GameBoard::movePawn(int pawnId, Common::CubeCoordinate pawnCoord)
 void GameBoard::removePawn(int pawnId)
 {
     // toimiiks?
+    std::cout << "removepawn" << std::endl;
 
     for(std::unordered_map<int, std::shared_ptr<Common::Pawn>>::iterator it = pawnMap.begin(); it != pawnMap.end(); it++)
     {
@@ -152,16 +153,25 @@ void GameBoard::moveActor(int actorId, Common::CubeCoordinate actorCoord)
 {
     std::vector<std::shared_ptr<Common::Transport>> transportit = HexMap.at(actorCoord).get()->getTransports();
 
-    std::cout << transportit.size() << "transportit.ziseee" << std::endl;
+    std::vector<std::shared_ptr<Common::Pawn>> pawnit = HexMap.at(actorCoord).get()->getPawns();
+
     monstersMap.at(actorId)->getActor().get()->addHex(HexMap.at(actorCoord));
-    std::cout << transportit.size() << "transportit.ziseee" << std::endl;
-    if(transportit.size() != 0){
-        sceneptr_->removeItem(paattiMap.at(actorId));
-        paattiMap.at(HexMap.at(actorCoord).get()->getTransports().at(0).get()->getId())->setOpacity(1);
-        paattiMap.erase(actorId);
+    monstersMap.at(actorId)->getActor().get()->doAction();
+    HexMap.at(actorCoord).get()->addActor(monstersMap.at(actorId)->getActor());
+    if(transportit.size() != HexMap.at(actorCoord).get()->getTransports().size()){
+        HexMap.at(actorCoord).get()->removeTransport(transportit.at(0));
+        sceneptr_->removeItem(paattiMap.at(transportit.at(0).get()->getId()));
     }
 
-    monstersMap.at(actorId)->getActor().get()->doAction();
+    if(pawnit.size() != HexMap.at(actorCoord).get()->getPawns().size()){
+        int indeksi = 0;
+        for(auto x : pawnit){
+            HexMap.at(actorCoord).get()->removePawn(pawnit.at(indeksi));
+            sceneptr_->removeItem(pawnItemMap.at(pawnit.at(indeksi).get()->getId()));
+            ++indeksi;
+        }
+    }
+
     monstersMap.at(actorId)->setNewCoord(actorCoord);
     monstersMap.at(actorId)->updateGraphics();
 }
@@ -218,19 +228,6 @@ std::pair<std::string, std::string> GameBoard::spinwheel()
     kakko->setText("Amount to move:   "+menejo);
     kakko->setGeometry(-250,50,150,25);
     sceneptr_->addWidget(kakko);
-    //std::cout<< result.first<<result.second<<" spinnaus  " <<std::endl;
-    //
-    //
-    //QLabel *gif_anim = new QLabel();
-    //gif_anim->setGeometry(-170,-90,40,40);
-    //QMovie *movie = new QMovie("://spinneri.gif");
-    //movie->setScaledSize(gif_anim->size());
-    //gif_anim->setMovie(movie);
-    //std::cout<<movie->frameCount()<<std::endl;
-    //movie->start();
-    //
-    //
-    //QGraphicsProxyWidget *proxy = sceneptr_->addWidget(gif_anim);
 
 
     spinnerResult = result;
@@ -373,8 +370,19 @@ void GameBoard::nextTurn()
     state.get()->changePlayerTurn(getrunner().get()->getCurrentPlayer().get()->getPlayerId() + 1);
 
     }
+    bool loyty = false;
+    for(auto pawn : pawnMap){
+        if (pawn.second.get()->getPlayerId() == runner.get()->getCurrentPlayer().get()->getPlayerId()){
+            loyty = true;
+        }
+
+    }
+    if (loyty == false){
+        nextTurn();
+    }
     state.get()->changeGamePhase(Common::GamePhase::MOVEMENT);
     this->updateInfobox(this->getstate().get()->currentGamePhase(), this->getstate().get()->currentPlayer());
+
 
 }
 
