@@ -157,6 +157,8 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                         board_->setTargetTile(coord_);
                         board_->getrunner().get()->moveActor(board_->getMoveFrom(),coord_, board_->getMoveFromId(), board_->getSpinnerResult().second);
                         board_->getstate().get()->changeGamePhase(Common::GamePhase::MOVEMENT);
+                        board_->spinnermovement->clear();
+                        board_->getscene()->removeItem(board_->proxy);
                         board_->updateInfobox(board_->getstate().get()->currentGamePhase(), board_->getstate().get()->currentPlayer());
 
                         board_->nextTurn();

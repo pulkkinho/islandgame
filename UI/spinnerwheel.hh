@@ -14,18 +14,13 @@
 class spinnerwheel : public QGraphicsItem
 {
 public:
-    spinnerwheel(std::shared_ptr<Common::SpinnerLayout>, QGraphicsItem* parent =NULL);
+    spinnerwheel( QGraphicsItem* parent =NULL);
 
     void paintwheel();
 
 protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     QRectF boundingRect() const;
-
-
-
-private:
-     std::shared_ptr<Common::SpinnerLayout> layout_;
 
 };
 

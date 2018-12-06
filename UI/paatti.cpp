@@ -10,7 +10,6 @@
 Paatti::Paatti(std::shared_ptr<Common::Transport> Paatti, Common::CubeCoordinate coord, QGraphicsItem* parent):
     QGraphicsPixmapItem(parent),paatti_(Paatti), coord_(coord)
 
-
 {
     updateGraphics();
 }
@@ -57,4 +56,3 @@ Common::CubeCoordinate Paatti::getCoord()
 {
     return coord_;
 }
-

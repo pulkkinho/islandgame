@@ -4,10 +4,8 @@
 Pawnitem::Pawnitem(int playerid,int ID, Common::CubeCoordinate coord, std::shared_ptr<Common::Hex> hexi, QGraphicsItem* parent):
     QGraphicsPixmapItem(parent),playerId_(playerid),pawnID_(ID), coord_(coord), hexi_(hexi)
 
-
 {
-
-    //updateGraphics();
+    //updategraphics?
 }
 
 void Pawnitem::setNewCoord(Common::CubeCoordinate newCoord)
@@ -69,4 +67,3 @@ void Pawnitem::updateGraphics(int slotti)
     y= y * s * 1.5;
     this->setPos(q-x-sivuskaalaaja,w-s-y+korkeusskaalaaja);
 }
-

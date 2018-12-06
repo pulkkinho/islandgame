@@ -18,14 +18,11 @@ void infoBox::updateGraphics()
 {
     playernumber = QString::number(playerInTurn_);
     phase = currentGamePhase_;
-
     this->resize(400,40);
     QGridLayout *vbl = new QGridLayout(this);
 
     if(currentGamePhase_ == 1){
         phase = QString::fromStdString(" please move your pawn(s)");
-
-
     }
     if(currentGamePhase_ == 2){
         phase = QString::fromStdString(" please sink a tile");
