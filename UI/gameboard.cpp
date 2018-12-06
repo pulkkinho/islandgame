@@ -16,7 +16,6 @@
 #include "QLabel"
 #include "QtWidgets"
 #include "QTimer"
-#include "spinneranimation.hh"
 
 
 
@@ -108,6 +107,12 @@ void GameBoard::movePawn(int pawnId, Common::CubeCoordinate pawnCoord)
 
     pawnItemMap.at(pawnId)->updateGraphics(HexMap.at(pawnCoord).get()->getPawnAmount());
 
+    if(checkPoints(pawnCoord)==true){
+        std::cout<<" KALAJAAAA" << std::endl;
+        // henri pls poista
+        //HexMap.at(pawnCoord).get()->removePawn(pawnMap.at(pawnId));
+        // pawnmapremove
+    }
     moveCount = 0;
 }
 
@@ -218,16 +223,22 @@ std::pair<std::string, std::string> GameBoard::spinwheel()
 
     std::pair<std::string,std::string> result = this->getrunner().get()->spinWheel();
 
-    spinneranimation* spinner = new spinneranimation(result.first,result.second);
+    spinner = new spinneranimation(result.first,result.second);
+    spinner->startanimation();
 
-    sceneptr_->addWidget(spinner);
+    proxy = sceneptr_->addWidget(spinner);
 
-    QLabel *kakko = new QLabel();
+
+    //sceneptr_->removeItem(proxy);
+
+    spinnermovement = new QLabel();
+    spinnermovement->setStyleSheet("QLabel { background-color : white; color : blue; }");
+
 
     QString menejo =QString::fromStdString( result.second);
-    kakko->setText("Amount to move:   "+menejo);
-    kakko->setGeometry(-250,50,150,25);
-    sceneptr_->addWidget(kakko);
+    spinnermovement->setText("Amount to move:   "+menejo);
+    spinnermovement->setGeometry(-250,50,150,25);
+    sceneptr_->addWidget(spinnermovement);
 
 
     spinnerResult = result;
@@ -282,16 +293,11 @@ void GameBoard::removeTransport(int id)
 
 }
 
-void GameBoard::drawwheel(std::shared_ptr<Common::SpinnerLayout> gamewheel)
+void GameBoard::drawwheel()
 {
-            spinnerwheel* superpaatti = new spinnerwheel(gamewheel);
+            spinnerwheel* superpaatti = new spinnerwheel();
             sceneptr_->addItem(superpaatti);
 
-}
-
-void GameBoard::setwheel(std::shared_ptr<Common::SpinnerLayout> wheel)
-{
-    wheel_=wheel;
 }
 
 void GameBoard::setLabel(Common::GamePhase, int)
@@ -381,6 +387,9 @@ void GameBoard::nextTurn()
         nextTurn();
     }
     state.get()->changeGamePhase(Common::GamePhase::MOVEMENT);
+
+    spinnermovement->clear();
+    sceneptr_->removeItem(proxy);
     this->updateInfobox(this->getstate().get()->currentGamePhase(), this->getstate().get()->currentPlayer());
 
 
@@ -389,6 +398,26 @@ void GameBoard::nextTurn()
 std::map<int, Paatti *> GameBoard::getPaattiMap()
 {
     return paattiMap;
+}
+
+bool GameBoard::checkPoints(Common::CubeCoordinate pawnNewCoord)
+{
+    int playerId = state.get()->currentPlayer();
+    if(HexMap.at(pawnNewCoord).get()->getPieceType() == "Coral"){
+        for(auto player : state.get()->getPlayerPointVector()){
+            if(player.first == playerId){
+                state.get()->addPointsToPlayer(playerId,1);
+                return true;
+            }
+        }
+    }
+}
+
+void GameBoard::checkIfGameOver()
+{
+    if(pawnMap.size() == 0 ){
+        // joku configwindowin tapainen asia ja kun exec->exit(0)
+    }
 }
 
 

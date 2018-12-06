@@ -11,9 +11,7 @@
 monsters::monsters(std::shared_ptr<Common::Actor> monstersi, Common::CubeCoordinate coord, QGraphicsItem* parent):
     QGraphicsPixmapItem(parent),monsters_(monstersi), coord_(coord)
 
-
 {
-
     monsters_.get()->getActorType();
     updateGraphics();
 }
@@ -28,7 +26,6 @@ void monsters::updateGraphics()
         setPixmap(laivunen.scaledToHeight(25));
         korkeusskaalaaja = 5;
         sivuskaalaaja = 15;
-
     }
 
     if(monsters_.get()->getActorType()=="vortex"){
@@ -36,7 +33,6 @@ void monsters::updateGraphics()
         setPixmap(laivunen.scaledToHeight(10));
         sivuskaalaaja = 15;
         korkeusskaalaaja=12;
-
     }
 
     if(monsters_.get()->getActorType()=="shark"){
@@ -44,18 +40,16 @@ void monsters::updateGraphics()
         setPixmap(laivunen.scaledToHeight(25));
         sivuskaalaaja = 18;
         korkeusskaalaaja = 10;
-
     }
 
     if(monsters_.get()->getActorType()=="kraken"){
         QPixmap laivunen("://kraken.png");
         setPixmap(laivunen.scaledToHeight(30));
         sivuskaalaaja = 10;
-
     }
+
     int y = coord_.x;
     int x = 2 * coord_.z + coord_.x;
-
     int q = 200;
     int w = 200;
     int s = 20;

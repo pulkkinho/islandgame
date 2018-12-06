@@ -18,7 +18,7 @@
 #include "scoreboardui.hh"
 #include "monsters.hh"
 #include "paatti.hh"
-
+#include "spinneranimation.hh"
 
 class GameBoard : public Common::IGameBoard
 {
@@ -129,15 +129,8 @@ public:
 
     /**
      * @brief drawwheel
-     * @param gamewheel
      */
-    void drawwheel(std::shared_ptr<Common::SpinnerLayout> gamewheel);
-
-    /**
-     * @brief setwheel
-     * @param wheel
-     */
-    void setwheel(std::shared_ptr<Common::SpinnerLayout> wheel);
+    void drawwheel();
 
     /**
      * @brief getpushbutton
@@ -298,6 +291,13 @@ public:
      */
     std::map<int, Paatti*> getPaattiMap();
 
+    bool checkPoints( Common::CubeCoordinate);
+
+    void checkIfGameOver();
+
+    spinneranimation* spinner;
+    QGraphicsProxyWidget *proxy;
+    QLabel *spinnermovement;
 private:
 
     //!
@@ -326,6 +326,7 @@ private:
 
     std::shared_ptr<scoreboardUI> scoreboard;
     std::shared_ptr<infoBox> infobox;
+
 
     
     

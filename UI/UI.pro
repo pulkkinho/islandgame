@@ -23,7 +23,6 @@ SOURCES += main.cc \
     gamestate.cpp \
     pawnitem.cpp \
     spinnerwheel.cpp \
-    scoreboard.cpp \
     spinneranimation.cpp \
     scoreboardui.cpp \
     infobox.cpp \
@@ -39,7 +38,6 @@ HEADERS  += \
     paatti.hh \
     pawnitem.hh \
     spinnerwheel.hh \
-    scoreboard.hh \
     spinneranimation.hh \
     scoreboardui.hh \
     infobox.hh \

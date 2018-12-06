@@ -6,9 +6,6 @@
 #include "QPainter"
 #include "iostream"
 
-
-
-
 Player::Player():
     Common::IPlayer()
 {
@@ -42,5 +39,3 @@ Player::Player():
  {
      return actionsLeft_;
  }
-
-

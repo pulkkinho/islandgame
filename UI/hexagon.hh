@@ -3,13 +3,11 @@
 
 #include <QWidget>
 #include <QPainterPath>
-
-#include "mainwindow.hh"
+#include "gameboard.hh"
 #include <QPoint>
 #include <QVector>
 #include <QGraphicsItem>
 #include <QObject>
-#include "gamestate.hh"
 
 class Widget : public QGraphicsPolygonItem
 {
