@@ -16,7 +16,7 @@
 #include "QPushButton"
 #include "infobox.hh"
 #include "scoreboardui.hh"
-#include "kraken.hh"
+#include "monsters.hh"
 #include "paatti.hh"
 
 
@@ -287,10 +287,10 @@ public:
     void nextTurn();
 
     /**
-     * @brief getKrakenMap
+     * @brief getmonstersMap
      * @return
      */
-    std::map<int, kraken*> getKrakenMap();
+    std::map<int, monsters*> getmonstersMap();
 
     /**
      * @brief getPaattiMap
@@ -304,24 +304,19 @@ private:
     std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>> HexMap;
     std::unordered_map<int, std::shared_ptr<Common::Pawn>> pawnMap;
     std::map<int, Pawnitem*> pawnItemMap;
-    std::map<int, kraken*> krakenMap;
-
+    std::map<int, monsters*> monstersMap;
 
     std::map<int, Paatti*> paattiMap;
     std::map<int, Common::CubeCoordinate> actorMap;
     std::vector<Common::CubeCoordinate> coordinates;
 
-    std::shared_ptr<GameBoard> matti;
-
     std::shared_ptr<Common::IGameRunner> runner;
-
 
     std::pair<std::string,std::string> spinnerResult;
 
     std::shared_ptr<Common::SpinnerLayout> wheel_;
 
     std::shared_ptr<GameState> state;
-    //Logic::GameEngine runner;
 
     QGraphicsScene* sceneptr_;
     Common::CubeCoordinate moveFrom;

@@ -1,4 +1,4 @@
-#include "kraken.hh"
+#include "monsters.hh"
 #include "hexagon.hh"
 #include <QtGui>
 #include <iostream>
@@ -8,22 +8,22 @@
 #include "actorfactory.hh"
 
 #include <QGraphicsSceneMouseEvent>
-kraken::kraken(std::shared_ptr<Common::Actor> krakeni, Common::CubeCoordinate coord, QGraphicsItem* parent):
-    QGraphicsPixmapItem(parent),kraken_(krakeni), coord_(coord)
+monsters::monsters(std::shared_ptr<Common::Actor> monstersi, Common::CubeCoordinate coord, QGraphicsItem* parent):
+    QGraphicsPixmapItem(parent),monsters_(monstersi), coord_(coord)
 
 
 {
 
-    kraken_.get()->getActorType();
+    monsters_.get()->getActorType();
     updateGraphics();
 }
 
-void kraken::updateGraphics()
+void monsters::updateGraphics()
 {
     int sivuskaalaaja = 15;
     int korkeusskaalaaja = 4;
 
-    if(kraken_.get()->getActorType()=="seamunster"){
+    if(monsters_.get()->getActorType()=="seamunster"){
         QPixmap laivunen("://monster.png");
         setPixmap(laivunen.scaledToHeight(25));
         korkeusskaalaaja = 5;
@@ -31,7 +31,7 @@ void kraken::updateGraphics()
 
     }
 
-    if(kraken_.get()->getActorType()=="vortex"){
+    if(monsters_.get()->getActorType()=="vortex"){
         QPixmap laivunen("://vortex.png");
         setPixmap(laivunen.scaledToHeight(10));
         sivuskaalaaja = 15;
@@ -39,7 +39,7 @@ void kraken::updateGraphics()
 
     }
 
-    if(kraken_.get()->getActorType()=="shark"){
+    if(monsters_.get()->getActorType()=="shark"){
         QPixmap laivunen("://shark.png");
         setPixmap(laivunen.scaledToHeight(25));
         sivuskaalaaja = 18;
@@ -47,7 +47,7 @@ void kraken::updateGraphics()
 
     }
 
-    if(kraken_.get()->getActorType()=="kraken"){
+    if(monsters_.get()->getActorType()=="kraken"){
         QPixmap laivunen("://kraken.png");
         setPixmap(laivunen.scaledToHeight(30));
         sivuskaalaaja = 10;
@@ -64,28 +64,28 @@ void kraken::updateGraphics()
     this->setPos(q-x-sivuskaalaaja,w-s-y+korkeusskaalaaja);
 }
 
-void kraken::setNewCoord(Common::CubeCoordinate coordi)
+void monsters::setNewCoord(Common::CubeCoordinate coordi)
 {
     coord_ = coordi;
 }
 
-std::string kraken::getType()
+std::string monsters::getType()
 {
-    return kraken_.get()->getActorType();
-    std::cout << kraken_.get()->getActorType() << "actortype" << std::endl;
+    return monsters_.get()->getActorType();
+    std::cout << monsters_.get()->getActorType() << "actortype" << std::endl;
 }
 
-std::shared_ptr<Common::Actor> kraken::getActor()
+std::shared_ptr<Common::Actor> monsters::getActor()
 {
-    return kraken_;
+    return monsters_;
 }
 
-void kraken::setKraken(std::shared_ptr<Common::Actor> aktori)
+void monsters::setmonsters(std::shared_ptr<Common::Actor> aktori)
 {
-    kraken_ = aktori;
+    monsters_ = aktori;
 }
 
-Common::CubeCoordinate kraken::getCoord()
+Common::CubeCoordinate monsters::getCoord()
 {
     return coord_;
 }

@@ -22,12 +22,12 @@ SOURCES += main.cc \
     player.cpp \
     gamestate.cpp \
     pawnitem.cpp \
-    kraken.cpp \
     spinnerwheel.cpp \
     scoreboard.cpp \
     spinneranimation.cpp \
     scoreboardui.cpp \
-    infobox.cpp
+    infobox.cpp \
+    monsters.cpp
 
 HEADERS  += \
     gameboard.hh \
@@ -38,12 +38,12 @@ HEADERS  += \
     hexagon.hh \
     paatti.hh \
     pawnitem.hh \
-    kraken.hh \
     spinnerwheel.hh \
     scoreboard.hh \
     spinneranimation.hh \
     scoreboardui.hh \
-    infobox.hh
+    infobox.hh \
+    monsters.hh
 
 FORMS += \
     configurationwindow.ui\

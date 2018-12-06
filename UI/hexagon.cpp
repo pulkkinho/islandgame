@@ -38,7 +38,6 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                     clickPosition.y() && poly[1].x()-2 > clickPosition.x() &&
                     poly[5].x()+2 < clickPosition.x()){
             //pelivaihe 1
-                std::cout << "klikedi klik" << std::endl;
                 if( board_->getrunner().get()->currentGamePhase()  == 1){
 
 
@@ -58,16 +57,18 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                     else if (board_->getMoveCount() == 1){
                         board_->setTargetTile(coord_);
 
+                        //tarkistetaan, onko kyseessä transportin liikutus
                         if(board_->getHex(board_->getMoveFrom()).get()->getTransports().size() > 0){
-                            std::cout <<board_->getActorId(board_->getMoveFrom(), board_->getSpinnerResult().first) << "actorid" << std::endl;
+                            //voiko pelaaja liikuttaa paattia
+                            if(board_->getPaattiMap().at(board_->getPaattiId(board_->getMoveFrom()))->getObject().get()
+                                    ->canMove(board_->getrunner().get()->getCurrentPlayer().get()->getPlayerId()) == true){
+                            if(board_->getHex(coord_).get()->getPieceType() == "Water"){
                             //liikutetaan alusta ja asetetaan jäljellä olevien liikkeiden määrä
                                 board_->getrunner().get()->getCurrentPlayer().get()->setActionsLeft(
-                                        board_->getrunner().get()->getCurrentPlayer().get()->getActionsLeft() -
                                         board_->getrunner().get()->moveTransport(board_->getMoveFrom(),
                                         coord_,board_->getPaattiId(board_->getMoveFrom())));
 
-
-
+                                //liikutetaan myös pawneja transportissa
                                 for(auto pawn : board_->getHexMap().at(board_->getMoveFrom()).get()->getPawns()){
 
                                     board_->getPawnItemMap().at(pawn.get()->getId())->setNewCoord(coord_);
@@ -75,10 +76,21 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                                     board_->getHexMap().at(coord_).get()->addPawn(pawn);
                                     board_->getPawnItemMap().at(pawn.get()->getId())->updateGraphics(board_->getHexMap().at(coord_).get()->getPawnAmount());
                                 }
+                                //vaihdetaan vuoroa, mikäli tarpeen
+                                if(board_->getrunner().get()->getCurrentPlayer().get()->getActionsLeft() <= 0){
+                                board_->getstate().get()->changeGamePhase(Common::GamePhase::SINKING);
+                                }
+                                board_->updateInfobox(board_->getstate().get()->currentGamePhase(), board_->getstate().get()->currentPlayer());
+                            }
+                            //jos nappula siirretään transportista maalle/korallille
+                            else if(board_->getrunner().get()->movePawn(board_->getMoveFrom(),coord_, board_->getMoveFromId()) == 0){
                                 board_->getstate().get()->changeGamePhase(Common::GamePhase::SINKING);
                                 board_->updateInfobox(board_->getstate().get()->currentGamePhase(), board_->getstate().get()->currentPlayer());
-
+                                board_->updateScoreBoard(board_->getstate().get()->getPlayerPointVector());
+                            }
+                            }
                         }
+                        //liikutetaan pelinappulaa
                         else if(board_->getrunner().get()->movePawn(board_->getMoveFrom(),coord_, board_->getMoveFromId()) == 0){
                             board_->getstate().get()->changeGamePhase(Common::GamePhase::SINKING);
 
@@ -96,6 +108,9 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 
 
                         board_->getrunner()->flipTile(coord_);
+                        if(board_->getHexMap().at(coord_).get()->getActors().size() > 0){
+                            board_->moveActor(board_->getHexMap().at(coord_).get()->getActors().at(0).get()->getId(), coord_);
+                        }
 
                     flip =  true;
                     Pressed = true;
@@ -120,27 +135,26 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                     }
                 }
             }
-
-                else if( board_->getrunner().get()->currentGamePhase()  == 3){
+            //vaihe3
+                else if( board_->getrunner().get()->currentGamePhase()  == 3 ){
 
 
                     if(board_->getMoveCount() == 0){
-                        for (auto krakeni : board_->getKrakenMap()){
-                            std::cout <<  coord_.y<< coord_.x<< coord_.z <<   "kooooord" <<std::endl;
+                        for (auto monstersi : board_->getmonstersMap()){
 
-                            if(krakeni.second->getActor().get()->getHex().get()->getCoordinates().y == coord_.y &&
-                                    krakeni.second->getActor().get()->getHex().get()->getCoordinates().x == coord_.x &&
-                                    krakeni.second->getActor().get()->getHex().get()->getCoordinates().z == coord_.z &&
-                                    krakeni.first == board_->getActorId(coord_, board_->getSpinnerResult().first)){
+                            if(monstersi.second->getActor().get()->getHex().get()->getCoordinates().y == coord_.y &&
+                                    monstersi.second->getActor().get()->getHex().get()->getCoordinates().x == coord_.x &&
+                                    monstersi.second->getActor().get()->getHex().get()->getCoordinates().z == coord_.z &&
+                                    monstersi.first == board_->getActorId(coord_, board_->getSpinnerResult().first)){
 
-                                board_->setMoveTile(coord_, krakeni.first);
+                                board_->setMoveTile(coord_, monstersi.first);
                                 break;
                             }
                         }
                     }
+
                     else if (board_->getMoveCount() == 1){
                         board_->setTargetTile(coord_);
-                        std::cout << "que" << std::endl;
                         board_->getrunner().get()->moveActor(board_->getMoveFrom(),coord_, board_->getMoveFromId(), board_->getSpinnerResult().second);
                         board_->getstate().get()->changeGamePhase(Common::GamePhase::MOVEMENT);
                         board_->updateInfobox(board_->getstate().get()->currentGamePhase(), board_->getstate().get()->currentPlayer());
@@ -149,10 +163,8 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 
                     }
                 }
-
             }
             else Pressed = false;
-
         }
         else Pressed = false;
 
