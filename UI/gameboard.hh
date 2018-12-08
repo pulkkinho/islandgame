@@ -293,7 +293,7 @@ public:
 
     bool checkPoints( Common::CubeCoordinate);
 
-    void checkIfGameOver();
+    bool checkIfGameOver();
 
     spinneranimation* spinner;
     QGraphicsProxyWidget *proxy;
@@ -308,7 +308,6 @@ private:
 
     std::map<int, Paatti*> paattiMap;
     std::map<int, Common::CubeCoordinate> actorMap;
-    std::vector<Common::CubeCoordinate> coordinates;
 
     std::shared_ptr<Common::IGameRunner> runner;
 

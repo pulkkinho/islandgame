@@ -13,10 +13,11 @@ public:
 
     void updateGraphics();
     void setNew(Common::GamePhase, int);
+    void gameOver(bool, int);
 
 private:
-    Common::GamePhase currentGamePhase_;
     int playerInTurn_;
+    Common::GamePhase currentGamePhase_;
     QString playernumber;
 
     QLabel *kukko;

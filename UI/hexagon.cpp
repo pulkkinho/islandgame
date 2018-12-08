@@ -33,6 +33,7 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
     QPoint clickPosition = event->scenePos().toPoint();
     QPoint keke(clickPosition.x(),clickPosition.y());
     try {
+        if(board_->checkIfGameOver() == false){
         if(poly.containsPoint(keke,Qt::WindingFill)){
             if(poly[0].y() < clickPosition.y() && poly[3].y() >
                     clickPosition.y() && poly[1].x()-2 > clickPosition.x() &&
@@ -59,7 +60,24 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 
                         //tarkistetaan, onko kyseessä transportin liikutus
                         if(board_->getHex(board_->getMoveFrom()).get()->getTransports().size() > 0){
-                            //voiko pelaaja liikuttaa paattia
+                            //tarkistetaan liikutetaanko pelinappulaa kahden veneen välillä
+                            if(board_->getHex(board_->getMoveFrom()).get()->getTransports().size() > 0 &&
+                                    board_->getHex(coord_).get()->getTransports().size() > 0 &&
+                                    board_->getHex(board_->getMoveFrom()).get()->getTransports().at(0).get()->getTransportType() == "boat" &&
+                                    board_->getHex(coord_).get()->getTransports().at(0).get()->getTransportType() == "boat" ){
+                                if(board_->getrunner().get()->movePawn(board_->getMoveFrom(),coord_, board_->getMoveFromId()) == 0){
+                                                            board_->getstate().get()->changeGamePhase(Common::GamePhase::SINKING);
+
+
+                                                            board_->updateInfobox(board_->getstate().get()->currentGamePhase(), board_->getstate().get()->currentPlayer());
+                                                            board_->updateScoreBoard(board_->getstate().get()->getPlayerPointVector());
+                                }
+                            }
+
+
+
+                            else{
+                                //voiko pelaaja liikuttaa paattia
                             if(board_->getPaattiMap().at(board_->getPaattiId(board_->getMoveFrom()))->getObject().get()
                                     ->canMove(board_->getrunner().get()->getCurrentPlayer().get()->getPlayerId()) == true){
                             if(board_->getHex(coord_).get()->getPieceType() == "Water"){
@@ -69,12 +87,28 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                                         coord_,board_->getPaattiId(board_->getMoveFrom())));
 
                                 //liikutetaan myös pawneja transportissa
-                                for(auto pawn : board_->getHexMap().at(board_->getMoveFrom()).get()->getPawns()){
+                                if(board_->getHexMap().at(coord_).get()->getActorTypes().size() > 0){
+                                if(board_->getHexMap().at(coord_).get()->getActorTypes().at(0) != "vortex"){
+                                for(auto pawn : board_->getPaattiMap().at(board_->getPaattiId(coord_))->getObject().get()->getPawnsInTransport()){
 
-                                    board_->getPawnItemMap().at(pawn.get()->getId())->setNewCoord(coord_);
-                                    board_->getpawnmap().at(pawn.get()->getId())->setCoordinates(coord_);
-                                    board_->getHexMap().at(coord_).get()->addPawn(pawn);
-                                    board_->getPawnItemMap().at(pawn.get()->getId())->updateGraphics(board_->getHexMap().at(coord_).get()->getPawnAmount());
+                                  //board_->getPawnItemMap().at(pawn.get()->getId())->setNewCoord(coord_);
+                                  //board_->getpawnmap().at(pawn.get()->getId())->setCoordinates(coord_);
+                                  //board_->getHexMap().at(coord_).get()->addPawn(pawn);
+                                  //board_->getPawnItemMap().at(pawn.get()->getId())->updateGraphics(board_->getHexMap().at(coord_).get()->getPawnAmount());
+                                  //if(board_->getHexMap().at(pawnCoord).get()->getActorTypes().size() > 0){
+                                  //    if(HexMap.at(pawnCoord).get()->getActorTypes().at(0) == "vortex"){
+                                  //        removePawn(pawnId);}}
+                                    board_->movePawn(pawn.get()->getId(),coord_);
+                                }
+
+
+                                }
+                                }
+                                else{
+                                    for(auto pawn : board_->getPaattiMap().at(board_->getPaattiId(coord_))->getObject().get()->getPawnsInTransport()){
+
+                                        board_->movePawn(pawn.get()->getId(),coord_);}
+
                                 }
                                 //vaihdetaan vuoroa, mikäli tarpeen
                                 if(board_->getrunner().get()->getCurrentPlayer().get()->getActionsLeft() <= 0){
@@ -89,13 +123,23 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                                 board_->updateScoreBoard(board_->getstate().get()->getPlayerPointVector());
                             }
                             }
-                        }
-                        //liikutetaan pelinappulaa
+                        }}
+                        //liikutetaan pelinappulaa ilman transporttia
                         else if(board_->getrunner().get()->movePawn(board_->getMoveFrom(),coord_, board_->getMoveFromId()) == 0){
                             board_->getstate().get()->changeGamePhase(Common::GamePhase::SINKING);
 
+
                             board_->updateInfobox(board_->getstate().get()->currentGamePhase(), board_->getstate().get()->currentPlayer());
                             board_->updateScoreBoard(board_->getstate().get()->getPlayerPointVector());
+                        }
+                    }
+                    //jos uudessa hexagonissa on hai tai merihirvijö, nappula tulee syödyksi,
+                    //vortexin syönti tapahtuu gameboardin movepawnissa
+                    if(board_->getHexMap().at(coord_).get()->getActors().size() > 0){
+                        for(auto actor : board_->getHexMap().at(coord_).get()->getActors()){
+                            if(actor.get()->getActorType() != "vortex"){
+                                board_->moveActor(actor.get()->getId(),coord_);
+                            }
                         }
                     }
                 }
@@ -108,7 +152,12 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 
 
                         board_->getrunner()->flipTile(coord_);
-                        if(board_->getHexMap().at(coord_).get()->getActors().size() > 0){
+                        //tehdään moveActor-toiminto, jotta remove-toiminnot aktivoituvat
+                        //vortexille tätä ei tehdä
+                        if(board_->getHexMap().at(coord_).get()->getActors().size() > 0 &&
+                                board_->getHexMap().at(coord_).get()->getActors().at(0).get()->getActorType() != "vortex")
+                        {
+                            std::cout << board_->getHexMap().at(coord_).get()->getActors().size() << std::endl;
                             board_->moveActor(board_->getHexMap().at(coord_).get()->getActors().at(0).get()->getId(), coord_);
                         }
 
@@ -138,31 +187,63 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
             //vaihe3
                 else if( board_->getrunner().get()->currentGamePhase()  == 3 ){
 
-
+                    //jos kyseessä on ensimmäinen klikkaus
                     if(board_->getMoveCount() == 0){
-                        for (auto monstersi : board_->getmonstersMap()){
+                        //muiden kuin delfiinin liikuttaminen spinnerillä
+                        if(board_->getSpinnerResult().first != "dolphin"){
+                            for (auto monstersi : board_->getmonstersMap()){
 
-                            if(monstersi.second->getActor().get()->getHex().get()->getCoordinates().y == coord_.y &&
-                                    monstersi.second->getActor().get()->getHex().get()->getCoordinates().x == coord_.x &&
-                                    monstersi.second->getActor().get()->getHex().get()->getCoordinates().z == coord_.z &&
-                                    monstersi.first == board_->getActorId(coord_, board_->getSpinnerResult().first)){
+                                if(monstersi.second->getActor().get()->getHex().get()->getCoordinates().y == coord_.y &&
+                                        monstersi.second->getActor().get()->getHex().get()->getCoordinates().x == coord_.x &&
+                                        monstersi.second->getActor().get()->getHex().get()->getCoordinates().z == coord_.z &&
+                                        monstersi.first == board_->getActorId(coord_, board_->getSpinnerResult().first)){
 
-                                board_->setMoveTile(coord_, monstersi.first);
-                                break;
+                                    board_->setMoveTile(coord_, monstersi.first);
+                                    break;
+                                }
+                            }
+                        }
+                        else{
+                            for(auto transport : board_->getPaattiMap()){
+                                if(transport.second->getObject().get()->getHex().get()->getCoordinates().y == coord_.y &&
+                                        transport.second->getObject().get()->getHex().get()->getCoordinates().x == coord_.x &&
+                                        transport.second->getObject().get()->getHex().get()->getCoordinates().z == coord_.z &&
+                                        transport.first == board_->getPaattiId(coord_)){
+                                    board_->setMoveTile(coord_,transport.first);
+                                }
                             }
                         }
                     }
-
+                    //jos kyseessä on toinen klikkaus
                     else if (board_->getMoveCount() == 1){
-                        board_->setTargetTile(coord_);
-                        board_->getrunner().get()->moveActor(board_->getMoveFrom(),coord_, board_->getMoveFromId(), board_->getSpinnerResult().second);
-                        board_->getstate().get()->changeGamePhase(Common::GamePhase::MOVEMENT);
-                        board_->spinnermovement->clear();
-                        board_->getscene()->removeItem(board_->proxy);
-                        board_->updateInfobox(board_->getstate().get()->currentGamePhase(), board_->getstate().get()->currentPlayer());
+                       board_->setTargetTile(coord_);
+                       if(board_->getSpinnerResult().first != "dolphin"){
+                           board_->getrunner().get()->moveActor(board_->getMoveFrom(),coord_, board_->getMoveFromId(), board_->getSpinnerResult().second);
 
-                        board_->nextTurn();
+                            }
+                       else
+                       {
+                           //mikäli yrittää sukeltaa sääntöjen vastaisesti, menettää vuoronsa
+                           if(board_->getPaattiMap().at(board_->getPaattiId(board_->getMoveFrom()))->getObject().get()->getPawnsInTransport().size() > 0 &&
+                                   board_->getSpinnerResult().second == "D"){
+                           }
+                           else{
+                           board_->getrunner().get()->moveTransportWithSpinner
+                                   (board_->getMoveFrom(),coord_,board_->getPaattiId
+                                    (board_->getMoveFrom()), board_->getSpinnerResult().second);
 
+                                //liikutetaan myös pawneja transportissa
+                                for(auto pawn : board_->getHexMap().at(board_->getMoveFrom()).get()->getPawns()){
+                                    board_->movePawn(pawn.get()->getId(),coord_);
+                                }
+                           }
+                       }
+                       board_->getstate().get()->changeGamePhase(Common::GamePhase::MOVEMENT);
+                       board_->spinnermovement->clear();
+                       board_->getscene()->removeItem(board_->proxy);
+                       board_->updateInfobox(board_->getstate().get()->currentGamePhase(),
+                                             board_->getstate().get()->currentPlayer());
+                       board_->nextTurn();
                     }
                 }
             }
@@ -170,6 +251,8 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
         }
         else Pressed = false;
 
+        }
+        else(board_->nextTurn());
     }catch(Common::IllegalMoveException msg){
         std::cout << msg.msg() << std::endl;
     }

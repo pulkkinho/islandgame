@@ -6,7 +6,6 @@
 #include "map"
 #include "iostream"
 #include "string"
-#include "hexagon.hh"
 #include "paatti.hh"
 #include "mainwindow.hh"
 #include "monsters.hh"
@@ -16,6 +15,7 @@
 #include "QLabel"
 #include "QtWidgets"
 #include "QTimer"
+#include "hexagon.hh"
 
 
 
@@ -93,25 +93,39 @@ void GameBoard::movePawn(int pawnId, Common::CubeCoordinate pawnCoord)
     HexMap.at(oldCoord).get()->removePawn(pawnMap.at(pawnId));
 
     int x = 0;
+    //päivitetään vanhassa ruudussa olleiden muiden pawnien sijainti
     while (x < HexMap.at(oldCoord).get()->getPawnAmount()){
         pawnItemMap.at(HexMap.at(oldCoord).get()->getPawns().at(x).get()->getId())->updateGraphics(x+1);
         ++x;
     }
-    if(HexMap.at(pawnCoord).get()->getTransports().size() > 0){
+    if(HexMap.at(pawnCoord).get()->getTransports().size() > 0 && HexMap.at(pawnCoord).get()->getTransports().at(0).get()->getCapacity() > 0){
         HexMap.at(pawnCoord).get()->getTransports().at(0).get()->addPawn(pawnMap.at(pawnId));
     }
     pawnItemMap.at(pawnId)->setNewCoord(pawnCoord);
     pawnMap.at(pawnId)->setCoordinates(pawnCoord);
-
     HexMap.at(pawnCoord).get()->addPawn(pawnMap.at(pawnId));
-
     pawnItemMap.at(pawnId)->updateGraphics(HexMap.at(pawnCoord).get()->getPawnAmount());
 
+
+
     if(checkPoints(pawnCoord)==true){
-        std::cout<<" KALAJAAAA" << std::endl;
-        // henri pls poista
-        //HexMap.at(pawnCoord).get()->removePawn(pawnMap.at(pawnId));
-        // pawnmapremove
+
+        for(auto paatti : paattiMap){
+            if(paatti.second->getObject().get()->isPawnInTransport(pawnMap.at(pawnId)) == true){
+                paatti.second->getObject().get()->removePawn(pawnMap.at(pawnId));
+            }
+        }
+
+        if(HexMap.at(pawnMap.at(pawnId).get()->getCoordinates()).get()->getPawnAmount() > 0){
+        HexMap.at(pawnItemMap.at(pawnId)->getCoord()).get()->removePawn(pawnMap.at(pawnId));
+        }
+        pawnMap.erase(pawnId);
+    }
+
+    if(HexMap.at(pawnCoord).get()->getActorTypes().size() > 0){
+        if(HexMap.at(pawnCoord).get()->getActorTypes().at(0) == "vortex"){
+            removePawn(pawnId);
+        }
     }
     moveCount = 0;
 }
@@ -119,16 +133,15 @@ void GameBoard::movePawn(int pawnId, Common::CubeCoordinate pawnCoord)
 
 void GameBoard::removePawn(int pawnId)
 {
-    // toimiiks?
-    std::cout << "removepawn" << std::endl;
-
     for(std::unordered_map<int, std::shared_ptr<Common::Pawn>>::iterator it = pawnMap.begin(); it != pawnMap.end(); it++)
     {
         if((it->first) == pawnId)
         {
+            if(HexMap.at(pawnMap.at(pawnId).get()->getCoordinates()).get()->getPawnAmount() > 0){
+            HexMap.at(pawnItemMap.at(pawnId)->getCoord()).get()->removePawn(pawnMap.at(pawnId));
+            }
             pawnMap.erase(it);
             sceneptr_->removeItem(pawnItemMap.at(pawnId));
-            
             break;
         }
     }
@@ -137,19 +150,39 @@ void GameBoard::removePawn(int pawnId)
 
 void GameBoard::addActor(std::shared_ptr<Common::Actor> actor, Common::CubeCoordinate actorCoord)
 {
+    actorMap.insert(std::make_pair(actor.get()->getId(), actorCoord));
+    monsters* superpaatti = new monsters(actor, actorCoord);
+    superpaatti->setmonsters(actor);
+    HexMap.at(actorCoord).get()->addActor(actor);
+    actor.get()->addHex(HexMap.at(actorCoord));
+    sceneptr_->addItem(superpaatti);
+    monstersMap.insert(std::make_pair(actor.get()->getId(), superpaatti));
 
-    for(auto untamo : HexMap){
-
-        if( untamo.second.get()->getCoordinates().x == actorCoord.x && untamo.second.get()->getCoordinates().y == actorCoord.y){
-            actorMap.insert(std::make_pair(actor.get()->getId(), actorCoord));
-            monsters* superpaatti = new monsters(actor, actorCoord);
-            superpaatti->setmonsters(actor);
-            actor.get()->addHex(HexMap.at(actorCoord));
-            sceneptr_->addItem(superpaatti);
-            std::cout << actor << " actor gb" << std::endl;
-         std::cout << actor.get()->getId() << std::endl;
-            monstersMap.insert(std::make_pair(actor.get()->getId(), superpaatti));
-
+    if(actor.get()->getActorType() == "vortex"){
+        //poistetaan mahdolliset hexissä olleet pawnit
+        if(HexMap.at(actorCoord).get()->getPawnAmount() > 0){
+            for (auto pawn: HexMap.at(actorCoord).get()->getPawns()){
+                removePawn(pawn.get()->getId());
+            }
+        }
+        //poistetaan ympäröivien hexien transportit..
+        for(auto hexCoord : HexMap.at(actorCoord).get()->getNeighbourVector()){
+            if(HexMap.at(hexCoord).get()->getTransports().size()>0){
+                removeTransport(HexMap.at(hexCoord).get()->getTransports().at(0).get()->getId());
+            }
+            //..ja pawnit..
+            if(HexMap.at(hexCoord).get()->getPawnAmount()>0){
+                for (auto pawn : HexMap.at(hexCoord).get()->getPawns()){
+                    removePawn(pawn.get()->getId());
+                }
+            }//..ja actorit vortexeja lukuunottamatta
+            if(HexMap.at(hexCoord).get()->getActors().size() > 0){
+                for(auto actor : HexMap.at(hexCoord).get()->getActors()){
+                    if(actor.get()->getActorType() != "vortex"){
+                    removeActor(actor.get()->getId());
+                    }
+                }
+            }
         }
     }
 }
@@ -164,21 +197,27 @@ void GameBoard::moveActor(int actorId, Common::CubeCoordinate actorCoord)
     monstersMap.at(actorId)->getActor().get()->doAction();
     HexMap.at(actorCoord).get()->addActor(monstersMap.at(actorId)->getActor());
     if(transportit.size() != HexMap.at(actorCoord).get()->getTransports().size()){
-        HexMap.at(actorCoord).get()->removeTransport(transportit.at(0));
-        sceneptr_->removeItem(paattiMap.at(transportit.at(0).get()->getId()));
+            removeTransport(paattiMap.at(getPaattiId(actorCoord))->getObject().get()->getId());
+
     }
 
     if(pawnit.size() != HexMap.at(actorCoord).get()->getPawns().size()){
-        int indeksi = 0;
-        for(auto x : pawnit){
-            HexMap.at(actorCoord).get()->removePawn(pawnit.at(indeksi));
-            sceneptr_->removeItem(pawnItemMap.at(pawnit.at(indeksi).get()->getId()));
-            ++indeksi;
+        for(auto pawn : pawnit){
+            removePawn(pawn.get()->getId());
+        }
+    }
+    bool remove = false;
+    for(auto actor : HexMap.at(actorCoord).get()->getActorTypes()){
+        if(actor == "vortex"){
+            removeActor(actorId);
+            remove = true;
         }
     }
 
-    monstersMap.at(actorId)->setNewCoord(actorCoord);
-    monstersMap.at(actorId)->updateGraphics();
+    if (remove == false){
+        monstersMap.at(actorId)->setNewCoord(actorCoord);
+        monstersMap.at(actorId)->updateGraphics();
+    }
 }
 
 void GameBoard::removeActor(int actorId)
@@ -188,9 +227,12 @@ void GameBoard::removeActor(int actorId)
     for(std::map<int, Common::CubeCoordinate>::iterator it = actorMap.begin(); it != actorMap.end(); it++)
     {
         if((it->first) == actorId)
-        {
+        {   if(HexMap.at(actorMap.at(actorId)).get()->getActors().size() > 0){
+            HexMap.at(actorMap.at(actorId)).get()->removeActor(monstersMap.at(actorId)->getActor());
+            }
             actorMap.erase(it);
             sceneptr_->removeItem(monstersMap.at(actorId));
+            monstersMap.erase(actorId);
             break;
         }
     }
@@ -203,9 +245,9 @@ void GameBoard::addHex(std::shared_ptr<Common::Hex> newHex)
     int z = newHex.get()->getCoordinates().z;
     int x = newHex.get()->getCoordinates().x;
     int y = newHex.get()->getCoordinates().y;
-    coordinates.push_back(coord);
 
     Widget* super = new Widget(newHex, newHex.get()->getPieceType(), x, y, z, this, newHex.get()->getCoordinates());
+
 
     sceneptr_->addItem(super);
 
@@ -219,17 +261,14 @@ std::shared_ptr<GameState> GameBoard::getstate()
 
 std::pair<std::string, std::string> GameBoard::spinwheel()
 {
-    //spinbutton->isChecked()
-
     std::pair<std::string,std::string> result = this->getrunner().get()->spinWheel();
 
     spinner = new spinneranimation(result.first,result.second);
     spinner->startanimation();
 
     proxy = sceneptr_->addWidget(spinner);
+    std::cout << result.first << " spin" << std::endl;
 
-
-    //sceneptr_->removeItem(proxy);
 
     spinnermovement = new QLabel();
     spinnermovement->setStyleSheet("QLabel { background-color : white; color : blue; }");
@@ -248,29 +287,32 @@ std::pair<std::string, std::string> GameBoard::spinwheel()
             return result;
         }
     }
+    if (result.first == "dolphin"){
+        for (auto transport : paattiMap){
+            if(transport.second->getObject().get()->getTransportType() == "dolphin"){
+                return result;
+            }
+        }
+    }
     nextTurn();
 }
 
 void GameBoard::addTransport(std::shared_ptr<Common::Transport> transport, Common::CubeCoordinate coord)
 {
     std::string tyyppi = transport.get()->getTransportType();
-    for(auto untamo : HexMap){
-
-        if( untamo.second.get()->getCoordinates().x == coord.x && untamo.second.get()->getCoordinates().y == coord.y){
 
 
-
-            actorMap.insert(std::make_pair(transport.get()->getId(),coord));
-            Paatti* superpaatti = new Paatti(transport, coord);
-            sceneptr_->addItem(superpaatti);
-            HexMap.at(coord).get()->addTransport(transport);
-
-            paattiMap.insert(std::make_pair(transport.get()->getId(), superpaatti));
-            //lisätään mahdolliset jo hexissä olleet pawnit transporttiin
-            if(HexMap.at(coord).get()->getPawnAmount() > 0){
-                for(auto x : HexMap.at(coord).get()->getPawns()){
-                    transport.get()->addPawn(x);
-                }
+    actorMap.insert(std::make_pair(transport.get()->getId(),coord));
+    Paatti* superpaatti = new Paatti(transport, coord);
+    sceneptr_->addItem(superpaatti);
+    transport.get()->addHex(HexMap.at(coord));
+    HexMap.at(coord).get()->addTransport(transport);
+    paattiMap.insert(std::make_pair(transport.get()->getId(), superpaatti));
+    //lisätään mahdolliset jo hexissä olleet pawnit transporttiin
+    if(HexMap.at(coord).get()->getPawnAmount() > 0){
+        for(auto x : HexMap.at(coord).get()->getPawns()){
+            if(transport.get()->getCapacity() > 0){
+                transport.get()->addPawn(x);
             }
         }
     }
@@ -278,19 +320,39 @@ void GameBoard::addTransport(std::shared_ptr<Common::Transport> transport, Commo
 
 void GameBoard::moveTransport(int id, Common::CubeCoordinate coord)
 {
+
     paattiMap.at(id)->getObject().get()->addHex(HexMap.at(coord));
     HexMap.at(coord).get()->removeTransport(paattiMap.at(id)->getObject());
     HexMap.at(coord).get()->addTransport(paattiMap.at(id)->getObject());
     paattiMap.at(id)->setNewCoord(coord);
     paattiMap.at(id)->updateGraphics();
+    if(HexMap.at(coord).get()->getPawnAmount() > 0){
+        for(auto pawn : HexMap.at(coord).get()->getPawns()){
+            paattiMap.at(id)->getObject().get()->addPawn(pawn);
+        }
+    }
+    if(HexMap.at(coord).get()->getActorTypes().size() > 0){
+        if(paattiMap.at(id)->getObject().get()->getPawnsInTransport().size() > 0
+                && HexMap.at(coord).get()->getActorTypes().at(0) == "vortex"){
+            for(auto pawns : paattiMap.at(id)->getObject().get()->getPawnsInTransport()){
+                removePawn(pawns.get()->getId());
+            }
+        }
+        if(HexMap.at(coord).get()->getActorTypes().at(0) == "vortex"){
+            removeTransport(id);
+        }
+
+    }
 }
 
 void GameBoard::removeTransport(int id)
 {
-    std::cout << "removetransport" << std::endl;
-    paattiMap.erase(id);
-    sceneptr_->removeItem(paattiMap.at(id));
 
+    if(HexMap.at(paattiMap.at(id)->getCoord()).get()->getTransports().size() > 0){
+    HexMap.at(paattiMap.at(id)->getCoord()).get()->removeTransport(paattiMap.at(id)->getObject());
+    }
+    sceneptr_->removeItem(paattiMap.at(id));
+    paattiMap.erase(id);
 }
 
 void GameBoard::drawwheel()
@@ -366,6 +428,7 @@ std::map<int, monsters *> GameBoard::getmonstersMap()
 
 void GameBoard::nextTurn()
 {
+    if(checkIfGameOver() == false){
     if(runner.get()->getCurrentPlayer().get()->getPlayerId() == runner.get()->playerAmount()){
 
         runner.get()->getCurrentPlayer().get()->setActionsLeft(3);
@@ -378,6 +441,7 @@ void GameBoard::nextTurn()
     }
     bool loyty = false;
     for(auto pawn : pawnMap){
+        std::cout << pawnMap.size() << " size" << std::endl;
         if (pawn.second.get()->getPlayerId() == runner.get()->getCurrentPlayer().get()->getPlayerId()){
             loyty = true;
         }
@@ -391,14 +455,44 @@ void GameBoard::nextTurn()
     spinnermovement->clear();
     sceneptr_->removeItem(proxy);
     this->updateInfobox(this->getstate().get()->currentGamePhase(), this->getstate().get()->currentPlayer());
+    }
 
+    //pelin loppu
+    else{
+        std::vector<int> winners;
+        int highscore = 0;
+        for(auto player : getstate().get()->getPlayerPointVector()){
+            int id = player.first;
+            int score = player.second;
+            std::cout << id << " " << score << std::endl;
+            if (score > highscore){
+                std::cout << "huu" << std::endl;
+                highscore = score;
+                winners.clear();
+                winners.push_back(id);
+            }
+            else if(score == highscore){
+                winners.push_back(id);
+            }
+        }
+        std::cout << winners.size() << "öööl" << std::endl;
+        if(winners.size() > 1){
+            std::cout << "tie" << std::endl;
 
+            infobox.get()->gameOver(true, 0);
+        }
+        else{std::cout << "viineri" << std::endl;
+            infobox.get()->gameOver(false, winners.at(0));
+        }
+    }
 }
 
 std::map<int, Paatti *> GameBoard::getPaattiMap()
 {
     return paattiMap;
 }
+
+
 
 bool GameBoard::checkPoints(Common::CubeCoordinate pawnNewCoord)
 {
@@ -411,13 +505,17 @@ bool GameBoard::checkPoints(Common::CubeCoordinate pawnNewCoord)
             }
         }
     }
+    return false;
 }
 
-void GameBoard::checkIfGameOver()
+bool GameBoard::checkIfGameOver()
 {
     if(pawnMap.size() == 0 ){
         // joku configwindowin tapainen asia ja kun exec->exit(0)
+
+        return true;
     }
+    return false;
 }
 
 
@@ -466,8 +564,7 @@ std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>> GameBoard::getHex
 }
 
 std::unordered_map<int, std::shared_ptr<Common::Pawn>> GameBoard::getpawnmap(){
-    for (auto masa : pawnMap){
-    }
+
     return pawnMap;
 }
 

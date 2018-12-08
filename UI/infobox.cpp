@@ -21,6 +21,7 @@ void infoBox::updateGraphics()
     this->resize(400,40);
     QGridLayout *vbl = new QGridLayout(this);
 
+
     if(currentGamePhase_ == 1){
         phase = QString::fromStdString(" please move your pawn(s)");
     }
@@ -38,9 +39,24 @@ void infoBox::updateGraphics()
 
 }
 
+
+
 void infoBox::setNew(Common::GamePhase currenPhase, int playerInTurn)
 {
     currentGamePhase_ = currenPhase;
     playerInTurn_ = playerInTurn;
 
+}
+
+void infoBox::gameOver(bool tie, int winner)
+{
+    if(tie == true){
+        kukko->setText("Game over! It's a tie!");
+    }
+    else {
+
+        playernumber = QString::number(winner);
+        phase = QString::fromStdString(" is da winner!");
+        kukko->setText("Game over! Player " +playernumber  + phase);
+    }
 }
