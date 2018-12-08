@@ -5,8 +5,9 @@
 #-------------------------------------------------
 
 QT       += testlib
+QT       += widgets
 
-QT       -= gui
+QT       += core gui
 
 TARGET = tst_gameboardtest
 CONFIG   += console
@@ -39,6 +40,15 @@ SOURCES += \
     ../../../GameLogic/Engine/formatexception.cpp \
     ../../../GameLogic/Engine/gameexception.cpp \
     ../../../UI/gameboard.cpp \
+    ../../../UI/pawnitem.cpp \
+    ../../../UI/hexagon.cpp \
+    ../../../UI/monsters.cpp \
+    ../../../UI/paatti.cpp \
+    ../../../UI/infobox.cpp \
+    ../../../UI/spinnerwheel.cpp \
+    ../../../UI/spinneranimation.cpp \
+    ../../../UI/gamestate.cpp \
+    ../../../UI/scoreboardui.cpp \
     ../../../GameLogic/Engine/pawn.cpp \
     ../../../GameLogic/Engine/transport.cpp \
     ../../../GameLogic/Engine/dolphin.cpp \
@@ -59,8 +69,16 @@ HEADERS += \
     ../../../GameLogic/Engine/ioexception.hh \
     ../../../GameLogic/Engine/formatexception.hh \
     ../../../GameLogic/Engine/gameexception.hh \
-    ../../../GameLogic/Engine/igameboard.hh \
+    ../../../GameLogic/Engine/igameboard \
     ../../../UI/gameboard.hh \
+    ../../../UI/pawnitem.hh \
+    ../../../UI/monsters.hh \
+    ../../../UI/hexagon.hh \
+    ../../../UI/paatti.hh \
+    ../../../UI/infobox.hh \
+    ../../../UI/gamestate.hh \
+    ../../../UI/spinnerwheel.hh \
+    ../../../UI/spinneranimation.hh \
     ../../../GameLogic/Engine/pawn.hh \
     ../../../GameLogic/Engine/transport.hh \
     ../../../GameLogic/Engine/dolphin.hh \

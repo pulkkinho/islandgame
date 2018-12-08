@@ -7,8 +7,8 @@
 
 #include <QGraphicsSceneMouseEvent>
 
-Paatti::Paatti(std::shared_ptr<Common::Transport> Paatti, Common::CubeCoordinate coord, QGraphicsItem* parent):
-    QGraphicsPixmapItem(parent),paatti_(Paatti), coord_(coord)
+Paatti::Paatti(std::shared_ptr<Common::Transport> Paatti, Common::CubeCoordinate coord, QGraphicsScene* scene, QGraphicsItem* parent):
+    QGraphicsPixmapItem(parent),paatti_(Paatti), coord_(coord), sceneptr_(scene)
 
 {
     updateGraphics();
@@ -55,4 +55,9 @@ std::shared_ptr<Common::Transport> Paatti::getObject()
 Common::CubeCoordinate Paatti::getCoord()
 {
     return coord_;
+}
+
+void Paatti::addToScene()
+{
+    sceneptr_->addItem(this);
 }

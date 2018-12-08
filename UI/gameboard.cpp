@@ -8,14 +8,22 @@
 #include "string"
 #include "paatti.hh"
 #include "mainwindow.hh"
-#include "monsters.hh"
 #include "spinnerwheel.hh"
 #include <stdio.h>
-#include "pawn.hh"
 #include "QLabel"
 #include "QtWidgets"
-#include "QTimer"
+#include "infobox.hh"
+#include "gamestate.hh"
 #include "hexagon.hh"
+
+#include "pawnitem.hh"
+#include "pawn.hh"
+#include "monsters.hh"
+
+#include <QGraphicsItem>
+#include <QGraphicsView>
+#include <QGraphicsScene>
+#include "QTimer"
 
 
 
@@ -23,7 +31,6 @@ GameBoard::GameBoard():
     Common::IGameBoard()
 
 {
-    sceneptr_ = new QGraphicsScene;
 
 
 }
@@ -73,13 +80,6 @@ void GameBoard::addPawn(int playerId, int pawnId, Common::CubeCoordinate coord)
 
     //hexmappiin pawn
     HexMap.at(coord).get()->addPawn(pawnMap.at(pawnId));
-    Pawnitem* apina = new Pawnitem(playerId,pawnId,coord,HexMap.at(coord));
-    //pawnitemille oikea hex
-    apina->setHex(HexMap.at(coord));
-    sceneptr_->addItem(apina);
-    //pawnitem oikeaan positioon
-    apina->updateGraphics(HexMap.at(coord).get()->getPawnAmount());
-    pawnItemMap.insert(std::make_pair(pawnId, apina));
 
 }
 
@@ -151,12 +151,13 @@ void GameBoard::removePawn(int pawnId)
 void GameBoard::addActor(std::shared_ptr<Common::Actor> actor, Common::CubeCoordinate actorCoord)
 {
     actorMap.insert(std::make_pair(actor.get()->getId(), actorCoord));
-    monsters* superpaatti = new monsters(actor, actorCoord);
+    monsters* superpaatti = new monsters(actor, actorMap.at(actor.get()->getId()), sceneptr_);
     superpaatti->setmonsters(actor);
-    HexMap.at(actorCoord).get()->addActor(actor);
-    actor.get()->addHex(HexMap.at(actorCoord));
-    sceneptr_->addItem(superpaatti);
+    HexMap.at(actorMap.at(actor.get()->getId())).get()->addActor(actor);
+    actor.get()->addHex(HexMap.at(actorMap.at(actor.get()->getId())));
     monstersMap.insert(std::make_pair(actor.get()->getId(), superpaatti));
+
+
 
     if(actor.get()->getActorType() == "vortex"){
         //poistetaan mahdolliset hexissä olleet pawnit
@@ -241,17 +242,17 @@ void GameBoard::removeActor(int actorId)
 void GameBoard::addHex(std::shared_ptr<Common::Hex> newHex)
 {
     Common::CubeCoordinate coord = newHex.get()->getCoordinates();
-    HexMap.insert(std::make_pair(coord, newHex));
-    int z = newHex.get()->getCoordinates().z;
-    int x = newHex.get()->getCoordinates().x;
-    int y = newHex.get()->getCoordinates().y;
+    bool neww = true;
+    for(auto hex : HexMap){
+        if(hex.first.x == coord.x && hex.first.y == coord.y && hex.first.z == coord.z){
+            HexMap.at(hex.first) = newHex;
+            neww = false;
+        }
+    }
+    if (neww == true){
+        HexMap.insert(std::make_pair(coord, newHex));
 
-    Widget* super = new Widget(newHex, newHex.get()->getPieceType(), x, y, z, this, newHex.get()->getCoordinates());
-
-
-    sceneptr_->addItem(super);
-
-
+    }
 }
 
 std::shared_ptr<GameState> GameBoard::getstate()
@@ -299,12 +300,7 @@ std::pair<std::string, std::string> GameBoard::spinwheel()
 
 void GameBoard::addTransport(std::shared_ptr<Common::Transport> transport, Common::CubeCoordinate coord)
 {
-    std::string tyyppi = transport.get()->getTransportType();
-
-
-    actorMap.insert(std::make_pair(transport.get()->getId(),coord));
-    Paatti* superpaatti = new Paatti(transport, coord);
-    sceneptr_->addItem(superpaatti);
+    Paatti* superpaatti = new Paatti(transport, coord, sceneptr_);
     transport.get()->addHex(HexMap.at(coord));
     HexMap.at(coord).get()->addTransport(transport);
     paattiMap.insert(std::make_pair(transport.get()->getId(), superpaatti));
@@ -516,6 +512,50 @@ bool GameBoard::checkIfGameOver()
         return true;
     }
     return false;
+}
+
+void GameBoard::setScene()
+{
+
+    sceneptr_ = new QGraphicsScene;
+}
+
+void GameBoard::addHextoScene()
+{
+    for(auto hex : HexMap){
+        std::shared_ptr<Common::Hex> newHex = hex.second;
+
+        int z = newHex.get()->getCoordinates().z;
+        int x = newHex.get()->getCoordinates().x;
+        int y = newHex.get()->getCoordinates().y;
+
+        Widget* super = new Widget(newHex, newHex.get()->getPieceType(), x, y, z, this, newHex.get()->getCoordinates());
+        sceneptr_->addItem(super);
+    }
+
+
+
+}
+
+void GameBoard::addActorsToScene(int actorId)
+{
+}
+
+void GameBoard::addPawnsToScene()
+{
+    for(auto pawn : pawnMap){
+        std::shared_ptr<Common::Pawn> pawni = pawn.second;
+        Pawnitem* apina = new Pawnitem(pawni.get()->getPlayerId(),
+                                       pawn.first, pawni.get()->getCoordinates(),
+                                       HexMap.at(pawni.get()->getCoordinates()),
+                                       sceneptr_);
+        //pawnitemille oikea hex
+        apina->setHex(HexMap.at(pawni.get()->getCoordinates()));
+        //pawnitem oikeaan positioon
+        apina->updateGraphics(HexMap.at(pawni.get()->getCoordinates()).get()->getPawnAmount());
+        pawnItemMap.insert(std::make_pair(pawn.first, apina));
+        sceneptr_->addItem(apina);
+    }
 }
 
 

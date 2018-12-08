@@ -1,5 +1,5 @@
-#ifndef KOKLAUS_HH
-#define KOKLAUS_HH
+#ifndef HEXAGON_HH
+#define HEXAGON_HH
 
 #include <QWidget>
 #include <QPainterPath>
@@ -41,4 +41,4 @@ private:
 
 };
 
-#endif // KOKLAUS_HH
+#endif // HEXAGON_HH

@@ -3,17 +3,16 @@
 
 #include <map>
 #include <unordered_map>
-#include "QGraphicsScene"
-#include <QGraphicsItem>
-#include <QGraphicsView>
-#include "igamerunner.hh"
 #include "cmath"
+#include <iostream>
+
+#include "QPushButton"
+#include "QGraphicsScene"
+#include "igamerunner.hh"
 #include "gameengine.hh"
 #include "mainwindow.hh"
 
 #include "igameboard.hh"
-#include <iostream>
-#include "QPushButton"
 #include "infobox.hh"
 #include "scoreboardui.hh"
 #include "monsters.hh"
@@ -295,6 +294,14 @@ public:
 
     bool checkIfGameOver();
 
+    void setScene();
+
+    void addHextoScene();
+
+    void addActorsToScene(int);
+
+    void addPawnsToScene();
+
     spinneranimation* spinner;
     QGraphicsProxyWidget *proxy;
     QLabel *spinnermovement;
@@ -308,6 +315,7 @@ private:
 
     std::map<int, Paatti*> paattiMap;
     std::map<int, Common::CubeCoordinate> actorMap;
+    std::map<int, std::shared_ptr<Common::Actor>> actorObjectMap;
 
     std::shared_ptr<Common::IGameRunner> runner;
 

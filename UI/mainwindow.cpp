@@ -12,7 +12,8 @@ MainWindow::MainWindow( QWidget *parent) :
 
     GameBoard peliloota;
     std::shared_ptr<GameBoard> boardptr = std::make_shared<GameBoard>(peliloota);
-    view_.setScene(peliloota.getscene());
+
+    boardptr.get()->setScene();
 
     GameState gamesteitti;
     std::shared_ptr<GameState> statePtr = std::make_shared<GameState>(gamesteitti);
@@ -34,6 +35,13 @@ MainWindow::MainWindow( QWidget *parent) :
 
 
     std::shared_ptr<Common::IGameRunner> peli = Common::Initialization::getGameRunner(boardptr,statePtr,pelaajavektori);
+
+    boardptr.get()->setrunner(peli);
+    boardptr.get()->addHextoScene();
+    //pawnit ja pelin alussa olevat veneet sceneen
+    for(auto transport : boardptr.get()->getPaattiMap()){
+        transport.second->addToScene();
+    }
 
     std::shared_ptr<Common::SpinnerLayout> wheel(nullptr);
 
@@ -81,7 +89,9 @@ MainWindow::MainWindow( QWidget *parent) :
         }
         x=x+1;
     }
-    boardptr.get()->setrunner(peli);
+
+    boardptr.get()->addPawnsToScene();
+    view_.setScene(boardptr.get()->getscene());
 
     statePtr.get()->setrunner(peli);
 

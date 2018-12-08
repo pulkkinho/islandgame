@@ -7,9 +7,8 @@
 #include "actor.hh"
 #include "actorfactory.hh"
 
-#include <QGraphicsSceneMouseEvent>
-monsters::monsters(std::shared_ptr<Common::Actor> monstersi, Common::CubeCoordinate coord, QGraphicsItem* parent):
-    QGraphicsPixmapItem(parent),monsters_(monstersi), coord_(coord)
+monsters::monsters(std::shared_ptr<Common::Actor> monstersi, Common::CubeCoordinate coord, QGraphicsScene* scene, QGraphicsItem* parent):
+    QGraphicsPixmapItem(parent),monsters_(monstersi), coord_(coord), sceneptr_(scene)
 
 {
     monsters_.get()->getActorType();
@@ -82,4 +81,9 @@ void monsters::setmonsters(std::shared_ptr<Common::Actor> aktori)
 Common::CubeCoordinate monsters::getCoord()
 {
     return coord_;
+}
+
+void monsters::addToScene()
+{
+    sceneptr_->addItem(this);
 }

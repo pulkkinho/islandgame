@@ -17,12 +17,13 @@ class Pawnitem : public QGraphicsPixmapItem
 {
 
 public:
-    Pawnitem(int playerid,int ID, Common::CubeCoordinate coord, std::shared_ptr<Common::Hex>, QGraphicsItem* parent =NULL);
+    Pawnitem(int playerid,int ID, Common::CubeCoordinate coord, std::shared_ptr<Common::Hex>, QGraphicsScene* scene, QGraphicsItem* parent =NULL);
 
     void updateGraphics(int slotti);
     void setNewCoord(Common::CubeCoordinate newCoord);
     void setHex(std::shared_ptr<Common::Hex> hex);
     Common::CubeCoordinate getCoord();
+    void addToScene();
 
 
 
@@ -30,6 +31,7 @@ public:
 private:
     int playerId_;
      int pawnID_;
+     QGraphicsScene* sceneptr_;
      Common::CubeCoordinate coord_;
      std::shared_ptr<Common::Hex> hexi_;
 

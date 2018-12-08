@@ -12,7 +12,6 @@ Widget::Widget(std::shared_ptr<Common::Hex> Hexi, std::string Tyyppi, int x, int
     QGraphicsPolygonItem(parent), hexptr(Hexi), tyyppi(Tyyppi), x_(x), y_(y),
     z_(z), board_(board), coord_(coord)
 {
-
     Pressed = false;
     flip = false;
 }
@@ -154,10 +153,15 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                         board_->getrunner()->flipTile(coord_);
                         //tehdään moveActor-toiminto, jotta remove-toiminnot aktivoituvat
                         //vortexille tätä ei tehdä
+                        if(board_->getmonstersMap().size() > 0){
+                        board_->getmonstersMap().rbegin()->second->addToScene();
+                        }
+                        if(board_->getPaattiMap().size() > 0){
+                            board_->getPaattiMap().rbegin()->second->addToScene();
+                        }
                         if(board_->getHexMap().at(coord_).get()->getActors().size() > 0 &&
                                 board_->getHexMap().at(coord_).get()->getActors().at(0).get()->getActorType() != "vortex")
                         {
-                            std::cout << board_->getHexMap().at(coord_).get()->getActors().size() << std::endl;
                             board_->moveActor(board_->getHexMap().at(coord_).get()->getActors().at(0).get()->getId(), coord_);
                         }
 

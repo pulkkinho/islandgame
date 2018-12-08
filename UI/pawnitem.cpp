@@ -1,11 +1,12 @@
 #include "pawnitem.hh"
 #include "iostream"
 #include "gameboard.hh"
-Pawnitem::Pawnitem(int playerid,int ID, Common::CubeCoordinate coord, std::shared_ptr<Common::Hex> hexi, QGraphicsItem* parent):
-    QGraphicsPixmapItem(parent),playerId_(playerid),pawnID_(ID), coord_(coord), hexi_(hexi)
+Pawnitem::Pawnitem(int playerid,int ID, Common::CubeCoordinate coord, std::shared_ptr<Common::Hex> hexi,
+                   QGraphicsScene* scene, QGraphicsItem* parent):
+    QGraphicsPixmapItem(parent),playerId_(playerid),pawnID_(ID), coord_(coord), hexi_(hexi), sceneptr_(scene)
 
 {
-    //updategraphics?
+
 }
 
 void Pawnitem::setNewCoord(Common::CubeCoordinate newCoord)
@@ -21,6 +22,11 @@ void Pawnitem::setHex(std::shared_ptr<Common::Hex> hex)
 Common::CubeCoordinate Pawnitem::getCoord()
 {
     return coord_;
+}
+
+void Pawnitem::addToScene()
+{
+    sceneptr_->addItem(this);
 }
 
 void Pawnitem::updateGraphics(int slotti)

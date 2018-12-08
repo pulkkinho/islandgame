@@ -12,13 +12,14 @@
 #include <QVector>
 #include <QGraphicsItem>
 #include <QObject>
+#include <QGraphicsScene>
 
 
 class monsters : public QGraphicsPixmapItem
 {
 
 public:
-    monsters(std::shared_ptr<Common::Actor> monsters, Common::CubeCoordinate coord, QGraphicsItem* parent =NULL);
+    monsters(std::shared_ptr<Common::Actor> monsters, Common::CubeCoordinate coord, QGraphicsScene* scene, QGraphicsItem* parent =NULL);
 
     void updateGraphics();
     void setNewCoord(Common::CubeCoordinate coordi);
@@ -30,11 +31,15 @@ public:
 
     Common::CubeCoordinate getCoord();
 
+    void addToScene();
+
 
 
 
 
 private:
+
+     QGraphicsScene* sceneptr_;
      std::shared_ptr<Common::Actor> monsters_;
      Common::CubeCoordinate coord_;
 

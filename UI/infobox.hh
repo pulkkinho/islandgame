@@ -3,7 +3,6 @@
 #include <QObject>
 #include <QWidget>
 #include "QtWidgets"
-#include "iplayer.hh"
 #include "gamestate.hh"
 
 class infoBox : public QWidget
