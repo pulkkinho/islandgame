@@ -38,9 +38,9 @@ MainWindow::MainWindow( QWidget *parent) :
 
     boardptr.get()->setrunner(peli);
     boardptr.get()->addHextoScene();
-    //pawnit ja pelin alussa olevat veneet sceneen
-    for(auto transport : boardptr.get()->getPaattiMap()){
-        transport.second->addToScene();
+    //pelin alussa olevat veneet sceneen
+    for(auto transport : boardptr.get()->getTransportMap()){
+        boardptr.get()->addToScene(transport.second.get()->getHex().get()->getCoordinates());
     }
 
     std::shared_ptr<Common::SpinnerLayout> wheel(nullptr);
@@ -70,11 +70,7 @@ MainWindow::MainWindow( QWidget *parent) :
 
                             if(untamo.first.x == xx && untamo.first.y == yy && untamo.first.z == zz){
                                 Common::CubeCoordinate koordit (xx, yy, zz) ;
-                                std::shared_ptr<Common::Pawn> nappu(nullptr);
-                                nappu = std::make_shared<Common::Pawn>(pawnid,playerid,koordit);
-                                pawn_.setId(3*x+pawncounter,x);
-                                boardptr.get()->addtopawnmap(nappu.get()->getId(),nappu);
-                                boardptr.get()->addPawn(pelaajavektori.at(x).get()->getPlayerId(),nappu.get()->getId(),untamo.first);
+                                boardptr.get()->addPawn(playerid,pawnid, koordit);
                                 lammio = true;
                             }
                         }

@@ -151,14 +151,9 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 
 
                         board_->getrunner()->flipTile(coord_);
+                        board_->addToScene(coord_);
                         //tehdään moveActor-toiminto, jotta remove-toiminnot aktivoituvat
                         //vortexille tätä ei tehdä
-                        if(board_->getmonstersMap().size() > 0){
-                        board_->getmonstersMap().rbegin()->second->addToScene();
-                        }
-                        if(board_->getPaattiMap().size() > 0){
-                            board_->getPaattiMap().rbegin()->second->addToScene();
-                        }
                         if(board_->getHexMap().at(coord_).get()->getActors().size() > 0 &&
                                 board_->getHexMap().at(coord_).get()->getActors().at(0).get()->getActorType() != "vortex")
                         {

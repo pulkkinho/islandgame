@@ -6,6 +6,7 @@
 #include "QColor"
 #include "actor.hh"
 #include "actorfactory.hh"
+#include "QApplication"
 
 monsters::monsters(std::shared_ptr<Common::Actor> monstersi, Common::CubeCoordinate coord, QGraphicsScene* scene, QGraphicsItem* parent):
     QGraphicsPixmapItem(parent),monsters_(monstersi), coord_(coord), sceneptr_(scene)

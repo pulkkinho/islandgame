@@ -13,7 +13,7 @@ spinneranimation::spinneranimation(std::string actor,std::string amount,QWidget 
 }
 
 // Funktio spinnerinuolen pyörimisen aloittamiseksi
-// pyörii kolmen sekunnin ajan
+// pyörii sekunnin ajan
 void spinneranimation::startanimation()
 {
     movie_ = new QMovie("://spinneri.gif");
@@ -21,7 +21,7 @@ void spinneranimation::startanimation()
     gif_anim->setMovie(movie_);
     movie_->start();
     this->setGeometry(-170,-90,40,40);
-    QTimer::singleShot(3000, this, SLOT(stopanimation()));
+    QTimer::singleShot(1000, this, SLOT(stopanimation()));
 }
 
 // Funktio spinnerin pyörimisen lopettamiseksi.

@@ -302,6 +302,15 @@ public:
 
     void addPawnsToScene();
 
+    std::string getFlipType();
+
+    std::map<int, std::shared_ptr<Common::Actor>> getActorObjectMap();
+
+    void addToScene(Common::CubeCoordinate);
+
+    std::map<int, std::shared_ptr<Common::Transport>> getTransportMap();
+
+
     spinneranimation* spinner;
     QGraphicsProxyWidget *proxy;
     QLabel *spinnermovement;
@@ -313,7 +322,10 @@ private:
     std::map<int, Pawnitem*> pawnItemMap;
     std::map<int, monsters*> monstersMap;
 
+    std::string flipType;
+
     std::map<int, Paatti*> paattiMap;
+    std::map<int, std::shared_ptr<Common::Transport>> transportMap;
     std::map<int, Common::CubeCoordinate> actorMap;
     std::map<int, std::shared_ptr<Common::Actor>> actorObjectMap;
 
