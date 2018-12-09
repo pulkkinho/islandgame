@@ -34,33 +34,33 @@ void Pawnitem::updateGraphics(int slotti)
     int sivuskaalaaja = 24 - slotti * 10;
     int korkeusskaalaaja = slotti * 6;
     if(playerId_ == 1){
-        QPixmap apuna("://pawn1.png");
-        setPixmap(apuna.scaledToHeight(15));
+        QPixmap pawnImage("://pawn1.png");
+        setPixmap(pawnImage.scaledToHeight(15));
 
     }
     if(playerId_ == 2){
-        QPixmap apuna("://pawn2.png");
-        setPixmap(apuna.scaledToHeight(15));
+        QPixmap pawnImage("://pawn2.png");
+        setPixmap(pawnImage.scaledToHeight(15));
 
     }
     if(playerId_ == 3){
-        QPixmap apuna("://pawn3.png");
-        setPixmap(apuna.scaledToHeight(15));
+        QPixmap pawnImage("://pawn3.png");
+        setPixmap(pawnImage.scaledToHeight(15));
 
     }
     if(playerId_ == 4){
-            QPixmap apuna("://pawn4.png");
-            setPixmap(apuna.scaledToHeight(15));
+            QPixmap pawnImage("://pawn4.png");
+            setPixmap(pawnImage.scaledToHeight(15));
 
         }
     if(playerId_ == 5){
-            QPixmap apuna("://pawn5.png");
-            setPixmap(apuna.scaledToHeight(15));
+            QPixmap pawnImage("://pawn5.png");
+            setPixmap(pawnImage.scaledToHeight(15));
 
         }
     if(playerId_ == 6){
-            QPixmap apuna("://pawn6.png");
-            setPixmap(apuna.scaledToHeight(15));
+            QPixmap pawnImage("://pawn6.png");
+            setPixmap(pawnImage.scaledToHeight(15));
 
         }
     int y = coord_.x;

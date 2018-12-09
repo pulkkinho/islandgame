@@ -6,13 +6,11 @@ infoBox::infoBox(Common::GamePhase currentGamePhase, int playerInTurn, QWidget *
     playerInTurn_(playerInTurn),
     QWidget(parent)
 {
-
     playernumber = QString::number(playerInTurn_);
 
-    kukko = new QLabel();
+    textLabel = new QLabel();
     updateGraphics();
 }
-
 
 void infoBox::updateGraphics()
 {
@@ -33,13 +31,11 @@ void infoBox::updateGraphics()
     }
 
 
-    kukko->setText("Player " +playernumber+phase);
+    textLabel->setText("Player " +playernumber+phase);
 
-    vbl->addWidget(kukko,0,1);
+    vbl->addWidget(textLabel,0,1);
 
 }
-
-
 
 void infoBox::setNew(Common::GamePhase currenPhase, int playerInTurn)
 {
@@ -51,12 +47,12 @@ void infoBox::setNew(Common::GamePhase currenPhase, int playerInTurn)
 void infoBox::gameOver(bool tie, int winner)
 {
     if(tie == true){
-        kukko->setText("Game over! It's a tie!");
+        textLabel->setText("Game over! It's a tie!");
     }
     else {
 
         playernumber = QString::number(winner);
         phase = QString::fromStdString(" is da winner!");
-        kukko->setText("Game over! Player " +playernumber  + phase);
+        textLabel->setText("Game over! Player " +playernumber  + phase);
     }
 }

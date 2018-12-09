@@ -7,35 +7,46 @@ scoreboardUI::scoreboardUI(    std::vector<std::pair<int,int>> _playerPointVecto
     QWidget(parent)
 
 {
+    // Alustetaan pistetaulukko.
+
     this->resize(30,30);
     std::string playernumber;
     std::string numberOfPoints;
 
+    // Käy läpi pelaajat yksi kerrallaan ja asettaa näiden
+    // pelaajanumerot ja pisteet, sekä pelaajan pelinappulaa
+    // indikoivan kuvan vektoreihin
     for(auto player : _playerPointVector){
+
         playernumber = std::to_string(player.first);
         numberOfPoints= std::to_string(player.second);
 
         QString playernumber2 =QString::fromStdString( playernumber);
         QString numberOfPoints2 =QString::fromStdString( numberOfPoints);
 
-        QLabel *kakko = new QLabel;
-        kakko->setPixmap(QPixmap ("://pawn"+playernumber2+".png").scaledToHeight(25));
-        kuvavektor.push_back(std::make_shared<QLabel>(kakko));
+        QLabel *imagePixmap = new QLabel;
+        imagePixmap->setPixmap(QPixmap ("://pawn"+playernumber2+".png").scaledToHeight(25));
+        kuvavektor.push_back(std::make_shared<QLabel>(imagePixmap));
 
-        QLabel *kukko = new QLabel;
-        kukko->setText("Player" +playernumber2+"   Points:  "+numberOfPoints2);
-        tekstivektor.push_back(std::make_shared<QLabel>(kukko));
+        QLabel *textLabel = new QLabel;
+        textLabel->setText("Player" +playernumber2+"   Points:  "+numberOfPoints2);
+        tekstivektor.push_back(std::make_shared<QLabel>(textLabel));
     }
     updateGraphics(_playerPointVector);
 }
 
+// Päivitetään pistetaulukko ja lisätään tiedot
+// layouttiin
 void scoreboardUI::updateGraphics(std::vector<std::pair<int, int> > playerVector)
 {
-    QGridLayout *vbl = new QGridLayout(this);
+    QGridLayout *layout = new QGridLayout(this);
     std::string playernumber;
     std::string numberOfPoints;
     int row = 0;
 
+    // Käy läpi pelaajat yksi kerrallaan ja asettaa näiden
+    // pelaajanumerot ja pisteet, sekä pelaajan pelinappulaa
+    // indikoivan kuvan vektoreihin
     for(auto player : playerVector){
         playernumber = std::to_string(player.first);
         numberOfPoints= std::to_string(player.second);
@@ -47,8 +58,8 @@ void scoreboardUI::updateGraphics(std::vector<std::pair<int, int> > playerVector
         tekstivektor.at(indeksi).get()->setText("Player" +playernumber2+"   Points:  "+numberOfPoints2);
         kuvavektor.at(indeksi).get()->setPixmap( QPixmap ("://pawn"+playernumber2+".png").scaledToHeight(25));
 
-        vbl->addWidget(kuvavektor.at(indeksi).get(),row,0);
-        vbl->addWidget(tekstivektor.at(indeksi).get(),row,1);
+        layout->addWidget(kuvavektor.at(indeksi).get(),row,0);
+        layout->addWidget(tekstivektor.at(indeksi).get(),row,1);
         row = row + 1;
     }
 }

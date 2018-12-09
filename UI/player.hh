@@ -5,25 +5,60 @@
 #include "ostream"
 #include "memory"
 
-
+/**
+ * @brief The Player class
+ * Pelaajan luokka, joka periytetty
+ * Common::IPlayeristä
+ */
 class Player : public Common::IPlayer
 {
 public:
+    /**
+     * @brief Player
+     * constructor
+     */
     Player();
+    /**
+     * @brief ~Player
+     * Destructor
+     */
     virtual ~Player();
 
-  virtual int getPlayerId() const;
+    /**
+   * @brief getPlayerId
+   * playerin ID:n getterfunktio
+   * @return PlayerID
+   */
+    virtual int getPlayerId() const;
 
-  virtual int setPlayerId(int ID) ;
+    /**
+     * @brief setPlayerId
+     * Playerin ID:n setterfunktio
+     * @param ID
+     * ID joka setataan
+     */
+    virtual int setPlayerId(int ID) ;
 
+    /**
+     * @brief setActionsLeft
+     * Liikemäärän setterifunktio
+     * @param actionsLeft
+     */
+    virtual void setActionsLeft(unsigned int actionsLeft);
 
-  virtual void setActionsLeft(unsigned int actionsLeft);
+    /**
+     * @brief getActionsLeft
+     * Liikemäärän getterifunktio
+     * @return actionsleft
+     */
+    virtual unsigned int getActionsLeft() const;
 
-
-  virtual unsigned int getActionsLeft() const;
-
+    /**
+    * @brief getplayerptr
+    * Pelaajapointterin getterifunktio
+    * @return playerptr
+    */
    std::shared_ptr<Common::IPlayer> getplayerptr();
-
 
 private:
     int playerID_;

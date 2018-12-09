@@ -8,8 +8,13 @@
 #include "actorfactory.hh"
 #include "QApplication"
 
-monsters::monsters(std::shared_ptr<Common::Actor> monstersi, Common::CubeCoordinate coord, QGraphicsScene* scene, QGraphicsItem* parent):
-    QGraphicsPixmapItem(parent),monsters_(monstersi), coord_(coord), sceneptr_(scene)
+monsters::monsters(std::shared_ptr<Common::Actor> monstersi,
+                   Common::CubeCoordinate coord,
+                   QGraphicsScene* scene, QGraphicsItem* parent):
+                   QGraphicsPixmapItem(parent),
+                   monsters_(monstersi),
+                   coord_(coord),
+                   sceneptr_(scene)
 
 {
     monsters_.get()->getActorType();

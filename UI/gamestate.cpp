@@ -12,26 +12,21 @@ enum GamePhase { MOVEMENT = 1, SINKING = 2, SPINNING = 3 };
 GameState::~GameState()
 
 {
-
 }
 
 Common::GamePhase GameState::currentGamePhase() const
 {
     return _gamePhaseId;
-
 }
 
 int GameState::currentPlayer() const
 {
-
     return _playerInTurn;
 }
 
 void GameState::changeGamePhase(Common::GamePhase nextPhase)
 {
     _gamePhaseId = nextPhase;
-
-
 }
 
 void GameState::changePlayerTurn(int nextPlayer)
@@ -42,13 +37,11 @@ void GameState::changePlayerTurn(int nextPlayer)
 void GameState::setrunner(std::shared_ptr<Common::IGameRunner> runneri)
 {
   runner = runneri;
-
 }
 
 void GameState::addPointsToPlayer(int playerId, int points)
 {
     int x = 0;
-    // std::vector<std::pair<int,int>>
     for(auto pair : _playerPointVector){
         if(playerId == pair.first){
             _playerPointVector.at(x).second =_playerPointVector.at(x).second + points;
@@ -56,17 +49,6 @@ void GameState::addPointsToPlayer(int playerId, int points)
         }
         x = x + 1;
     }
-}
-
-void GameState::deletePawn(int pawnId)
-{
-    // deletoi pawni
-}
-
-int GameState::playerPawnsLeft(int playerId)
-{
-    // returnaa napujen määrä?
-
 }
 
 void GameState::initializePlayerPointVector()
@@ -77,7 +59,6 @@ void GameState::initializePlayerPointVector()
         _playerPointVector.push_back(std::make_pair(x,0));
         x = x+1;
     }
-
 }
 
 std::vector<std::pair<int,int>> GameState::getPlayerPointVector()
@@ -88,13 +69,9 @@ std::vector<std::pair<int,int>> GameState::getPlayerPointVector()
 int GameState::getPawnPerPlayer()
 {
     return _pawnPerPlayer;
-
 }
 
 std::shared_ptr<Common::IGameRunner> GameState::getrunner()
 {
   return runner;
 }
-
-
-

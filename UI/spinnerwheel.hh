@@ -11,15 +11,32 @@
 #include <QGraphicsItem>
 #include <QObject>
 
+/**
+ * @brief The spinnerwheel class
+ * Luo kuvat johon spinnerin pyörivä
+ * osuus osoittaa
+ */
 class spinnerwheel : public QGraphicsItem
 {
 public:
+
+    /**
+     * @brief spinnerwheel
+     * Constructor
+     * @param parent
+     */
     spinnerwheel( QGraphicsItem* parent =NULL);
 
-    void paintwheel();
-
 protected:
+    /**
+     * @brief paint
+     * Spinnerwheelin kuvien piirtofunktio
+     * @param painter
+     * @param option
+     * @param widget
+     */
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+
     QRectF boundingRect() const;
 
 };

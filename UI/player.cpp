@@ -9,11 +9,10 @@
 Player::Player():
     Common::IPlayer()
 {
-
 }
+
  Player::~Player()
  {
-
  }
 
  int Player::getPlayerId() const
@@ -28,10 +27,6 @@ Player::Player():
 
  void Player::setActionsLeft(unsigned int actionsLeft)
  {
-     //tekeekö itsestään nämä?
-    // maalla actionsLeft = actionsLeft -1;
-    // uiden actionsLeft = actionsLeft - actionsLeft;
-
     actionsLeft_ = actionsLeft;
  }
 

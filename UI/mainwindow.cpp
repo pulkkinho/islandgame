@@ -4,8 +4,11 @@
 
 MainWindow::MainWindow( QWidget *parent) :
     QMainWindow(parent),
+    skipTurnButton_("Skip movements?",this),
     view_(this)
+
 {
+    connect(&skipTurnButton_, SIGNAL(clicked(bool)), this, SLOT(skipTurn()));
 
     configurationWindow kopo;
     if(kopo.exec()){
@@ -38,6 +41,8 @@ MainWindow::MainWindow( QWidget *parent) :
 
     boardptr.get()->setrunner(peli);
     boardptr.get()->addHextoScene();
+    skipTurnButton_.setGeometry(-175,0,20,20);
+    boardptr.get()->getscene()->addWidget(&skipTurnButton_);
     //pelin alussa olevat veneet sceneen
     for(auto transport : boardptr.get()->getTransportMap()){
         boardptr.get()->addToScene(transport.second.get()->getHex().get()->getCoordinates());
@@ -110,4 +115,11 @@ MainWindow::MainWindow( QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+}
+
+void MainWindow::skipTurn()
+{
+    //boardptr.get()->getstate().get()->changeGamePhase(Common::GamePhase::SINKING);
+    //boardptr.get()->updateInfobox(boardptr.get()->getstate().get()->currentGamePhase(),
+    //                              boardptr.get()->getstate().get()->currentPlayer());
 }

@@ -12,21 +12,61 @@
 
 #include "gamestate.hh"
 
-
+/**
+ * @brief The Pawnitem class
+ * Luokka pelaajanappulalle
+ */
 class Pawnitem : public QGraphicsPixmapItem
 {
 
 public:
-    Pawnitem(int playerid,int ID, Common::CubeCoordinate coord, std::shared_ptr<Common::Hex>, QGraphicsScene* scene, QGraphicsItem* parent =NULL);
+    /**
+     * @brief Pawnitem Constructor
+     * @param playerid
+     * @param ID
+     * @param coord
+     * @param scene
+     * @param parent
+     */
+    Pawnitem(int playerid,int ID, Common::CubeCoordinate coord,
+             std::shared_ptr<Common::Hex>,
+             QGraphicsScene* scene, QGraphicsItem* parent =NULL);
 
+    /**
+     * @brief updateGraphics
+     * Nappulan grafiikan päivittämisfunktio
+     * @param slotti
+     * kertoo nappulan paikan hexissä
+     */
     void updateGraphics(int slotti);
+
+    /**
+     * @brief setNewCoord
+     * Antaa uudet koordinaatit nappulalle
+     * @param newCoord
+     */
     void setNewCoord(Common::CubeCoordinate newCoord);
+
+    /**
+     * @brief setHex
+     * asettaa tietyn hexan pawnille
+     * @param hex
+     */
     void setHex(std::shared_ptr<Common::Hex> hex);
+
+    /**
+     * @brief getCoord
+     * Palauttaa koordinaatit, jossa nappula
+     * sijaitsee
+     * @return
+     */
     Common::CubeCoordinate getCoord();
+
+    /**
+     * @brief addToScene
+     * Lisää nappulan grafiikoihin
+     */
     void addToScene();
-
-
-
 
 private:
     int playerId_;
@@ -34,10 +74,7 @@ private:
      QGraphicsScene* sceneptr_;
      Common::CubeCoordinate coord_;
      std::shared_ptr<Common::Hex> hexi_;
-
      bool vbMousePressed;
-
-
 };
 
 #endif // PAWNITEM_HH

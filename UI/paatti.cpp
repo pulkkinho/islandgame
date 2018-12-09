@@ -7,16 +7,22 @@
 
 #include <QGraphicsSceneMouseEvent>
 
-Paatti::Paatti(std::shared_ptr<Common::Transport> Paatti, Common::CubeCoordinate coord, QGraphicsScene* scene, QGraphicsItem* parent):
-    QGraphicsPixmapItem(parent),paatti_(Paatti), coord_(coord), sceneptr_(scene)
+Paatti::Paatti(std::shared_ptr<Common::Transport> Paatti,
+               Common::CubeCoordinate coord,
+               QGraphicsScene* scene, QGraphicsItem* parent):
+               QGraphicsPixmapItem(parent),
+               paatti_(Paatti),
+               coord_(coord),
+               sceneptr_(scene)
 
 {
     updateGraphics();
 }
 
+// Päivitetään grafiikat sen perusteella minkä tyyppinen
+// transport on, delfiini vai vene
 void Paatti::updateGraphics()
 {
-
     int sivuskaalaaja = 15;
     int korkeusskaalaaja = 7;
 

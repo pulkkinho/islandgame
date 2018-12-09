@@ -19,20 +19,24 @@
 #include "paatti.hh"
 #include "spinneranimation.hh"
 
+/**
+ * @brief The GameBoard class
+ * Pelilaudan luokka, periytetty
+ * IGameBoardista
+ */
 class GameBoard : public Common::IGameBoard
 {
-
-
-
 public:
     /**
      * @brief GameBoard
+     * Constructor
      */
     GameBoard();
     ~GameBoard();
 
     /**
      * @brief checkTileOccupation
+     * Tarkastaa hexan tilan annetuilla koordinaateilla
      * @param tileCoord
      * @return
      */
@@ -40,6 +44,7 @@ public:
 
     /**
      * @brief isWaterTile
+     * Tarkastaa onko hexa vesityyppiä annetuilla koordinaateilla
      * @param tileCoord
      * @return
      */
@@ -47,6 +52,7 @@ public:
 
     /**
      * @brief getHex
+     * Hexan getterifunktio
      * @param hexCoord
      * @return
      */
@@ -54,6 +60,8 @@ public:
 
     /**
      * @brief addPawn
+     * Pawnin lisäysfunktio. Lisäys tehdään pelaajajalle
+     * jonka ID vastaa parametrin ID:tä.
      * @param playerId
      * @param pawnId
      */
@@ -61,6 +69,9 @@ public:
 
     /**
      * @brief addPawn
+     * Pawnin lisäysfunktio. Lisäys tehdään pelaajajalle
+     * jonka ID vastaa parametrin ID:tä. Lisätään parametrinä
+     * annetulle koordinaatille.
      * @param playerId
      * @param pawnId
      * @param coord
@@ -69,6 +80,8 @@ public:
 
     /**
      * @brief movePawn
+     * Pawnin liikutusfunktio, jossa parametrit kertovat mitä pawnia
+     * liikutetaan ja mikä on uusi kohdekoordinaatti
      * @param pawnId
      * @param pawnCoord
      */
@@ -76,12 +89,14 @@ public:
 
     /**
      * @brief removePawn
+     * Pawnin poistofunktio
      * @param pawnId
      */
     virtual void removePawn(int pawnId);
 
     /**
      * @brief addActor
+     * Actorin lisäysfunktio
      * @param actor
      * @param actorCoord
      */
@@ -89,6 +104,7 @@ public:
 
     /**
      * @brief moveActor
+     * Actorin liikutusfunktio
      * @param actorId
      * @param actorCoord
      */
@@ -96,18 +112,21 @@ public:
 
     /**
      * @brief removeActor
+     * Actorin poistofunktio
      * @param actorId
      */
     virtual void removeActor(int actorId);
 
     /**
      * @brief addHex
+     * Hexan luontifunktio
      * @param newHex
      */
     virtual void addHex(std::shared_ptr<Common::Hex> newHex);
 
     /**
      * @brief addTransport
+     * Transportin lisäysfunktio
      * @param transport
      * @param coord
      */
@@ -115,6 +134,7 @@ public:
 
     /**
      * @brief moveTransport
+     * Transportin liikutusfunktio
      * @param id
      * @param coord
      */
@@ -122,40 +142,40 @@ public:
 
     /**
      * @brief removeTransport
+     * Transportin poistofunktio
      * @param id
      */
     virtual void removeTransport(int id);
 
     /**
      * @brief drawwheel
+     * Spinnerin piirtofunktio
      */
     void drawwheel();
 
     /**
-     * @brief getpushbutton
-     * @return
-     */
-    QPushButton* getpushbutton();
-
-    /**
      * @brief setLabel
+     * Labelin setterifunktio
      */
     void setLabel(Common::GamePhase,int);
 
     /**
      * @brief getstate
+     * GameStaten getterifunktio
      * @return
      */
     std::shared_ptr<GameState> getstate();
 
     /**
      * @brief spinwheel
+     * SpinWheelin pyöräytysfunktio
      * @return
      */
     std::pair<std::string,std::string> spinwheel();
 
     /**
      * @brief getscene
+     * scenen getterifunktio
      * @return
      */
     QGraphicsScene* getscene();
@@ -175,24 +195,28 @@ public:
 
     /**
      * @brief setrunner
+     * IGameRunnerin setterifunktio
      * @param runneri
      */
     void setrunner(std::shared_ptr<Common::IGameRunner> runneri);
 
     /**
      * @brief getrunner
+     * IGameRunnerin getterifunktio
      * @return
      */
     std::shared_ptr<Common::IGameRunner> getrunner();
 
     /**
      * @brief getpawnmap
+     * Pawnmapin getterifunktio
      * @return
      */
     std::unordered_map<int, std::shared_ptr<Common::Pawn>> getpawnmap();
 
     /**
      * @brief getHexMap
+     * Hexmapin getterifunktio
      * @return
      */
     std::map<Common::CubeCoordinate, std::shared_ptr<Common::Hex>> getHexMap();
@@ -345,13 +369,6 @@ private:
 
     std::shared_ptr<scoreboardUI> scoreboard;
     std::shared_ptr<infoBox> infobox;
-
-
-    
-    
-
-
-
 };
 
 #endif // GAMEBOARD_HH

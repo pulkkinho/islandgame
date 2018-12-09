@@ -6,22 +6,23 @@
 This is a game where the main goal is to save the three pawns
 given to the player at the beginning of the game,
 where player gets points for each saved pawn.
+The game begins with each player having 3 pawns randomly
+initialized on the beach of the island.
 Once all the pawns have either been saved or died to the dangers lurking
 deep in the sea, the game ends and the player with the most points
 scored is declared winner. Minimum of two players are required to play and
 maximum of six players can play at a time.
 
-Saving a pawn can be done in two ways. The first is to get the pawn
-to one of the coralhexes in the edge of the gameboard. By doing this
-the player is granted 1 point. The other way is to get pawn to the
-peak of the mountain (centre of the gameboard). There awaits a pelican
-that will fly the first pawn to get to the peak away. By doing this
-the player is granted 2 points. However after the pelican has flewn away
-this method cannot be used anymore to save other pawns so it is one time only.
+Saving a pawn is done by getting the pawn to one of the
+coralhexes in the edge of the gameboard. By doing this
+the player is granted 1 point. So the maximum poins per player
+can be 3 should the player be able to save all of his/her pawns.
+
 
 Each turn consists three parts. First a player moves his/her pawns. Then the player
 sinks one tile of the gameboard. Lastly the player spins a wheel, which points
 which animal moves and how much, giving the player ability to move an animal of that type.
+The 3rd phase is skipped if there isn't such animal to be found yet.
 Then next player starts his/her own turn.
 
 Each turn player has a 3 moves which can be used to move pawns. If players pawn is in water
@@ -43,8 +44,5 @@ Kraken: destroys the boats. Passengers are dropped into the sea.
 
 Sea monster: eats swimmers and boats.
 
-Vortex: destroys everything in the neighbouring sea tile.
-Swimmers, animals and boats on the tiles are removed from the game.
-
-//std::pair<std::string,std::string> kuukku =board_->getrunner().get()->spinWheel();
-//std::cout<< kuukku.first<<kuukku.second<<" spinnaus  " <<std::endl;
+Vortex: destroys everything in the neighbouring tiles.
+Pawns, animals and boats on the tiles are removed from the game.

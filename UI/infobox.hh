@@ -5,21 +5,46 @@
 #include "QtWidgets"
 #include "gamestate.hh"
 
+/**
+ * @brief The infoBox class
+ * Pelin tilasta kertovan infolaatikon
+ * luokka
+ */
 class infoBox : public QWidget
 {
 public:
+    /**
+     * @brief infoBox
+     * Luokan Constructor
+     * @param currentGamePhase
+     * @param playerInTurn
+     * @param parent
+     */
     infoBox(Common::GamePhase currentGamePhase, int playerInTurn, QWidget* parent = NULL);
 
+    /**
+     * @brief updateGraphics
+     * Funktio grafiikoiden päivitykselle
+     */
     void updateGraphics();
+
+    /**
+     * @brief setNew
+     * Funktio uuden informaation päivitykselle
+     */
     void setNew(Common::GamePhase, int);
+
+    /**
+     * @brief gameOver
+     * Funktio, jonka informaatio laitetaan infoboksiin kun peli päättyy
+     */
     void gameOver(bool, int);
 
 private:
     int playerInTurn_;
     Common::GamePhase currentGamePhase_;
     QString playernumber;
-
-    QLabel *kukko;
+    QLabel *textLabel;
     QString phase;
 };
 
