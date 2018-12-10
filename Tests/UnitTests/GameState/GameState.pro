@@ -60,7 +60,7 @@ HEADERS += \
     ../../../GameLogic/Engine/ioexception.hh \
     ../../../GameLogic/Engine/formatexception.hh \
     ../../../GameLogic/Engine/gameexception.hh \
-    ../../../GameLogic/Engine/igameboard \
+    ../../../GameLogic/Engine/igameboard.hh \
     ../../../GameLogic/Engine/pawn.hh \
     ../../../UI/gamestate.hh \
     ../../../GameLogic/Engine/transport.hh \
