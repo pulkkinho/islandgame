@@ -6,12 +6,14 @@ GameState::GameState():
     Common::IGameState()
 
 {
+
 }
 enum GamePhase { MOVEMENT = 1, SINKING = 2, SPINNING = 3 };
 
 GameState::~GameState()
 
 {
+
 }
 
 Common::GamePhase GameState::currentGamePhase() const

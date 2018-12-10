@@ -6,6 +6,8 @@
 #include "QPainter"
 #include "iostream"
 
+
+
 Player::Player():
     Common::IPlayer()
 {

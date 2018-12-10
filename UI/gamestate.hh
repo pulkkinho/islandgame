@@ -12,6 +12,7 @@
  */
 class GameState : public Common::IGameState
 {
+//    enum GamePhase { MOVEMENT = 1, SINKING = 2, SPINNING = 3 };
 public:
     /**
      * @brief GameState
@@ -25,28 +26,28 @@ public:
      * Kertoo pelin sen hetkisen Phasen
      * @return
      */
-    virtual Common::GamePhase currentGamePhase() const;
+     Common::GamePhase currentGamePhase() const;
 
     /**
      * @brief currentPlayer
      * kertoo vuorossa olevan pelaajan
      * @return
      */
-    virtual int currentPlayer() const;
+     int currentPlayer() const;
 
     /**
      * @brief changeGamePhase
      * vaihtaa pelin Phasea seuraavaan
      * @param nextPhase
      */
-    virtual void changeGamePhase(Common::GamePhase nextPhase);
+     void changeGamePhase(Common::GamePhase nextPhase);
 
     /**
      * @brief changePlayerTurn
      * Vaihtaa pelaajan vuoron seuraavalle
      * @param nextPlayer
      */
-    virtual void changePlayerTurn(int nextPlayer);
+     void changePlayerTurn(int nextPlayer);
 
     /**
      * @brief setrunner
@@ -98,6 +99,10 @@ private:
     std::vector<std::pair<int,int>> _playerPointVector;
     std::vector<std::pair<int,int>> _playerPawnVector;
     std::shared_ptr<Common::IGameRunner> runner;
+
+
+
+
 };
 
 #endif // GAMESTATE_HH
