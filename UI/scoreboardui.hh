@@ -46,10 +46,9 @@ public:
 
 private:
     std::vector<std::pair<int,int>> _playerPointVector;
+    QWidget* widget;
     std::vector<std::shared_ptr<QLabel>> tekstivektor;
     std::vector<std::shared_ptr<QLabel>> kuvavektor;
-
-
 };
 
 #endif // SCOREBOARDUI_HH

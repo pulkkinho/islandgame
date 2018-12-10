@@ -252,7 +252,7 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 
         }
         else(board_->nextTurn());
-    }catch(Common::IllegalMoveException msg){
+    }catch(Common::GameException& msg){
         std::cout << msg.msg() << std::endl;
     }
 }
@@ -273,8 +273,9 @@ QRectF Widget::boundingRect() const{
 void Widget::paint(QPainter *painter,
                       const QStyleOptionGraphicsItem *option,
                       QWidget *widget){
+    widget->activateWindow();
 
-
+    if(option){}
     int y = x_;
     int x = 2 * z_ + x_;
 

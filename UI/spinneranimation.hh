@@ -43,9 +43,9 @@ public slots:
     void stopanimation();
 
 private:
-
     std::string actor_;
     std::string amount_;
+    QWidget* widget;
     QLabel *gif_anim;
     QMovie *movie_;
 };

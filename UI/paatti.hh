@@ -71,9 +71,9 @@ public:
 
 
 private:
-     QGraphicsScene* sceneptr_;
-     std::shared_ptr<Common::Transport> paatti_;
-     Common::CubeCoordinate coord_;
+    std::shared_ptr<Common::Transport> paatti_;
+    Common::CubeCoordinate coord_;
+    QGraphicsScene* sceneptr_;
 };
 
 #endif // PAATTI_HH

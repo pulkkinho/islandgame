@@ -4,11 +4,9 @@
 
 MainWindow::MainWindow( QWidget *parent) :
     QMainWindow(parent),
-    skipTurnButton_("Skip movements?",this),
     view_(this)
 
 {
-    connect(&skipTurnButton_, SIGNAL(clicked(bool)), this, SLOT(skipTurn()));
 
     configurationWindow kopo;
     if(kopo.exec()){
@@ -41,8 +39,6 @@ MainWindow::MainWindow( QWidget *parent) :
 
     boardptr.get()->setrunner(peli);
     boardptr.get()->addHextoScene();
-    skipTurnButton_.setGeometry(-175,0,20,20);
-    boardptr.get()->getscene()->addWidget(&skipTurnButton_);
     //pelin alussa olevat veneet sceneen
     for(auto transport : boardptr.get()->getTransportMap()){
         boardptr.get()->addToScene(transport.second.get()->getHex().get()->getCoordinates());
@@ -61,8 +57,8 @@ MainWindow::MainWindow( QWidget *parent) :
             int pawnid = 3*x+pawncounter;
             int playerid = x+1;
 
-            bool lammio = false;
-            while (lammio == false){
+            bool ehto = false;
+            while (ehto == false){
 
                 int xx = rand() % 22 - 11;
                 int yy = rand() % 22 - 11;
@@ -76,7 +72,7 @@ MainWindow::MainWindow( QWidget *parent) :
                             if(untamo.first.x == xx && untamo.first.y == yy && untamo.first.z == zz){
                                 Common::CubeCoordinate koordit (xx, yy, zz) ;
                                 boardptr.get()->addPawn(playerid,pawnid, koordit);
-                                lammio = true;
+                                ehto = true;
                             }
                         }
                     }
@@ -117,9 +113,3 @@ MainWindow::~MainWindow()
 {
 }
 
-void MainWindow::skipTurn()
-{
-    //boardptr.get()->getstate().get()->changeGamePhase(Common::GamePhase::SINKING);
-    //boardptr.get()->updateInfobox(boardptr.get()->getstate().get()->currentGamePhase(),
-    //                              boardptr.get()->getstate().get()->currentPlayer());
-}

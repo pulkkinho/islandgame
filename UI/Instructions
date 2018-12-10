@@ -42,7 +42,7 @@ Shark: eats swimmers. The swimmers on the tile are removed from the game.
 
 Kraken: destroys the boats. Passengers are dropped into the sea.
 
-Sea monster: eats swimmers and boats.
+Sea monster: eats swimmers and transports.
 
 Vortex: destroys everything in the neighbouring tiles.
 Pawns, animals and boats on the tiles are removed from the game.

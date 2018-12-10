@@ -4,7 +4,7 @@
 
 scoreboardUI::scoreboardUI(    std::vector<std::pair<int,int>> _playerPointVector,QWidget *parent):
     _playerPointVector(_playerPointVector),
-    QWidget(parent)
+    widget(parent)
 
 {
     // Alustetaan pistetaulukko.

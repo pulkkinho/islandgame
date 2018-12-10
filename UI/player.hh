@@ -37,7 +37,7 @@ public:
      * @param ID
      * ID joka setataan
      */
-    virtual int setPlayerId(int ID) ;
+    virtual void setPlayerId(int ID) ;
 
     /**
      * @brief setActionsLeft

@@ -15,6 +15,7 @@
 #include "igameboard.hh"
 #include "infobox.hh"
 #include "scoreboardui.hh"
+#include "pawnitem.hh"
 #include "monsters.hh"
 #include "paatti.hh"
 #include "spinneranimation.hh"
@@ -321,8 +322,6 @@ public:
     void setScene();
 
     void addHextoScene();
-
-    void addActorsToScene(int);
 
     void addPawnsToScene();
 

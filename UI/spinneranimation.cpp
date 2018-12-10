@@ -4,7 +4,7 @@
 spinneranimation::spinneranimation(std::string actor,std::string amount,QWidget *parent):
     actor_(actor),
     amount_(amount),
-    QWidget(parent)
+    widget(parent)
 {
     this->resize(40,40);
     gif_anim = nullptr;

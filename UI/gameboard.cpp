@@ -72,6 +72,8 @@ std::shared_ptr<Common::Hex> GameBoard::getHex(Common::CubeCoordinate hexCoord) 
 
 void GameBoard::addPawn(int playerId, int pawnId)
 {
+    ++playerId;
+    ++pawnId;
 }
 
 void GameBoard::addPawn(int playerId, int pawnId, Common::CubeCoordinate coord)
@@ -305,6 +307,7 @@ std::pair<std::string, std::string> GameBoard::spinwheel()
         }
     }
     nextTurn();
+    return result;
 }
 
 void GameBoard::addTransport(std::shared_ptr<Common::Transport> transport, Common::CubeCoordinate coord)
@@ -421,6 +424,7 @@ int GameBoard::getActorId(Common::CubeCoordinate coord, std::string tyyppi)
             return actori.first;
         }
     }
+    return -1;
 }
 
 int GameBoard::getPaattiId(Common::CubeCoordinate coord)
@@ -430,6 +434,7 @@ int GameBoard::getPaattiId(Common::CubeCoordinate coord)
             return paatti.first;
         }
     }
+    return -1;
 }
 
 std::map<int, monsters *> GameBoard::getmonstersMap()
@@ -547,9 +552,7 @@ void GameBoard::addHextoScene()
 
 }
 
-void GameBoard::addActorsToScene(int actorId)
-{
-}
+
 
 void GameBoard::addPawnsToScene()
 {

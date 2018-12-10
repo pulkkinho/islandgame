@@ -495,7 +495,7 @@ std::shared_ptr<Common::Actor> GameBoardTest::addActor(
     std::shared_ptr<Common::Actor> newactor;
     if( type == "Kraken")
     {
-       newactor = std::make_shared<Common::Kraken>(actorid);
+       //newactor = std::make_shared<Common::Kraken>(actorid);
     }
     else if (type == "Seamunster")
     {

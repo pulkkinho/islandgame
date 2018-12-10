@@ -20,7 +20,7 @@ Player::Player():
      return playerID_;
  }
 
- int Player::setPlayerId(int ID)
+void Player::setPlayerId(int ID)
  {
      playerID_ =  ID;
  }

@@ -13,6 +13,7 @@
 class infoBox : public QWidget
 {
 public:
+    int playerInTurn_;
     /**
      * @brief infoBox
      * Luokan Constructor
@@ -41,7 +42,6 @@ public:
     void gameOver(bool, int);
 
 private:
-    int playerInTurn_;
     Common::GamePhase currentGamePhase_;
     QString playernumber;
     QLabel *textLabel;

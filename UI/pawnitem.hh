@@ -71,9 +71,10 @@ public:
 private:
     int playerId_;
      int pawnID_;
-     QGraphicsScene* sceneptr_;
      Common::CubeCoordinate coord_;
      std::shared_ptr<Common::Hex> hexi_;
+     QGraphicsScene* sceneptr_;
+
      bool vbMousePressed;
 };
 

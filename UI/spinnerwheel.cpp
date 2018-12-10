@@ -10,6 +10,10 @@ spinnerwheel::spinnerwheel( QGraphicsItem* parent):
 // Luodaan kiekon kuvat, johon osoitetaan kiekon toiminnan
 // mukaisella tavalla
 void spinnerwheel::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
+
+    widget->activateWindow();
+
+    if(option){}
     painter->setBrush(Qt::white);
     painter->drawPixmap(-175,-150,50,50,QPixmap ("://dolphin.png"));
     painter->drawPixmap(-250,-100,50,50,QPixmap ("://shark.png"));
@@ -19,5 +23,5 @@ void spinnerwheel::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
 
 QRectF spinnerwheel::boundingRect() const
 {
-    return QRectF(-150,-150,50,50);
+    return QRectF(-150,-150,200,200);
 }

@@ -51,6 +51,8 @@ void GameState::addPointsToPlayer(int playerId, int points)
     }
 }
 
+
+
 void GameState::initializePlayerPointVector()
 {
     int amount = getrunner().get()->playerAmount();

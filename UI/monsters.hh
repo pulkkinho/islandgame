@@ -81,8 +81,11 @@ public:
      */
     void addToScene();
 private:
-     QGraphicsScene* sceneptr_;
      std::shared_ptr<Common::Actor> monsters_;
      Common::CubeCoordinate coord_;
+     QGraphicsScene* sceneptr_;
+
+
+
 };
 #endif // MONSTERS_HH
