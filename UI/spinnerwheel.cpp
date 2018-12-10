@@ -11,7 +11,7 @@ spinnerwheel::spinnerwheel( QGraphicsItem* parent):
 // mukaisella tavalla
 void spinnerwheel::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
 
-    widget->activateWindow();
+    widget->isActiveWindow();
 
     if(option){}
     painter->setBrush(Qt::white);

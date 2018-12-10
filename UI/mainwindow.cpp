@@ -8,8 +8,8 @@ MainWindow::MainWindow( QWidget *parent) :
 
 {
 
-    configurationWindow kopo;
-    if(kopo.exec()){
+    configurationWindow configuraatiowindow;
+    if(configuraatiowindow.exec()){
 
     GameBoard peliloota;
     std::shared_ptr<GameBoard> boardptr = std::make_shared<GameBoard>(peliloota);
@@ -23,7 +23,7 @@ MainWindow::MainWindow( QWidget *parent) :
     std::vector<std::shared_ptr<Common::IPlayer>> pelaajavektori;
     int x=0;
 
-    while (x<kopo.getvalue()){
+    while (x<configuraatiowindow.getvalue()){
 
         std::shared_ptr<Player> uusipelaaja (nullptr);
         uusipelaaja = std::make_shared<Player>();
@@ -50,7 +50,7 @@ MainWindow::MainWindow( QWidget *parent) :
 
     boardptr.get()->drawwheel();
 
-    while(x<kopo.getvalue()){
+    while(x<configuraatiowindow.getvalue()){
         int pawncounter = 0;
         while (pawncounter<3) {
             pawncounter = pawncounter+1;

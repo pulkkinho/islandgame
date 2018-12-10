@@ -302,13 +302,18 @@ std::pair<std::string, std::string> GameBoard::spinwheel()
     if (result.first == "dolphin"){
         for (auto transport : paattiMap){
             if(transport.second->getObject().get()->getTransportType() == "dolphin"){
+                if(transport.second->getObject().get()->canMove(state.get()->currentPlayer()) == true){
                 return result;
+                }
             }
         }
     }
     nextTurn();
     return result;
 }
+
+// if(board_->getPaattiMap().at(board_->getPaattiId(board_->getMoveFrom()))->getObject().get()
+//  ->canMove(board_->getrunner().get()->getCurrentPlayer().get()->getPlayerId()) == true){
 
 void GameBoard::addTransport(std::shared_ptr<Common::Transport> transport, Common::CubeCoordinate coord)
 {

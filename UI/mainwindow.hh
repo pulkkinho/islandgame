@@ -22,16 +22,8 @@ public:
     ~MainWindow();
 
 private:
-
-    int kuupo;
     QGraphicsView view_;
-    std::vector<std::shared_ptr<Common::IPlayer>> pelaajavihtori;
     Player* player_;
-
-
 };
-
-
-
 
 #endif // MAINWINDOW_H

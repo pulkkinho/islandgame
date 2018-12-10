@@ -1,5 +1,5 @@
-# Samu Reilimo, student number: 245948
-# Henri Pulkkinen, student number: 258141
+# Samu Reilimo, student number: 245948, samu.reilimo@student.tut.fi
+# Henri Pulkkinen, student number: 258141, henri.pulkkinen@student.tut.fi
 # Island Game
 # Ohjelmoinnin tekniikat - IslandGame project
 
@@ -17,7 +17,6 @@ Saving a pawn is done by getting the pawn to one of the
 coralhexes in the edge of the gameboard. By doing this
 the player is granted 1 point. So the maximum poins per player
 can be 3 should the player be able to save all of his/her pawns.
-
 
 Each turn consists three parts. First a player moves his/her pawns. Then the player
 sinks one tile of the gameboard. Lastly the player spins a wheel, which points
@@ -40,9 +39,12 @@ Dolphin: helps a swimmer. A swimmer with the dolphin can be moved three
 
 Shark: eats swimmers. The swimmers on the tile are removed from the game.
 
-Kraken: destroys the boats. Passengers are dropped into the sea.
+Kraken: destroys the transports. Passengers are dropped into the sea.
 
 Sea monster: eats swimmers and transports.
 
 Vortex: destroys everything in the neighbouring tiles.
 Pawns, animals and boats on the tiles are removed from the game.
+
+Movement is done by first doubleclicking the pawn or actor the player wants to move
+and then doubleclicking the target hex where the player want to move to.

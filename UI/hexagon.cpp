@@ -30,10 +30,10 @@ void Widget::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 
 
     QPoint clickPosition = event->scenePos().toPoint();
-    QPoint keke(clickPosition.x(),clickPosition.y());
+    QPoint pointt(clickPosition.x(),clickPosition.y());
     try {
         if(board_->checkIfGameOver() == false){
-        if(poly.containsPoint(keke,Qt::WindingFill)){
+        if(poly.containsPoint(pointt,Qt::WindingFill)){
             if(poly[0].y() < clickPosition.y() && poly[3].y() >
                     clickPosition.y() && poly[1].x()-2 > clickPosition.x() &&
                     poly[5].x()+2 < clickPosition.x()){
@@ -273,7 +273,7 @@ QRectF Widget::boundingRect() const{
 void Widget::paint(QPainter *painter,
                       const QStyleOptionGraphicsItem *option,
                       QWidget *widget){
-    widget->activateWindow();
+    widget->isActiveWindow();
 
     if(option){}
     int y = x_;
