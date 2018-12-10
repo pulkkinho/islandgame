@@ -51,13 +51,12 @@ class Hex : public std::enable_shared_from_this<Hex> {
      * @post Exception quarantee: nothrow
      */
     void addPawn( std::shared_ptr<Common::Pawn> pawn );
-
     /**
-     * @brief removePawn removes a pawn from the hex
-     * @param pawn a shared pointer to the pawn removed
+     * @brief removePawn removes an pawn from the hex
+     * @param pawn a shared pointer to the pwn removed
      * @post Exception quarantee: nothrow
      */
-    void removePawn(std::shared_ptr<Common::Pawn> pawn );
+    void removePawn( std::shared_ptr<Common::Pawn> pawn );
 
     /**
      * @brief getCoordinates gets the location of the hex.
@@ -119,11 +118,6 @@ class Hex : public std::enable_shared_from_this<Hex> {
     bool isWaterTile() const;
 
     /**
-     * @brief setWaterAttribute sets a water attribute to the hex.
-     */
-    void setWaterAttribute();
-
-    /**
      * @brief getNeighbourVector returns the neighbour hexes.
      * @return The neighbour hexes.
      */
@@ -138,11 +132,11 @@ class Hex : public std::enable_shared_from_this<Hex> {
     std::shared_ptr<Common::Pawn> givePawn(int pawnId) const;
 
     /**
-     * @brief givetransport returns the transport with id transportId
+     * @brief giveTransport returns the transport with id transportId
      * @param transportId the id of the transport needed
      * @return a shared pointer to the transport with id transportId or nullptr if transport not found
      */
-    std::shared_ptr<Common::Transport> givetransport(int transportId) const;
+    std::shared_ptr<Common::Transport> giveTransport(int transportId) const;
 
     /**
      * @brief giveActor returns the actor with id actorId
@@ -151,11 +145,47 @@ class Hex : public std::enable_shared_from_this<Hex> {
      */
     std::shared_ptr<Common::Actor> giveActor(int actorId) const;
 
-    /**
-     * @brief clear clears the hex.
-     * @post all actors and transports are removed from the hex
-     */
-    void clear();
+   /**
+    * @brief clear clears the hex.
+    * @post all actors, pawns and transports are removed from the hex
+    */
+   void clear();
+   /**
+    * @brief clearPawnsFromWater clears pawns that are not in transport from hex.
+    * @post all pawns that are not in transports are removed from the hex
+    */
+   void clearPawnsFromTerrain();
+   /**
+    * @brief clearTransports clears transports from hex
+    * @post all transports are remowed from the hex
+    */
+   void clearTransports();
+   /**
+    * @brief addNeighbour adds neighbour hex to the hex
+    * @param neightbour has been added to the hex
+    */
+   void addNeighbour(std::shared_ptr<Common::Hex> hex);
+   /**
+    * @brief clearAllFromNeightbours clears all from neightbour hexes
+    * @post everything is cleared from neightbour hexes
+    */
+   void clearAllFromNeightbours();
+
+   /**
+    * @brief getActors returns Actors inside the Hex.
+    * @return vector of shared_ptrs to Actors.
+    */
+   std::vector<std::shared_ptr<Common::Actor> > getActors();
+   /**
+    * @brief getPawns returns Pawns inside the Hex.
+    * @return vector of shared_ptrs to Pawns.
+    */
+   std::vector<std::shared_ptr<Common::Pawn> > getPawns();
+   /**
+    * @brief getTransports returns Transports inside the Hex.
+    * @return vector of shared_ptrs to Transports
+    */
+   std::vector<std::shared_ptr<Common::Transport> > getTransports();
 
   private:
 
@@ -163,22 +193,25 @@ class Hex : public std::enable_shared_from_this<Hex> {
     Common::CubeCoordinate coord_;
 
     //! Actors on the hex, searchable by ID
-    mutable std::map<int, std::shared_ptr<Common::Actor>> _actorMap;
+    mutable std::map<int, std::shared_ptr<Common::Actor>> actorMap_;
 
-    //! transports on the hex, searchable by ID
-    mutable std::map<int, std::shared_ptr<Common::Transport>> _transportMap;
+    //! Transports on the hex, searchable by ID
+    mutable std::map<int, std::shared_ptr<Common::Transport>> transportMap_;
 
     //! Pawns on the hex, searchable by ID
-    mutable std::map<int, std::shared_ptr<Common::Pawn>> _pawnMap;
+    mutable std::map<int, std::shared_ptr<Common::Pawn>> pawnMap_;
+
+    //! Number of the pawns in the hex.
+    int pawns_;
 
     //! Piece type of the hex.
     std::string piece_;
 
-    //! Whether it is a water tile.
-    int waterTile_;
-
-    //! The neighbour hexes.
+    //! Vector which contains coordinates of neighbour hexes
     std::vector<Common::CubeCoordinate> neighbourVector_;
+    //! Vector which contains neighbour hexes
+    std::vector<std::shared_ptr<Common::Hex>> neighbourHexes_;
+
     void setNeighbourVector();
 
 };

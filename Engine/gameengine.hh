@@ -6,6 +6,7 @@
 #include "igamerunner.hh"
 #include "igamestate.hh"
 #include "iplayer.hh"
+#include "wheellayoutparser.hh"
 
 #include <memory>
 #include <string>
@@ -69,6 +70,32 @@ class GameEngine : public Common::IGameRunner
                                     int actorId,
                                     std::string moves);
     /**
+     * @copydoc Common::IGameRunner::moveTransport(
+     * Common::CubeCoordinate origin, Common::CubeCoordinate target,
+     * int transportId)
+     */
+    virtual int moveTransport(Common::CubeCoordinate origin,
+                              Common::CubeCoordinate target,
+                              int transportId);
+
+    /**
+     * @copydoc Common::IGameRunner::moveTransportWithSpinner(
+     * Common::CubeCoordinate origin, Common::CubeCoordinate target,
+     * int transportId, std::string moves)
+     */
+    virtual int moveTransportWithSpinner(Common::CubeCoordinate origin,
+                               Common::CubeCoordinate target,
+                               int transportId,
+                               std::string moves);
+
+    /**
+     * @copydoc Common::IGameRunner::checkTransportMovement()
+     */
+    virtual int checkTransportMovement(Common::CubeCoordinate origin,
+                                    Common::CubeCoordinate target,
+                                    int transportId,
+                                    std::string moves);
+    /**
      * @copydoc Common::IGameRunner::flipTile()
      */
     virtual std::string flipTile(Common::CubeCoordinate tileCoord);
@@ -77,6 +104,16 @@ class GameEngine : public Common::IGameRunner
      * @copydoc Common::IGameRunner::spinWheel()
      */
     virtual std::pair<std::string,std::string> spinWheel();
+
+    /**
+     * @copydoc  Common::IGameRunner::getSpinnerLayout()
+     */
+    virtual Common::SpinnerLayout getSpinnerLayout() const override;
+
+    /**
+     * @copydoc Common::IGameRunner::getCurrentPlayer()
+     */
+    virtual std::shared_ptr<Common::IPlayer> getCurrentPlayer();
 
     /**
      * @copydoc Common::IGameRunner::currentPlayer()
@@ -88,6 +125,11 @@ class GameEngine : public Common::IGameRunner
      */
     virtual Common::GamePhase currentGamePhase() const;
 
+    /**
+     * @copydoc Common::IGameRunner::playerAmount()
+     */
+    virtual int playerAmount() const;
+
   private:
 
     bool breadthFirst(Common::CubeCoordinate FromCoord, Common::CubeCoordinate ToCoord, unsigned int actionsLeft);
@@ -97,18 +139,21 @@ class GameEngine : public Common::IGameRunner
     std::vector<Common::CubeCoordinate> addHexToBoard(Common::CubeCoordinate coord,
                                                       std::string pieceType);
     void initializeBoard();
+    void initializeBoats();
 
     std::vector<std::shared_ptr<Common::IPlayer>> playerVector_;
     std::shared_ptr<Common::IGameBoard> board_;
     std::shared_ptr<Common::IGameState> gameState_;
 
     //! Actortypes.
-    std::vector<std::string> animalActors_;
-    std::vector<std::string> commonActors_;
+
+    WheelLayoutParser layoutParser_;
 
     //! Piecetypes.
     std::vector<std::pair<std::string,int>> islandPieces_;
 
+    // Radius of the island, needed to spawn boats
+    int islandRadius_;
 };
 
 }

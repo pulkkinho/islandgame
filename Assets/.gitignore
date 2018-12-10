@@ -2,5 +2,9 @@
 
 !.gitignore
 !pieces.json_example
+<<<<<<< HEAD
 !layout.json_example
 
+=======
+!layout.json_example
+>>>>>>> dd4efa690ca98deba1747745457ad1215dd58de9

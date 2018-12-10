@@ -2,7 +2,12 @@
 
 namespace Common {
 
-Pawn::Pawn(): xCoord_(0), yCoord_(0), _coord(0,0,0) {}
+Pawn::Pawn(): coord_(0,0,0) {}
+
+Pawn::Pawn(int pawnId, int playerId, CubeCoordinate pawnCoord):
+    coord_(pawnCoord), pawnId_(pawnId), playerId_(playerId)
+{
+}
 
 void Pawn::setRegularCoordinates(int x, int y)
 {
@@ -19,8 +24,13 @@ void Pawn::setRegularCoordinates(int x, int y)
 void Pawn::setCoordinates(Common::CubeCoordinate newCoordinates)
 {
 
-    _coord = newCoordinates;
+    coord_ = newCoordinates;
 
+}
+
+CubeCoordinate Pawn::getCoordinates()
+{
+    return coord_;
 }
 
 void Pawn::setId(int pawnId, int playerId)
@@ -31,14 +41,14 @@ void Pawn::setId(int pawnId, int playerId)
 
 }
 
-int Pawn::getId()
-{
-    return pawnId_;
-}
-
 int Pawn::getPlayerId()
 {
     return playerId_;
+}
+
+int Pawn::getId()
+{
+    return pawnId_;
 }
 
 }

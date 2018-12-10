@@ -22,7 +22,15 @@ SOURCES += \
     hex.cpp \
     pawn.cpp \
     actor.cpp \
-    transport.cpp
+    transport.cpp \
+    transportfactory.cpp \
+    shark.cpp \
+    kraken.cpp \
+    seamunster.cpp \
+    vortex.cpp \
+    dolphin.cpp \
+    boat.cpp \
+    wheellayoutparser.cpp
 
 HEADERS += \
     gameexception.hh \
@@ -41,7 +49,15 @@ HEADERS += \
     igamestate.hh \
     iplayer.hh \
     actor.hh \
-    transport.hh
+    transport.hh \
+    transportfactory.hh \
+    shark.hh \
+    kraken.hh \
+    seamunster.hh \
+    vortex.hh \
+    dolphin.hh \
+    boat.hh \
+    wheellayoutparser.hh
 
 unix {
     target.path = /usr/lib

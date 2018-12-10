@@ -1,20 +1,23 @@
 #ifndef ACTORFACTORY_HH
 #define ACTORFACTORY_HH
 
-#include <QJsonObject>
+#include "actor.hh"
+
+#include <functional>
 #include <string>
 #include <vector>
+#include <map>
 
 /**
  * @file
- * @brief Singleton class that creates actors. Common actors include the different
- * @brief sea animals and other actors defined in the actors.json file.
- * @brief Animals include: Dolphin, Kraken, Seamunster and Shark.
- * @brief Common actors include: Boat and Vortex.
+ * @brief Singleton class that creates actors. Actors must be registered using
+ * registerActor function
  */
 
 namespace Logic {
 
+using ActorPointer = std::shared_ptr<Common::Actor>;
+using ActorBuildFunction = std::function<ActorPointer (int)>;
 /**
  * @brief Singleton class for creating actors.
  *
@@ -23,7 +26,7 @@ namespace Logic {
  */
 class ActorFactory {
 
-  public:
+public:
 
     /**
      * @return A reference to the factory.
@@ -31,33 +34,31 @@ class ActorFactory {
     static ActorFactory& getInstance();
 
     /**
-     * @brief readJSON reads actors from a JSON file.
-     * @exception IOException Could not open the file Assets/actors.json for reading.
-     * @exception FormatException Format of the file Assets/actors.json is invalid.
-     * @post Exception quarantee: basic
+     * @brief Adds a build
+     * @param type Actor type identifier
+     * @param buildFunction function that performs the building
      */
-    void readJSON();
+    void addActor(std::string type, ActorBuildFunction buildFunction);
 
     /**
-     * @brief Gets the animal actors read into the game.
-     * @return The actors read from the JSON file. If the file is not read yet, or the actors don't exist, returns an empty vector.
-     * @post Exception quarantee: nothrow
+     * @brief getAvailableActors
+     * @return vector contailing the type identifiers of available actors
      */
-    std::vector<std::string> getAnimalActors() const;
+    std::vector<std::string> getAvailableActors() const;
 
     /**
-     * @brief Gets the common actors read into the game.
-     * @return The actors read from the JSON file. If the file is not read, or the actors did not exist, will return an empty vector.
-     * @post Exception quarantee: nothrow
+     * @brief createActor
+     * @param type
+     * @return the created actor. Ownership is transferred to caller
      */
-    std::vector<std::string> getCommonActors() const;
+    ActorPointer createActor(std::string type);
 
-  private:
+private:
 
     ActorFactory();
 
-    QJsonObject json_;
-
+    std::map<std::string, ActorBuildFunction> actorDefinitions;
+    int idCounter;
 };
 
 }

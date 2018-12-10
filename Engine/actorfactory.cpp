@@ -1,16 +1,17 @@
 #include "actorfactory.hh"
-#include "formatexception.hh"
-#include "ioexception.hh"
-
-#include <QFile>
-#include <QJsonArray>
-#include <QJsonDocument>
 
 namespace Logic {
 
-QString const ACTORDATA = ("Assets/actors.json");
+using std::map;
+using std::string;
+using std::vector;
 
-ActorFactory::ActorFactory() {}
+ActorFactory::ActorFactory():
+    actorDefinitions(),
+    idCounter(0)
+{
+
+}
 
 ActorFactory& ActorFactory::getInstance()
 {
@@ -20,45 +21,27 @@ ActorFactory& ActorFactory::getInstance()
 
 }
 
-void ActorFactory::readJSON()
+void ActorFactory::addActor(string type, ActorBuildFunction buildFunction)
 {
+    actorDefinitions[type] = buildFunction;
+}
 
-    QFile file (ACTORDATA);
-
-    if (!file.open(QFile::ReadOnly))
-    {
-        throw Common::IoException("Could not read file");
+std::vector<std::string> ActorFactory::getAvailableActors() const
+{
+    auto types = vector<string>();
+    for (auto it = actorDefinitions.begin();
+         it != actorDefinitions.end();
+         ++it) {
+        types.push_back(it->first);
     }
-
-    QJsonDocument json = QJsonDocument::fromJson(file.readAll());
-    if (json.isNull()) {
-        throw Common::FormatException("JSON parsing failed for input file");
-    }
-
-    json_ = json.object();
+    return types;
 
 }
 
-std::vector<std::string> ActorFactory::getAnimalActors() const {
-
-    std::vector<std::string> animalActors;
-    QJsonArray animal = json_["Animal"].toArray();
-    for (int i = 0; i < animal.size(); ++i) {
-        animalActors.push_back(animal[i].toObject().value("name").toString().toStdString());
-    }
-    return animalActors;
-
-}
-
-std::vector<std::string> ActorFactory::getCommonActors() const {
-
-    std::vector<std::string> commonActors;
-    QJsonArray common = json_["Common"].toArray();
-    for (int i = 0; i < common.size(); ++i) {
-        commonActors.push_back(common[i].toObject().value("name").toString().toStdString());
-    }
-    return commonActors;
-
+ActorPointer ActorFactory::createActor(string type)
+{
+    ++idCounter;
+    return actorDefinitions[type](idCounter);
 }
 
 }
